@@ -222,3 +222,9 @@ server {
 Start the old app (from branch dev) with "node server/app.js" (it will start on default port 9000)
 
 Start the new app (from branch develop) with "PORT=9001 node server/app.js"
+
+
+## License
+
+[GPL-3.0 license](https://opensource.org/licenses/GPL-3.0)
+
