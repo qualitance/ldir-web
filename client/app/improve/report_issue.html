@@ -1,0 +1,74 @@
+<lx-dialog class="dialog dialog--l ldr-create-pile-modal" id="createIssue" auto-close="false"
+           close-modal-on-state-change>
+    <form class="issueForm" name="issueForm" ng-submit="sendIssue(issueForm,'createIssue')" flex-align="center center"
+          novalidate>
+
+        <div class="dialog__header">
+            <div class="toolbar bgc-green-500 pl++">
+          <span class="toolbar__label tc-white fs-title">
+              {{'views.report.help' | translate}}
+          </span>
+
+                <div class="toolbar__right">
+                    <button class="btn btn--l btn--white btn--icon" lx-ripple
+                            ng-click="resetForm(issueForm); closeModal('createIssue', issueForm);" type="button">
+                        <i class="mdi mdi-close"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="dialog__content">
+            <div class="p++">
+                <p>
+                    {{'views.report.moreInfo' | translate}}
+                </p>
+            </div>
+            <div flex-item="12" class="p++">
+                <lx-text-field label="{{'views.report.issueName' | translate}}"
+                               error="(issueForm.message.$invalid && issueForm.$submitted) || (issueForm.message.$error.maxlength)">
+                    <input name="message" ng-model="issue.message" ng-minlength="10" ng-maxlength="100" required
+                           maxlength="100" ng-trim="false">
+                </lx-text-field>
+                <div class="error-message-holder tc-red-500"
+                     data-ng-show="(issueForm.message.$invalid) && issueForm.$submitted">
+                    <div data-ng-show="issueForm.message.$error.maxlength">{{'views.report.maxChars' | translate}}.
+                    </div>
+                    <div data-ng-show="issueForm.message.$error.minlength">{{'views.report.minChars' | translate}}.
+                    </div>
+                </div>
+            </div>
+            <div flex-item="12" class="pl++ pr++" style="text-align:right">
+                <span>{{issueForm.message.$viewValue.length || 0}}</span> / 100
+            </div>
+            <div flex-item="12" class="p++">
+                <lx-text-field label="{{'views.report.issueDescription' | translate}}"
+                               error="(issueForm.description.$invalid && issueForm.$submitted) || (issueForm.description.$error.maxlength)">
+                    <textarea name="description" ng-model="issue.description" ng-minlength="10" ng-maxlength="500"
+                              required maxlength="500" ng-trim="false"></textarea>
+                </lx-text-field>
+                <div class="error-message-holder tc-red-500"
+                     data-ng-show="(issueForm.description.$invalid) && issueForm.$submitted">
+                    <div data-ng-show="issueForm.description.$error.maxlength">{{'views.report.maxChars500' |
+                        translate}}.
+                    </div>
+                    <div data-ng-show="issueForm.description.$error.minlength">{{'views.report.minChars' |
+                        translate}}.
+                    </div>
+                </div>
+            </div>
+            <div flex-item="12" class="pl++ pr++" style="text-align:right">
+                <span>{{issueForm.description.$viewValue.length || 0}}</span> / 500
+            </div>
+            <br>
+
+            <div class="dialog__actions">
+                <button class="btn btn--m btn--black btn--flat" type="button" lx-ripple
+                        ng-click="resetForm(issueForm); closeModal('createIssue', issueForm);">{{'generic.cancel' |
+                    translate}}
+                </button>
+                <button class="btn btn--m btn--green btn--flat" type="submit" lx-ripple>{{'generic.save' | translate}}
+                </button>
+            </div>
+        </div>
+    </form>
+</lx-dialog>

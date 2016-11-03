@@ -1,0 +1,290 @@
+.ldr-view-pile {
+    .ldr-flex-left {
+        //background-color: $green-500;
+    }
+    .ldr-pile-details {
+        position: relative;
+        background-color: $base-background-color;
+        padding: 30px 0 0 20px;
+        .ldr-size-labels-container {
+            width: 90%;
+        }
+        .ldr-print-btn {
+            position: absolute;
+            right: 10px;
+            top: 30px;
+        }
+        .ldr-pile-id h1 {
+            font: 32px 'Roboto-Medium';
+            color: $grey-800;
+        }
+        .ldr-date-reported {
+            margin-bottom: 30px;
+            h3 {
+                font: 20px 'Roboto-Light';
+                color: $grey-500;
+            }
+        }
+        .ldr-confirms {
+            font: 17px 'Roboto-Light';
+            margin-bottom: 30px;
+            span {
+                font-family: 'Roboto-Regular';
+                color: $green-500;
+            }
+        }
+        .ldr-description {
+            margin-bottom: 50px;
+            font: 17px 'Roboto-Light';
+        }
+        .ldr-status h2 {
+            font: 25px 'Roboto-Regular';
+            color: $grey-800;
+            span {
+                text-transform: capitalize;
+                font-family: 'Roboto-Light';
+                &.pending {
+                    color: $orange-500;
+                }
+                &.unconfirmed {
+                    color: $red-500;
+                }
+                &.confirmed {
+                    color: $blue-500;
+                }
+                &.reported {
+                    color: $purple-500;
+                }
+                &.clean {
+                    color: $green-500;
+                }
+            }
+        }
+        dl {
+            clear: both;
+            overflow: hidden;
+            margin: 15px 0;
+            dt, dd {
+                float: left;
+            }
+            dt {
+                width: 20%;
+                span {
+                    color: $grey-800;
+                    font: 18px 'Roboto-Medium';
+                }
+            }
+            dd {
+                font: 18px 'Roboto-Light';
+                color: $grey-800;
+                position: relative;
+                .ldr-view-on-map {
+                    position: absolute;
+                    top: 0;
+                    right: -40px;
+                    cursor: pointer;
+                    font-size: 40px;
+                    color: $grey-600;
+                }
+            }
+        }
+    }
+    .ldr-pile-actions {
+        padding: 20px;
+        //color: $white;
+        .ldr-action-incentive h1 {
+            font: 32px 'Roboto-Medium';
+            color: $grey-800;
+        }
+        .ldr-actions {
+            overflow: hidden;
+            a {
+                text-decoration: none;
+                font: 18px 'Roboto-Medium';
+                color: $grey-800;
+                line-height: 40px;
+                margin: 10px 0;
+                float: left;
+                clear: left;
+                .paddingLeft10 {
+                    padding-left: 10px;
+                }
+                i {
+                    transition: all 0.2s ease;
+                }
+                i.icon--flat {
+                    display: none;
+                    opacity: 0;
+                }
+                &:hover, &.set {
+                    i.icon--circled {
+                        display: none;
+                    }
+                    i.icon--flat {
+                        display: inline-block;
+                        opacity: 1;
+                    }
+                }
+                &.set {
+                    cursor: default;
+                }
+            }
+        }
+        button {
+            margin-top: 15px;
+        }
+    }
+    .ldr-pile-photos {
+        margin-top: 40px;
+        box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.ldr-view-comments {
+    padding: 20px;
+    .ldr-comments-title {
+        //margin-top: 15%;
+        > * {
+            float: left;
+        }
+        #comment {
+            font: 32px 'Roboto-Medium';
+            color: $grey-800;
+            padding-left: 20px;
+        }
+        button {
+            margin-left: 20px;
+        }
+    }
+    .ldr-comments-section {
+        counter-reset: section;
+        clear: both;
+        padding: 20px 0;
+        > div {
+            margin: 10px 0;
+            position: relative;
+            &:before {
+                counter-increment: section;
+                content: "#" counters(section, ".");
+                position: absolute;
+                bottom: 0;
+                right: 10px;
+                font: 50px 'Roboto-Medium';
+                color: $grey-300;
+            }
+        }
+    }
+}
+
+.ldr-map-dialog {
+    .leaflet-label {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 0 !important;
+        border-width: 0 !important;
+        color: $white;
+        font: 18px 'Roboto-Light';
+        padding: 10px 20px;
+        margin-top: -55px;
+        margin-left: 10px;
+    }
+    .leaflet-label:before,
+    .leaflet-label:after {
+        display: none;
+    }
+}
+
+#commentDialog {
+    background-color: #f5f5f5;
+    .ldr-comment-body {
+        padding: 24px 24px 0 24px;
+        position: relative;
+        height: 300px;
+    }
+    .ldr-errors {
+        padding: 0 24px;
+    }
+    .ldr-pile-comments {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+
+        > div {
+            padding: 20px;
+            height: 100%;
+            width: 100%;
+
+            > div {
+                height: 100%;
+                width: 100%;
+                background-size: 50%;
+            }
+
+            textarea {
+                resize: none;
+                height: 100% !important;
+                width: 100% !important;
+                border-radius: 3px;
+                border-width: 0;
+                outline: none;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+                background: transparent;
+                padding: 10px;
+                font: 16px 'Roboto-Regular';
+                &.has-text {
+                    background: rgba(255, 255, 255, .7);
+                }
+            }
+        }
+    }
+}
+
+#editDescriptionDialog {
+    background-color: #f5f5f5;
+    .ldr-comment-body {
+        padding: 24px 24px 0 24px;
+        position: relative;
+        height: 300px;
+    }
+    .ldr-errors {
+        padding: 0 24px;
+    }
+    .ldr-pile-comments {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+
+        > div {
+            padding: 20px;
+            height: 100%;
+            width: 100%;
+
+            > div {
+                background: white;
+                height: 100%;
+                width: 100%;
+                background: $white url("../assets/images/map/type_description.svg") no-repeat center center;
+                background-size: 50%;
+            }
+
+            textarea {
+                resize: none;
+                height: 100% !important;
+                width: 100% !important;
+                border-radius: 3px;
+                border-width: 0;
+                outline: none;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+                background: transparent;
+                padding: 10px;
+                font: 16px 'Roboto-Regular';
+                &.has-text {
+                    background: rgba(255, 255, 255, .7);
+                }
+            }
+        }
+    }
+}

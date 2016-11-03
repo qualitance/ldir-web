@@ -1,0 +1,510 @@
+<div class="ldr-container">
+    <div class="ldr-view-pile">
+        <div flex-container="row">
+            <div flex-item="5" class="ldr-flex-left">
+                <div class="ldr-pile-details">
+                    <div class='ldr-pile-id'><h1>{{'generic.pileID' | translate}} {{pile.nr_ord}}</h1></div>
+                    <div class="ldr-print-btn" ng-if="pile.status == 'reported'">
+                        <button class="btn btn--xl btn--green btn--icon" lx-ripple ng-click="printPile()"><i
+                            class="mdi mdi-printer"></i></button>
+                    </div>
+                    <div class='ldr-date-reported'><h3>{{'generic.reported' | translate}} <span
+                        am-time-ago="pile.created_at"></span></h3></div>
+                    <div class='ldr-status'><h2>{{'generic.status' | translate}} <span>{{'pile.status.' + pile.status | translate}}</span>
+                        <i class="mdi mdi-checkbox-blank-circle"
+                           style="font-size: 50%; position: relative; top: -5px"
+                           ng-class="{'tc-orange-500': pile.status == 'pending', 'tc-red-500': pile.status == 'unconfirmed', 'tc-green-900': pile.status == 'confirmed', 'tc-light-blue-500': pile.status == 'reported', 'tc-light-green-500':pile.status == 'clean'}"></i>
+                    </h2></div>
+                    <div class='ldr-confirms'><p><span class="tc-grey-800"><strong>{{pile.confirm.length}}</strong> {{'views.editViewPile.there' | translate}}</span>
+                        |
+                        <span class="tc-grey-800"><strong>{{pile.unconfirm.length}}</strong> {{'views.editViewPile.notThere' | translate}}</span>
+                    </p></div>
+                    <div class="ldr-btn-actions">
+                        <button class="btn btn--xs btn--red btn--raised" lx-ripple ng-show="pile.status == 'pending'"
+                                ng-click="setStatus('unconfirmed')">{{'views.editViewPile.disregard' | translate}}
+                        </button>
+                        <button class="btn btn--xs btn--green btn--raised" lx-ripple ng-show="pile.status == 'pending'"
+                                ng-click="setStatus('confirmed')">{{'views.editViewPile.confirm' | translate}}
+                        </button>
+                        <button class="btn btn--xs btn--green btn--raised" lx-ripple ng-show="pile.status == 'reported'"
+                                ng-click="setStatus('clean')">{{'views.editViewPile.clean' | translate}}
+                        </button>
+                    </div>
+                    <dl>
+                        <dt class="ldr-size-labels-container">
+                        <p>{{'views.editViewPile.size' | translate}}</p>
+                        <p>{{'views.addPile.details.text' | translate}}</p>
+                        </dt>
+                        <dd>
+                            <div>
+                                <custom-ratings ng-model="pile.size" disabled></custom-ratings>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><span>{{'views.editViewPile.content' | translate}}</span></dt>
+                        <dd>
+                            <div>
+                                <span ng-repeat="material in pile.content">{{material | parseAndTranslate : 'content'}}{{$last ? '' : ', '}}</span>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl ng-if="pile.areas && pile.areas.length">
+                        <dt><span>{{'views.editViewPile.area' | translate}}</span></dt>
+                        <dd>
+                            <div>
+                                <span ng-repeat="area in pile.areas">{{area | parseAndTranslate : 'zones' | capitalizeFirstLetter}}{{$last ? '' : ', '}}</span>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><span>{{'views.editViewPile.gps' | translate}}</span></dt>
+                        <dd>
+                            <div>
+                                <a ng-click="openMapDialog('viewPileDialog')" class='ldr-view-on-map'
+                                   lx-tooltip="{{'views.editViewPile.viewPileLoc' | translate}}"><i
+                                    class='mdi mdi-map-marker-radius'></i></a>
+                                <span ng-bind-html="truePileLocation.lat | decToDms:'lat'"></span><br><span
+                                ng-bind-html="truePileLocation.lng | decToDms:'lng'"></span>
+                            </div>
+                        <dd style="margin-left:45px; margin-top:12px;">
+                            <button class="btn btn--s grey btn--fab" lx-ripple
+                                    ng-click="openEditPileLocationDialog('editPileLocationDialog')"
+                                    lx-tooltip="{{'views.editViewPile.editLoc' | translate}}"><i
+                                class="mdi mdi-pencil"></i></button>
+                        <dd>
+                        </dd>
+                    </dl>
+                    <dl ng-show="!description" style="padding: 3px;">
+                        <dt style="width: 130px;">
+                            <button class="btn btn--xs btn--white btn--raised" lx-ripple
+                                    ng-click="openEditDescriptionDialog('editDescriptionDialog')">
+                                {{'views.editViewPile.addDescription' | translate}}
+                            </button>
+                        </dt>
+                    </dl>
+                    <dl ng-show="description" style="height: 100%; width: 100%;">
+                        <dt style="margin-top: 5px;"><span>{{'views.editViewPile.description' | translate}}</span></dt>
+                        <dd style="margin-top: 2px; margin-bottom: 8px;">
+                            <button class="btn btn--s grey btn--fab" lx-ripple
+                                    ng-click="openEditDescriptionDialog('editDescriptionDialog')"
+                                    lx-tooltip="{{'views.editViewPile.editDescription' | translate}}"><i
+                                class="mdi mdi-pencil"></i></button>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dd>
+                            <div>
+                                <p>{{description}}</p>
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="ldr-pile-actions" ng-if="user._id != pile.user && pile.status == 'pending'">
+                    <div class='ldr-action-incentive'><h1>{{'views.editViewPile.selectAction' | translate}}</h1></div>
+                    <div class='ldr-actions'>
+                        <a href="#"
+                           ng-hide="pile.confirm.indexOf(user._id) != -1 || pile.unconfirm.indexOf(user._id) != -1"
+                           ng-click="confirmStatus('confirm')"><i
+                            class="icon icon--l icon--green icon--circled mdi mdi-check"></i><i
+                            class="icon icon--l icon--green icon--flat mdi mdi-check"></i><span>{{'views.editViewPile.itsThere' | translate}}</span></a>
+                        <a href="#"
+                           ng-hide="pile.confirm.indexOf(user._id) != -1 || pile.unconfirm.indexOf(user._id) != -1"
+                           ng-click="confirmStatus('unconfirm')"><i
+                            class="icon icon--l icon--red icon--circled mdi mdi-close"></i><i
+                            class="icon icon--l icon--red icon--flat mdi mdi-close"></i><span>{{'views.editViewPile.notInThere' | translate}}</span></a>
+                        <a href="#" ng-show="pile.unconfirm.indexOf(user._id) != -1" class="set"><i
+                            class="icon icon--l icon--red icon--flat mdi mdi-close"></i><span>{{'views.editViewPile.notInThere' | translate}}</span></a>
+                        <a href="#" ng-show="pile.confirm.indexOf(user._id)!= -1" class="set"><i
+                            class="icon icon--l icon--green icon--flat mdi mdi-check"></i><span>{{'views.editViewPile.itsThere' | translate}}</span></a>
+                    </div>
+                </div>
+                <div class="ldr-pile-actions" ng-if="['confirmed', 'reported'].indexOf(pile.status) != -1">
+                    <form name="form" ng-submit="allocatePile(form)">
+                        <div class='ldr-action-incentive'><h1>{{'views.editViewPile.allocate' | translate}}</h1></div>
+                        <div ng-show="pile.allocated.user._id">
+              <span class="fs-body-2 display-block tc-grey-800 paddingLeft10">
+                {{'views.editViewPile.allocatedTo' | translate}} <i>{{(pile.allocated.authority.isDummy?"":"PRIMARIA
+                  ")+pile.allocated.authority.name}}</i> {{'views.editViewPile.at' | translate}} <i>{{pile.allocated.due_date
+                  | date : 'yyyy-MM-dd' }}</i> {{'views.editViewPile.by' | translate}} <i><span
+                  ng-hide="pile.allocated.user._id != user._id">{{'views.editViewPile.you' | translate}}</span><span
+                  ng-show="pile.allocated.user._id != user._id">{{pile.allocated.user.first_name}} {{pile.allocated.user.last_name}}</span></i>
+              </span>
+                        </div>
+
+                        <div>
+                            <div flex-item>
+                                <ui-select name="authority" ng-model="allocate.authority" theme="select2"
+                                           class="custom-ui-select" ng-required="true">
+                                    <ui-select-match placeholder="{{'views.editViewPile.selectAuthority' | translate}}">
+                                        {{($select.selected.isDummy?"":"PRIMARIA ") + $select.selected.name}} -
+                                        {{'views.editViewPile.address' | translate}}: {{$select.selected.fax}}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="authority in authorities | filter: $select.search">
+                                        <span
+                                            ng-bind-html="(authority.isDummy?'':'PRIMARIA ') + authority.name + ' - ' + ('views.editViewPile.address' | translate)  + ': ' + authority.fax | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="mt+">
+                                <lx-date-picker model="allocate.date"
+                                                label="{{'views.editViewPile.deadline' | translate}}" fixed-label="true"
+                                                required></lx-date-picker>
+                            </div>
+                            <div class="flex-item">
+                                <button ng-if="pile.status == 'confirmed'" class="btn btn--m btn--green btn--raised"
+                                        lx-ripple
+                                        type="submit" ng-disabled="form.$invalid">{{'views.editViewPile.allocatePile' |
+                                    translate}}
+                                </button>
+                                <button ng-if="pile.hasOwnProperty('allocated') && pile.status != 'confirmed'"
+                                        class="btn btn--m btn--green btn--raised" lx-ripple type="submit"
+                                        ng-disabled="form.$invalid">
+                                    {{'views.editViewPile.reallocate' | translate}}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div flex-item="7" style="height: 700px;">
+
+                <div class="ldr-pile-photos">
+                    <div>
+                        <custom-carousel images="allImages"></custom-carousel>
+
+                        <div ng-show="!canDelete"
+                             style="position: absolute; right:25%; bottom: 75%; opacity: 0.2; filter:alpha(opacity=50);">
+                            <h1 style="font-size: 50px;">{{'views.editViewPile.mapScreen' | translate}}</h1>
+                        </div>
+
+                        <div style="position: absolute; right:5%; bottom: 5%;">
+                            <button class="btn btn--xs btn--red btn--raised"
+                                    ng-show="hasRole('supervisor') && canDelete && allImages.length != minSize"
+                                    lx-ripple ng-click="openConfirmationModal('confirmationDialog')">
+                                {{'views.editViewPile.deleteImage' | translate}}
+                            </button>
+                            <button class="btn btn--xs btn--white btn--raised"
+                                    ng-show="hasRole('supervisor') && allImages.length != maxSize" lx-ripple
+                                    ng-click="openModal('addImages')">{{'views.editViewPile.addImage' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="ldr-view-comments">
+        <div flex-container="row">
+            <div flex-item="12">
+                <div class="ldr-comments-title">
+                    <h1>{{'views.editViewPile.comments' | translate}}</h1>
+                    <button class="btn btn--xl btn--blue btn--fab" lx-ripple
+                            lx-tooltip="{{'views.editViewPile.addComment' | translate}}"
+                            ng-click="openCommentDialog('commentDialog')"><i class="mdi mdi-plus"></i></button>
+                </div>
+                <div class="ldr-comments-section">
+                    <div class="card" ng-repeat="comment in comments | orderBy: '-created_at' ">
+                        <div class="p++">
+                            <span class="fs-subhead tc-black-2 display-block" am-time-ago="comment.created_at"></span>
+
+                            <div class="paragraph fs-body-1 mt+">
+                                <p>
+                                    {{comment.description}}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MAP DIALOG -->
+
+<lx-dialog class="dialog dialog--l ldr-create-pile-modal" auto-close="false" id="viewPileDialog"
+           onclose="closingMapDialog('viewPileDialog')" close-modal-on-state-change>
+    <div ng-controller="ViewPileOnMapCtrl" ng-if="mapdialog">
+        <div class="dialog__header">
+            <div class="toolbar bgc-green-500 pl++">
+          <span class="toolbar__label tc-white fs-title">
+              {{'views.editViewPile.mapDialog.pileLocation' | translate}}
+          </span>
+
+                <div class="toolbar__right">
+                    <button class="btn btn--l btn--white btn--icon" lx-ripple
+                            ng-click="closeMapDialog('viewPileDialog')" ng-disabled="!savingScreenshot">
+                        <i class="mdi mdi-close"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dialog__content ldr-map-dialog" style="height: 600px">
+
+            <leaflet height="600px" width="100%" center="center" markers="markers" style="top: 64px;"
+                     defaults="defaults" maxbounds="regionBounds"></leaflet>
+            <button class="btn btn--xl btn--white btn--raised" style="margin-top: 65%; left: 55%" lx-ripple
+                    ng-show="hasRole('supervisor') && savableScreenshot" ng-disabled="!savingScreenshot"
+                    ng-click="takeScreenshot()" type="button">
+                <span ng-hide="!savingScreenshot">{{'views.editViewPile.mapDialog.saveScreen' | translate}}</span>
+                <span ng-show="!savingScreenshot">{{'views.editViewPile.mapDialog.savingScreen' | translate}}...</span>
+            </button>
+
+        </div>
+
+    </div>
+</lx-dialog>
+
+<!-- EDIT LOCATION DIALOG -->
+
+<lx-dialog class="dialog dialog--l ldr-create-pile-modal" auto-close="false" id="editPileLocationDialog"
+           onclose="closingEditPileLocationDialog('editPileLocationDialog')" close-modal-on-state-change>
+    <div ng-controller="ViewPileOnMapCtrl" ng-if="editPileLocationDialog">
+        <div class="dialog__header">
+            <div class="toolbar bgc-green-500 pl++">
+          <span class="toolbar__label tc-white fs-title">
+              {{'views.editViewPile.editLocDialog.editPileLoc' | translate}}
+          </span>
+
+                <div class="toolbar__right">
+                    <button class="btn btn--l btn--white btn--icon" lx-ripple
+                            ng-click="closeEditPileLocationDialog('editPileLocationDialog')">
+                        <i class="mdi mdi-close"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dialog__content ldr-map-dialog" style="height: 600px">
+
+            <leaflet height="600px" width="100%" center="center" style="top: 64px;"
+                     defaults="defaults" maxbounds="regionBounds"></leaflet>
+            <div style="position: absolute; margin-top: 5%; left: 75%;">
+                <span ng-bind-html="location.lat | decToDms:'lat'"></span><br>
+                <span ng-bind-html="location.lng | decToDms:'lng'"></span>
+            </div>
+            <button class="btn btn--xl btn--white btn--raised" style="margin-top: 65%; left: 60%" lx-ripple
+                    ng-click="saveLocation()" type="button">
+                <span>{{'views.editViewPile.editLocDialog.saveLoc' | translate}}</span>
+            </button>
+        </div>
+
+    </div>
+</lx-dialog>
+
+
+<!-- ADD COMMENT DIALOG -->
+<lx-dialog class="dialog dialog--l" id="commentDialog" onclose="closingCommentDialog('commentForm', commentDialog)"
+           close-modal-on-state-change>
+    <form name="commentForm" ng-submit="postComment(commentForm, 'commentDialog')" novalidate>
+
+        <div class="dialog__header">
+            <div class="toolbar bgc-green-500 pl++">
+            <span class="toolbar__label tc-white fs-title">
+                {{'views.editViewPile.addCommentDialog.addComment' | translate}}
+            </span>
+
+                <div class="toolbar__right">
+                    <button class="btn btn--l btn--white btn--icon" lx-ripple
+                            ng-click="closeCommentDialog(commentForm, 'commentDialog')">
+                        <i class="mdi mdi-close"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="dialog__content">
+            <div class="ldr-comment-body">
+                <div class="ldr-pile-comments">
+                    <div>
+                        <div>
+              <textarea autofocus="" name="comment" ng-model="comment.description"
+                        ng-class="{'has-text': commentForm.comment.$viewValue.length > 0}" required minlength="10"
+                        maxlength="600"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="ldr-errors" ng-show="commentForm.$submitted">
+        <span class="fs-subhead display-block tc-red-500"
+              ng-show="commentForm.$dirty && commentForm.comment.$error.required">{{'views.editViewPile.addCommentDialog.requiredComment' | translate}}</span>
+        <span class="fs-subhead display-block tc-red-500"
+              ng-show="commentForm.$dirty && commentForm.comment.$error.minlength">{{'views.editViewPile.addCommentDialog.commentTenChars' | translate}}</span>
+            </div>
+
+        </div>
+
+        <div class="dialog__actions">
+            <button class="btn btn--m btn--black btn--flat" lx-ripple lx-dialog-close type="button">{{'generic.cancel' |
+                translate}}
+            </button>
+            <button class="btn btn--m btn--green btn--flat" lx-ripple type="submit">
+                {{'views.editViewPile.addCommentDialog.postComment' | translate}}
+            </button>
+        </div>
+
+    </form>
+
+</lx-dialog>
+
+<!-- EDIT DESCRIPTION DIALOG -->
+
+<lx-dialog class="dialog dialog--l" id="editDescriptionDialog"
+           onclose="closingDescriptionDialog('descriptionForm', editDescriptionDialog)">
+    <form name="descriptionForm" novalidate>
+
+        <div class="dialog__header">
+            <div class="toolbar bgc-green-500 pl++">
+            <span class="toolbar__label tc-white fs-title">
+                {{'views.editViewPile.editDescription' | translate}}
+            </span>
+
+                <div class="toolbar__right">
+                    <button class="btn btn--l btn--white btn--icon" lx-ripple
+                            ng-click="closeDescriptionDialog(descriptionForm, 'editDescriptionDialog')">
+                        <i class="mdi mdi-close"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="dialog__content">
+            <div class="ldr-comment-body">
+                <div class="ldr-pile-comments">
+                    <div>
+                        <div ng-style="{'background':bgImage}">
+                            <textarea autofocus="" name="description"
+                                      ng-class="{'has-text': pile.description.length > 0}" ng-model="pile.description"
+                                      required maxlength="240"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="ldr-errors" ng-show="descriptionForm.$submitted">
+        <span class="fs-subhead display-block tc-red-500"
+              ng-show="descriptionForm.$dirty && descriptionForm.description.$error.required">{{'views.editViewPile.editDescriptionDialog.requiredDescription' | translate}}</span>
+            </div>
+        </div>
+
+        <div class="dialog__actions">
+            <button class="btn btn--m btn--black btn--flat" lx-ripple lx-dialog-close type="button">{{'generic.cancel' |
+                translate}}
+            </button>
+            <button class="btn btn--m btn--green btn--flat" lx-ripple type="submit"
+                    ng-click="editDescription(descriptionForm, 'editDescriptionDialog')">{{'generic.save' | translate}}
+            </button>
+        </div>
+
+    </form>
+
+</lx-dialog>
+
+<!-- ADD IMAGE DIALOG -->
+<lx-dialog class="dialog dialog--l ldr-create-pile-modal" id="addImages" auto-close="false" close-modal-on-state-change>
+
+    <div class="dialog__header">
+        <div class="toolbar bgc-green-500 pl++">
+          <span class="toolbar__label tc-white fs-title">
+              {{'views.editViewPile.addImageDialog.addImage' | translate}}
+          </span>
+
+            <div class="toolbar__right">
+                <button class="btn btn--l btn--white btn--icon" lx-ripple ng-disabled="saving"
+                        ng-click="closeModal('addImages')">
+                    <i class="mdi mdi-close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog__content">
+        <div class="ldr-modal-content">
+            <div class="ldr-vertical-align">
+                <div class="ldr-photo-section">
+                    <div class="ldr-placeholder" ng-if="!selectedImage">
+                        <div ngf-drop="selectImage($files)" ngf-drag-over-class="'ldr-dragover'" ngf-multiple="false"
+                             ngf-accept="'image/*'">
+                            <img src="/assets/images/map/add_photo.png">
+                            <h2>{{'views.addPile.photos.drag' | translate}}</h2>
+                            <span>- or -</span><br>
+                            <button type="file" ngf-select="selectImage($files)" ngf-multiple="false"
+                                    ngf-accept="'image/*'">
+                                {{'views.addPile.photos.selectLocal' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ldr-image-thumbnails" ng-if="selectedImage">
+                        <div class="card">
+                            <div class="card__img card__img--top" style="position: relative">
+                                <lx-thumbnail thumbnail-src="{{ newImage.thumbnailImage }}" thumbnail-width="300"
+                                              thumbnail-height="300"></lx-thumbnail>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog__actions">
+        <div style='overflow: hidden'>
+            <div style='float: right'>
+                <button class="btn btn--l btn--red btn--raised" lx-ripple ng-disabled="!selectedImage || saving"
+                        ng-click="deleteThumb()">
+                    <span>{{'generic.cancel' | translate}}</span>
+                </button>
+                <button class="btn btn--l btn--green btn--raised" lx-ripple ng-disabled="!selectedImage || saving"
+                        ng-click="saveImage('addImages')">
+                    <span ng-hide="saving">{{'generic.save' | translate}}</span>
+                    <span ng-show="saving">{{'generic.saving' | translate}}...</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</lx-dialog>
+
+<!-- CONFIRMATION DIALOG -->
+<lx-dialog class="dialog dialog--l" style="width: 500px; margin-left: -250px; top: 40%;" id="confirmationDialog"
+           auto-close="false" close-modal-on-state-change>
+
+    <div class="dialog__header">
+        <div class="toolbar__right">
+            <button class="btn btn--l btn--grey btn--icon" lx-ripple ng-disabled="saving"
+                    ng-click="closeConfirmationModal('confirmationDialog')">
+                <i class="mdi mdi-close"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="dialog__content">
+      <span style="margin-left: 30px;">
+       {{'views.editViewPile.confirmDialog.deleteForSure' | translate}}?
+      </span>
+    </div>
+
+    <div class="dialog__actions">
+        <div style='overflow: hidden'>
+            <div style='float: right; margin-top: 20px;'>
+                <button class="btn btn--l btn--red btn--raised" lx-ripple
+                        ng-click="closeConfirmationModal('confirmationDialog')">
+                    <span>{{'generic.cancel' | translate}}</span>
+                </button>
+                <button class="btn btn--l btn--green btn--raised" lx-ripple
+                        ng-click="deleteImage('confirmationDialog')">
+                    <span>{{'generic.yes' | translate}}</span>
+                </button>
+            </div>
+        </div>
+
+    </div>

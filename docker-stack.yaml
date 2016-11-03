@@ -1,0 +1,110 @@
+lb:
+    image: 'dockercloud/haproxy:1.5.3'
+    links:
+        - node
+        - static
+    ports:
+        - '80:80'
+    tags:
+        - ${NODE_TAG}
+        - lb
+    roles:
+        - global
+node:
+    image: ionutlepadatescuq/ldir-api:${DEPLOY_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - redis
+        - elasticsearch
+        - mongosetup
+    ports:
+        - "80"
+    environment:
+        - NODE_ENV=${NODE_ENV}
+        - VIRTUAL_HOST=api.ldir.ro
+        - STATIC_SITE=http://ldir.ro
+        - FACEBOOK_API_URL=https://graph.facebook.com/v2.3/
+    tags:
+        - ${NODE_TAG}
+        - node
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+static:
+    image: ionutlepadatescuq/ldir-static:${DEPLOY_VERSION}
+    ports:
+        - "80"
+    tags:
+        - ${NODE_TAG}
+        - webspa
+    environment:
+        - VIRTUAL_HOST=ldir.ro
+elasticsearch:
+    image: elasticsearch:1.5
+    ports:
+        - "9200"
+        - "9300"
+    volumes:
+        -  /ldir-volumes/elasticsearch:/usr/share/elasticsearch/data/elasticsearch
+    tags:
+        - ${NODE_TAG}
+        - el
+mongo1:
+    image: mongo:3.3
+    volumes:
+        - /ldir-volumes/mongo/db-1:/data/db
+    command: mongod --replSet "rs"
+    tags:
+        - ${NODE_TAG}
+        - mongo
+        - mongo1
+mongo2:
+    image: mongo:3.3
+    volumes:
+        - /ldir-volumes/mongo/db-2:/data/db
+    command: mongod --replSet "rs"
+    tags:
+        - ${NODE_TAG}
+        - mongo
+        - mongo2
+mongo3:
+    image: mongo:3.3
+    volumes:
+        - /ldir-volumes/mongo/db-3:/data/db
+    command: mongod --replSet "rs"
+    tags:
+        - ${NODE_TAG}
+        - mongo3
+kue:
+    image: ionutlepadatescuq/ldir-api:${DEPLOY_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - redis
+        - mongosetup
+    environment:
+        - NODE_ENV=${NODE_ENV}
+    tags:
+        - ${NODE_TAG}
+        - kue
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+    command: node server/queue.js
+redis:
+    image: redis:3.2
+    volumes:
+        - /ldir-volumes/redis:/data
+    tags:
+        - ${NODE_TAG}
+        - redis
+mongosetup:
+    image: levino/mongo-rs-setup
+    links:
+        - mongo1:mongo1
+        - mongo2:mongo2
+        - mongo3:mongo3
+    tags:
+        - ${NODE_TAG}
+        - mongo

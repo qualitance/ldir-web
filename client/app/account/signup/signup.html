@@ -1,0 +1,126 @@
+<div class="ldr-signup">
+    <div class="ldr-container">
+        <div class="ldr-back">
+            <div>
+                <a href="#" ui-sref="main"><span><i class="mdi mdi-arrow-left"></i></span></a>
+            </div>
+        </div>
+        <div class="ldr-inside">
+            <div>
+                <div class="tc-white-1" flex-container="row">
+                    <div flex-item="4" flex-item-order="2">
+
+                        <div class="ldr-logo">
+                            <div>
+                                <a ui-sref="main"><img src="../assets/images/logo_white.png"></a>
+                            </div>
+                        </div>
+                        <div class="well" ng-show="success">
+                            <p>{{'views.signup.thanks' | translate}}</p>
+                            <div class="ldr-btn-signup">
+                                <button class="btn btn--xl btn--white btn--raised" lx-ripple ng-click="resend()">
+                                    {{'views.signup.resend' | translate}}
+                                </button>
+                            </div>
+                        </div>
+                        <form class="form" name="form" ng-submit="register(user, form)" novalidate ng-if="!success">
+                            <div flex-item class="ldr-headline">
+                                <span class="fs-headline display-block">{{'views.signup.create' | translate}}</span>
+                            </div>
+                            <div flex-item>
+                                <lx-text-field label="{{'generic.emailAddress' | translate}}" theme="dark"
+                                               error="form.email.$invalid && submitted" fixed-label="true">
+                                    <input type="email" name="email" ng-model="user.email" ng-minlength="3"
+                                           maxlength="50" required mongoose-error>
+                                </lx-text-field>
+                                <div class="error-message-holder" data-ng-show="form.email.$invalid && submitted">
+                                    {{'views.signup.validEmail' | translate}}.
+                                </div>
+                            </div>
+                            <div flex-item>
+                                <lx-text-field label="{{'generic.password' | translate}}" theme="dark"
+                                               error="form.password1.$invalid && submitted" fixed-label="true">
+                                    <input type="password" name="password1" ng-model="user.password1" ng-minlength="6"
+                                           maxlength="50" required>
+                                </lx-text-field>
+                                <div class="error-message-holder" data-ng-show="(form.password1.$invalid) && submitted">
+                                    <div data-ng-show="form.password1.$error.required">
+                                        {{'views.signup.validPasswordMessageOne' | translate}}.
+                                    </div>
+                                    <div data-ng-show="form.password1.$error.minlength">
+                                        {{'views.signup.validPasswordMessageTwo' | translate}}.
+                                    </div>
+                                </div>
+                            </div>
+                            <div flex-item>
+                                <lx-text-field label="{{'views.signup.confirmPassword' | translate}}" theme="dark"
+                                               error="form.password2.$invalid && submitted" fixed-label="true">
+                                    <input type="password" name="password2" ng-model="user.password2" required
+                                           match="user.password1" maxlength="50">
+                                </lx-text-field>
+                                <div class="error-message-holder" data-ng-show="(form.password2.$invalid) && submitted">
+                                    <div data-ng-show="form.password2.$error.required">
+                                        {{'views.signup.validPasswordMessageOne' | translate}}.
+                                    </div>
+                                    <div data-ng-show="form.password2.$error.match && !form.password2.$error.required">
+                                        {{'views.signup.cofirmPasswordMessageTwo' | translate}}.
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div flex-item class="ldr-headline">
+                                <span class="fs-headline display-block">{{'views.signup.profile' | translate}}</span>
+                            </div>
+                            <div flex-item>
+                                <lx-text-field label="{{'views.signup.profileFirstName' | translate}}" theme="dark"
+                                               error="form.first_name.$invalid && submitted" fixed-label="true">
+                                    <input ng-blur="niceToKnow(user)" type="text" name="first_name"
+                                           ng-model="user.first_name" required mongoose-error maxlength="25">
+                                </lx-text-field>
+                                <div class="error-message-holder"
+                                     data-ng-show="(form.first_name.$invalid) && submitted">
+                                    {{'views.signup.profileFirstNameInvalid' | translate}}
+                                </div>
+                            </div>
+                            <div flex-item>
+                                <lx-text-field label="{{'views.signup.profileLastName' | translate}}" theme="dark"
+                                               error="form.last_name.$invalid && submitted" fixed-label="true">
+                                    <input ng-blur="niceToKnow(user)" type="text" name="last_name"
+                                           ng-model="user.last_name" required mongoose-error maxlength="25">
+                                </lx-text-field>
+                                <div class="error-message-holder" data-ng-show="(form.last_name.$invalid) && submitted">
+                                    {{'views.signup.profileLastNameInvalid' | translate}}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="checkbox">
+                                <input type="checkbox" name="terms" ng-model="user.terms" id="checkbox1"
+                                       class="checkbox__input" required>
+                                <label for="checkbox1" class="checkbox__label">{{'views.signup.termsMessageOne' |
+                                    translate}} <a ui-sref="terms" target="_blank" style="color:white">{{'views.signup.termsMessageTwo'
+                                        | translate}}</a></label>
+                                <div class="error-message-holder error-text"
+                                     data-ng-show="form.terms.$invalid && submitted">{{'views.signup.noCheckTerms' |
+                                    translate}}.
+                                </div>
+                            </div>
+                            <div flex-item class="ldr-btn-signup">
+                                <button class="btn btn--xl btn--white btn--raised" lx-ripple type="submit">
+                                    {{'views.signup.create' | translate}}
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="ldr-links">
+                            <div flex-item>
+                                <a href="#" ui-sref="login">{{'views.signup.haveAccount' | translate}}?</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div flex-item="4" flex-item-order="1">&nbsp;</div>
+                    <div flex-item="4" flex-item-order="3">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

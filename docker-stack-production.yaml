@@ -1,0 +1,266 @@
+lb:
+    image: 'dockercloud/haproxy:1.5.3'
+    links:
+        - node
+        - node10
+        - node20
+        - node21
+        - node22
+        - node23
+        - node24
+        - static
+    ports:
+        - "80:80"
+        - "${NODE_V10_PORT}:${NODE_V10_PORT}"
+        - "${NODE_V20_PORT}:${NODE_V20_PORT}"
+        - "${NODE_V21_PORT}:${NODE_V21_PORT}"
+        - "${NODE_V22_PORT}:${NODE_V22_PORT}"
+        - "${NODE_V23_PORT}:${NODE_V23_PORT}"
+        - "${NODE_V24_PORT}:${NODE_V24_PORT}"
+        - "${NODE_V30_PORT}:${NODE_V30_PORT}"
+    tags:
+        - ${NODE_TAG}
+        - lb
+    roles:
+        - global
+    restart: on-failure
+node:
+    image: ${DOCKER_REPOSITORY}/api:${NODE_V30_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - redis
+        - elasticsearch
+        - mongosetup
+    ports:
+        - "${NODE_V30_PORT}"
+    environment:
+        - PORT=${NODE_V30_PORT}
+        - NODE_ENV=${NODE_ENV}
+        - VIRTUAL_HOST=${SITE_URL}:${NODE_V30_PORT}
+        - STATIC_SITE=${SITE_PROTOCOL}://${SITE_URL}
+        - FACEBOOK_API_URL=https://graph.facebook.com/v2.3/
+    tags:
+        - ${NODE_TAG}
+        - node
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+    deployment_strategy: every_node
+    restart: on-failure
+node24:
+    image: ${DOCKER_REPOSITORY}/api:${NODE_V24_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - elasticsearch
+        - mongosetup
+    ports:
+        - "${NODE_V24_PORT}"
+    environment:
+        - PORT=${NODE_V24_PORT}
+        - NODE_ENV=${NODE_ENV}
+        - VIRTUAL_HOST=${SITE_URL}:${NODE_V24_PORT}
+        - STATIC_SITE=${SITE_PROTOCOL}://${SITE_URL}
+        - FACEBOOK_API_URL=https://graph.facebook.com/v2.3/
+    tags:
+        - ${NODE_TAG}
+        - node24
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+    restart: on-failure
+node23:
+    image: ${DOCKER_REPOSITORY}/api:${NODE_V23_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - elasticsearch
+        - mongosetup
+    ports:
+        - "${NODE_V23_PORT}"
+    environment:
+        - PORT=${NODE_V23_PORT}
+        - NODE_ENV=${NODE_ENV}
+        - VIRTUAL_HOST=${SITE_URL}:${NODE_V23_PORT}
+        - STATIC_SITE=${SITE_PROTOCOL}://${SITE_URL}
+        - FACEBOOK_API_URL=https://graph.facebook.com/v2.3/
+    tags:
+        - ${NODE_TAG}
+        - node23
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+    restart: on-failure
+node22:
+    image: ${DOCKER_REPOSITORY}/api:${NODE_V22_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - elasticsearch
+        - mongosetup
+    ports:
+        - "${NODE_V22_PORT}"
+    environment:
+        - PORT=${NODE_V22_PORT}
+        - NODE_ENV=${NODE_ENV}
+        - VIRTUAL_HOST=${SITE_URL}:${NODE_V22_PORT}
+        - STATIC_SITE=${SITE_PROTOCOL}://${SITE_URL}
+        - FACEBOOK_API_URL=https://graph.facebook.com/v2.3/
+    tags:
+        - ${NODE_TAG}
+        - node22
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+    restart: on-failure
+node21:
+    image: ${DOCKER_REPOSITORY}/api:${NODE_V21_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - elasticsearch
+        - mongosetup
+    ports:
+        - "${NODE_V21_PORT}"
+    environment:
+        - PORT=${NODE_V21_PORT}
+        - NODE_ENV=${NODE_ENV}
+        - VIRTUAL_HOST=${SITE_URL}:${NODE_V21_PORT}
+        - STATIC_SITE=${SITE_PROTOCOL}://${SITE_URL}
+        - FACEBOOK_API_URL=https://graph.facebook.com/v2.3/
+    tags:
+        - ${NODE_TAG}
+        - node21
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+    restart: on-failure
+node20:
+    image: ${DOCKER_REPOSITORY}/api:${NODE_V20_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - elasticsearch
+        - mongosetup
+    ports:
+        - "${NODE_V20_PORT}"
+    environment:
+        - PORT=${NODE_V20_PORT}
+        - NODE_ENV=${NODE_ENV}
+        - VIRTUAL_HOST=${SITE_URL}:${NODE_V20_PORT}
+        - STATIC_SITE=${SITE_PROTOCOL}://${SITE_URL}
+        - FACEBOOK_API_URL=https://graph.facebook.com/v2.3/
+    tags:
+        - ${NODE_TAG}
+        - node20
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+    restart: on-failure
+node10:
+    image: ${DOCKER_REPOSITORY}/api:${NODE_V10_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - elasticsearch
+        - mongosetup
+    ports:
+        - "${NODE_V10_PORT}"
+    environment:
+        - PORT=${NODE_V10_PORT}
+        - NODE_ENV=${NODE_ENV}
+        - VIRTUAL_HOST=${SITE_URL}:${NODE_V10_PORT}
+        - STATIC_SITE=${SITE_PROTOCOL}://${SITE_URL}
+        - FACEBOOK_API_URL=https://graph.facebook.com/v2.3/
+    tags:
+        - ${NODE_TAG}
+        - node10
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+    restart: on-failure
+static:
+    image: ${DOCKER_REPOSITORY}/static:${LDIRO_STATIC_VERSION}
+    ports:
+        - "80"
+    tags:
+        - ${NODE_TAG}
+        - webspa
+    environment:
+        - VIRTUAL_HOST=${SITE_URL}:80
+    restart: on-failure
+elasticsearch:
+    image: elasticsearch:1.5
+    ports:
+        - "9200"
+        - "9300"
+    volumes:
+        -  /ldir-volumes/elasticsearch:/usr/share/elasticsearch/data/elasticsearch
+    tags:
+        - ${NODE_TAG}
+        - el
+    restart: on-failure
+mongo1:
+    image: mongo:3.3
+    volumes:
+        - /ldir-volumes/mongo/db-1:/data/db
+    command: mongod --replSet "rs"
+    tags:
+        - ${NODE_TAG}
+        - mongo
+        - mongo1
+    restart: on-failure
+mongo2:
+    image: mongo:3.3
+    volumes:
+        - /ldir-volumes/mongo/db-2:/data/db
+    command: mongod --replSet "rs"
+    tags:
+        - ${NODE_TAG}
+        - mongo
+        - mongo2
+    restart: on-failure
+mongo3:
+    image: mongo:3.3
+    volumes:
+        - /ldir-volumes/mongo/db-3:/data/db
+    command: mongod --replSet "rs"
+    tags:
+        - ${NODE_TAG}
+        - mongo3
+    restart: on-failure
+kue:
+    image: ${DOCKER_REPOSITORY}/api:${NODE_V30_VERSION}
+    links:
+        - mongo1
+        - mongo2
+        - mongo3
+        - redis
+        - mongosetup
+    environment:
+        - NODE_ENV=${NODE_ENV}
+    tags:
+        - ${NODE_TAG}
+        - kue
+    volumes:
+        - /ldir-volumes/storage/temp:/src/uploads
+    command: node server/queue.js
+    restart: on-failure
+redis:
+    image: redis:3.2
+    volumes:
+        - /ldir-volumes/redis:/data
+    tags:
+        - ${NODE_TAG}
+        - redis
+    restart: on-failure
+mongosetup:
+    image: levino/mongo-rs-setup
+    links:
+        - mongo1:mongo1
+        - mongo2:mongo2
+        - mongo3:mongo3
+    tags:
+        - ${NODE_TAG}
+        - mongo

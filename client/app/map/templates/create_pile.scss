@@ -1,0 +1,255 @@
+.ldr-create-pile-modal {
+    background-color: $grey-100;
+    .ldr-modal-header {
+        overflow: hidden;
+        padding-bottom: 5px;
+        margin-bottom: -5px;
+        > div {
+            background-color: $white;
+            box-shadow: 0px 0px 5px 1px rgba(143, 143, 143, 1);
+            > div:nth-child(1) {
+                float: left;
+                .ldr-toolbar {
+                    list-style-type: none;
+                    text-align: center;
+                    li {
+                        display: inline-block;
+                        padding: 0 10px;
+                        font: 14px 'Roboto-Regular';
+                        color: $black-2;
+
+                        &.is-available {
+                            > span {
+                                color: $black-1;
+                                cursor: pointer;
+                            }
+                        }
+
+                        &.active {
+                            position: relative;
+                            color: $black;
+                            &:after {
+                                content: "";
+                                position: absolute;
+                                bottom: 0;
+                                height: 3px;
+                                width: 100%;
+                                background: $green-600;
+                                left: 0;
+                            }
+                        }
+                        span {
+                            display: block;
+                            height: 50px;
+                            line-height: 50px;
+                        }
+                    }
+                }
+            }
+            > div:nth-child(2) {
+                float: right;
+                button {
+                    position: relative;
+                    top: 5px;
+                }
+            }
+            .ldr-clearfix {
+                clear: both;
+                font-size: 0;
+                line-height: 0;
+            }
+        }
+    }
+    .ldr-modal-content {
+        position: relative;
+        height: 460px;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        .ldr-pile-section {
+            padding: 20px;
+            overflow: hidden;
+            .ldr-p-helper {
+                font: 13px 'Roboto-Medium';
+                color: $grey-600;
+                margin: 10px 0;
+                &.ldr-second {
+                    border-top: 1px solid #EFEFF0;
+                    padding-top: 15px;
+                }
+            }
+            .ldr-checkboxes {
+                > div {
+                    width: 50%;
+                    height: 35px;
+                    line-height: 35px;
+                    &:nth-child(even) {
+                        float: left;
+                    }
+                    &:nth-child(odd) {
+                        float: left;
+                    }
+                }
+                .checkbox {
+                    .checkbox__label {
+                        &:before {
+                            content: '\f1dc';
+                            color: $grey-400;
+                        }
+                        &:after {
+                            content: '\f1e0';
+                            color: $light-green-800;
+                        }
+                    }
+                }
+            }
+        }
+        .ldr-photo-section {
+            .ldr-placeholder {
+                text-align: center;
+                img {
+                    width: 100px;
+                    height: auto;
+                    display: inline-block;
+                }
+                h2 {
+                    font: 21px 'Roboto-Medium';
+                    font-weight: normal;
+                    color: $grey-600;
+                }
+                span {
+                    color: $grey-600;
+                    display: inline-block;
+                    margin: 10px 0;
+                    font-size: 16px;
+                }
+                button {
+                    font-size: 14px;
+                }
+            }
+            .ldr-image-thumbnails {
+                padding: 16px;
+                margin: -8px;
+                overflow: hidden;
+                text-align: center;
+                font-size: 0;
+                > div {
+                    display: inline-block;
+                    margin: 8px;
+                    position: relative;
+                    .ldr-delete-btn {
+                        font-size: 18px;
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        background-color: $red;
+                        border-radius: 50%;
+                        visibility: hidden;
+                        opacity: 0;
+                        margin-top: -10px;
+                        margin-right: -10px;
+                        transition: opacity 0.2s ease;
+                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+                        cursor: pointer;
+                    }
+                    &:hover {
+                        .ldr-delete-btn {
+                            visibility: visible;
+                            opacity: 1;
+                        }
+                    }
+                }
+                .ldr-placeholder {
+                    position: relative;
+                    width: 200px;
+                    height: 200px;
+                    img {
+                        width: 60px;
+                    }
+                    h2 {
+                        font-size: 17px;
+                    }
+                    span, button {
+                        margin: 0;
+                        font-size: 14px;
+                        padding: 0 5px;
+                    }
+                }
+            }
+        }
+        .ldr-pile-comments {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+
+            > div {
+                padding: 20px;
+                height: 100%;
+                width: 100%;
+
+                > div {
+                    height: 100%;
+                    width: 100%;
+                    background-size: 50%;
+                }
+
+                textarea {
+                    resize: none;
+                    height: 100% !important;
+                    width: 100% !important;
+                    border-radius: 3px;
+                    border-width: 0;
+                    outline: none;
+                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+                    background: transparent;
+                    padding: 10px;
+                    font: 16px 'Roboto-Regular';
+                    &.has-text {
+                        background: rgba(255, 255, 255, .7);
+                    }
+                }
+            }
+        }
+        .ldr-pile-summary {
+            .ldr-info-blocks {
+                > div {
+                    padding: 5px 0;
+                    margin: 5px 0;
+                    border-top: 1px solid #EFEFF0;
+                    &:first-child {
+                        border-top: none;
+                    }
+                }
+            }
+            padding: 20px;
+            dl {
+                dt {
+                    padding: 5px 0;
+                    span {
+                        font: 15px 'Roboto-Medium';
+                        color: $grey-600;
+                    }
+                }
+            }
+        }
+
+        .ldr-vertical-align {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            > div {
+                display: table;
+                height: 100%;
+                width: 100%;
+                > div {
+                    display: table-cell;
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+}

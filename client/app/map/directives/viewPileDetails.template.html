@@ -1,0 +1,23 @@
+<div class="custom-carousel">
+    <div>
+        <div class="cc-main-image">
+            <div>
+                <img ng-if="sizes.nh < sizes.nw" ng-style="{'margin-left': '-'+sizes.wd+'px', 'margin-top': 0}"
+                     ng-src="{{main.src || defaults.src}}" class="cc-img"
+                     ng-class="{'ww': main.dimensions.image.height > main.dimensions.image.width, 'wh': main.dimensions.image.height <= main.dimensions.image.width }">
+                <img ng-if="sizes.nh >= sizes.nw" ng-style="{'margin-top': '-'+sizes.hd+'px', 'margin-left': 0}"
+                     ng-src="{{main.src || defaults.src}}" class="cc-img"
+                     ng-class="{'ww': main.dimensions.image.height > main.dimensions.image.width, 'wh': main.dimensions.image.height <= main.dimensions.image.width }">
+            </div>
+        </div>
+        <div class="cc-thumbnails">
+            <div ng-repeat="file in files" class="cc-thumb" ng-click="setMainImg(file, $index)"
+                 ng-class="{'active': file._id == main._id}">
+                <div>
+                    <lx-thumbnail thumbnail-src="{{ file.thumb_src || defaults.src}}" thumbnail-width="100"
+                                  thumbnail-height="100"></lx-thumbnail>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

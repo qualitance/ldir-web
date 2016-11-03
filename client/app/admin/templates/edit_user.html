@@ -1,0 +1,104 @@
+<div class="ldr-container">
+    <div class="tc-white-1 mt++" flex-container="row" flex-gutter="24">
+        <div flex-item="6" flex-item-order="2">
+            <div class="ldr-profile-info" style="text-align: center">
+                <div class="fs-display-3 tc-black-1">{{user.first_name}} {{user.last_name}}</div>
+                <div class="fs-headline email">{{user.email}}</div>
+            </div>
+            <div class="ldr-avatar" style="text-align: center">
+                <div class="ldr-avatar-holder">
+                    <img ng-src="{{user.image?user.image.src:'assets/images/avatar_unknown.png'}}"
+                         class="img-round ldr-avatar-img">
+                </div>
+            </div>
+        </div>
+        <div flex-item="6" class="ldr-profile-form" flex-item-order="1">
+            <form name="updateForm" ng-submit="updateUser(updateForm)" novalidate>
+                <span class="fs-headline display-block tc-black">{{'views.editSingleUser.personal' | translate}}</span>
+                <lx-text-field label="{{'views.editSingleUser.firstName' | translate}}" fixed-label="true"
+                               error="updateForm.first_name.$error.required" disabled="true">
+                    <input ng-disabled="true" type="text" name="first_name" ng-model="user.first_name" class=""
+                           required>
+                </lx-text-field>
+                <lx-text-field label="{{'views.editSingleUser.lastName' | translate}}" fixed-label="true"
+                               error="updateForm.last_name.$error.required" disabled="true">
+                    <input ng-disabled="true" type="text" name="last_name" ng-model="user.last_name" class="" required>
+                </lx-text-field>
+                <br>
+                <span class="fs-headline display-block tc-black">{{'views.editSingleUser.contact' | translate}}</span>
+                <lx-text-field label="{{'generic.emailAddress' | translate}}" fixed-label="true" icon="email"
+                               error="updateForm.email.$error.required || updateForm.email.$error.email || updateForm.email.$error.mongoose"
+                               disabled="true">
+                    <input ng-disabled="true" type="email" name="email" ng-model="user.email" class="" required
+                           mongoose-error>
+                </lx-text-field>
+                <p class="form-error" ng-show="updateForm.email.$error.email && submitted">
+                    {{'views.editSingleUser.invalidEmail' | translate}}
+                </p>
+                <p class="form-error" ng-show="updateForm.email.$error.mongoose && submitted">
+                    {{errors.email}}
+                </p>
+                <lx-text-field label="{{'views.editSingleUser.address' | translate}}" fixed-label="true" icon="city"
+                               disabled="true">
+                    <input ng-disabled="true" type="text" name="address" ng-model="user.address" class="">
+                </lx-text-field>
+                <lx-text-field label="{{'views.editSingleUser.phoneNumber' | translate}}" fixed-label="true"
+                               icon="phone" error="updateForm.phone.$error.required" disabled="true">
+                    <input ng-disabled="true" type="text" name="phone" ng-model="user.phone" class="">
+                </lx-text-field>
+                <style type='text/css'>
+                    .noevents {
+                        pointer-events: none;
+                    }
+                </style>
+                <div ng-class="{'noevents': user._id == getCurrentUser._id}">
+                    <br>
+                    <span
+                        class="fs-headline display-block tc-black">{{'views.editSingleUser.status' | translate}}</span>
+                    <div>
+                        <ui-select name="status" ng-model="selectedStatus" theme="select2" class="custom-ui-select"
+                                   ng-change="refreshUser($select.selected, 'status')" ng-required="true">
+                            <ui-select-match placeholder="{{'views.editSingleUser.userStatus' | translate}}">
+                                {{$select.selected.value | lowercase | parseAndTranslate : 'userStatus'}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="status in statuses | filter: $select.search">
+                                <span ng-bind-html="'Status: '+ status.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <p class="form-error" ng-show="updateForm.status.$error.required">
+                        {{'views.editSingleUser.noStatus' | translate}}
+                    </p>
+                    <br>
+                    <span
+                        class="fs-headline display-block tc-black">{{'views.editSingleUser.userRole' | translate}}</span>
+                    <div>
+                        <ui-select name="role" ng-model="selectedRole" theme="select2" class="custom-ui-select"
+                                   ng-change="refreshUser($select.selected, 'role')" ng-required="true">
+                            <ui-select-match placeholder="{{'views.editSingleUser.userRole' | translate}}">
+                                {{$select.selected.value | lowercase | parseAndTranslate: 'roles'}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="role in roles | filter: $select.search">
+                                <span
+                                    ng-bind-html="('generic.role' | translate) + ': '+ role.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <p class="form-error" ng-show="updateForm.role.$error.required">
+                        {{'views.editSingleUser.noRole' | translate}}
+                    </p>
+                </div>
+
+                <div class="ldr-submit-btn" style="margin-top:3%">
+                    <button class="btn btn--xl btn--green btn--raised" lx-ripple type="submit"
+                            ng-disabled="updateForm.$invalid || !updateForm.$dirty">{{'generic.save' | translate}}
+                    </button>
+                    <button class="btn btn--m btn--black btn--flat" lx-ripple type="button"
+                            ng-if="user.status == 'pending'" ng-click="resend()" style="margin-top: 10px">
+                        {{'views.editSingleUser.resend' | translate}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

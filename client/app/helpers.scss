@@ -1,0 +1,58 @@
+.pointerCur {
+    cursor: pointer;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+/*
+TEXT ALIGN
+*/
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/*
+COLOR CLASSES
+*/
+
+.error-text {
+    color: $error-text;
+}
+
+/*
+MARGINS & PADDINGS
+*/
+
+$margin_names: left right top bottom;
+$margins: 0 5 10 15 20 30 40;
+
+@each $name in $margin_names {
+    @each $value in $margins {
+        .margin#{$name}#{$value}px {
+            margin-#{$name}: #{$value}px !important
+        }
+
+        .padding#{$name}#{$value}px {
+            padding-#{$name}: #{$value}px !important
+        }
+    }
+}
+
+.no-background{
+    background: transparent !important;
+}

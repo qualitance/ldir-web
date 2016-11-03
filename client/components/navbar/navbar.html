@@ -1,0 +1,103 @@
+<div class="ldr-header" ng-controller="NavbarCtrl" style="z-index:999;position:relative">
+    <a href="#" class="ldr-menu-icon" ng-click="navbarExpanded = !navbarExpanded"><i class="mdi mdi-menu"></i></a>
+    <div class="ldr-container">
+        <div class="ldr-inside">
+
+            <div class="ldr-top">
+
+                <div class="ldr-vertical-align">
+                    <div>
+                        <div class="ldr-as-table">
+                            <div class="ldr-avatar-profile">
+                                <div class="ldr-vertical-align">
+                                    <div class="ldr-avatar">
+                                        <div ui-sref="app.profile" class="ldr-avatar-holder">
+                                            <div ng-if="getCurrentUser.image" class="image-holder"
+                                                 ng-style="getCurrentUser.image | setBackgroundImage"></div>
+                                            <img ng-hide="getCurrentUser.image" src="assets/images/avatar_unknown.png"
+                                                 class="img-round">
+                                        </div>
+                                    </div>
+                                    <div class="ldr-account">
+                                        <div class="ldr-email">
+                                            <a ui-sref="app.profile"><span
+                                                class="fs-subhead display-block tc-white"><strong>{{getCurrentUser.email}}</strong></span></a>
+                                        </div>
+                                        <div class="ldr-name">
+                                            <a ui-sref="app.profile"><span class="fs-headline display-block tc-white">{{getCurrentUser.first_name}} {{getCurrentUser.last_name}}</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ldr-logo">
+                                <img src="../assets/images/logo-ldir-%5BConverted%5D.png">
+                                <div class="ldr-small-navbar">
+                                    <ul>
+                                        <li>
+                                            <a href="#" lx-tooltip="{{'views.navbar.improve' | translate}}"
+                                               tooltip-position="left" ng-click="openDialog('createIssue');"><i
+                                                class="mdi mdi-bug"></i></a>
+                                        </li>
+                                        <li ng-show="getCurrentUser.role==='volunteer'">
+                                            <a href="#" ui-sref="app.help" ui-sref-active="active"
+                                               lx-tooltip="{{'views.navbar.help' | translate}}" tooltip-position="left"><i
+                                                class="mdi mdi-help"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#" ng-click="logout()"
+                                               lx-tooltip="{{'views.navbar.logout' | translate}}"
+                                               tooltip-position="left"><i class="mdi mdi-logout"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ldr-reports" ng-if="!isAdmin()">
+
+            <div ng-if="hasRole('supervisor')"><span
+                class="ldr-label">{{'views.navbar.reported' | translate}}</span><br><strong>{{statistics.reported}}</strong>
+            </div>
+            <div><span
+                class="ldr-label">{{'views.navbar.pending' | translate}}</span><br><strong>{{statistics.pending}}</strong>
+            </div>
+            <div ng-if="hasRole('volunteer')"><span
+                class="ldr-label">{{'views.navbar.confirmed' | translate}}</span><br><strong>{{statistics.confirmed}}</strong>
+            </div>
+            <div><span
+                class="ldr-label">{{'views.navbar.cleaned' | translate}}</span><br><strong>{{statistics.clean}}</strong>
+            </div>
+
+        </div>
+        <div class="ldr-navbar" ng-slide-down="navbarExpanded" duration="0.3">
+
+            <ul>
+
+                <li ng-hide="getCurrentUser.role=='admin'"><a href="#" ui-sref-active="active"
+                                                              ui-sref="app.activity"><span><i class="mdi mdi-earth"></i>&nbsp; {{'views.navbar.notification' | translate}}<span
+                    ng-if="notificationNumber > 0">{{notificationNumber}}</span></span></a></li>
+                <li ng-show="isLoggedIn()"><a ui-sref-active="active" href="#" ui-sref='app.dashboard'><span><i
+                    class="mdi mdi-view-dashboard"></i>&nbsp;{{'views.navbar.dashboard' | translate}}</span></a></li>
+                <li ng-show="isLoggedIn()"><a ui-sref-active="active" href="#" ui-sref='app.map.display'><span><i
+                    class="mdi mdi-map"></i>&nbsp;{{'views.navbar.map' | translate}}</span></a></li>
+                <li ng-show="isAdmin()"><a ui-sref-active="active" href="#" ui-sref='app.admin.users'><span><i
+                    class="mdi mdi-settings"></i>&nbsp;{{'views.navbar.administration' | translate}}</span></a></li>
+
+            </ul>
+
+        </div>
+    </div>
+</div>
+</div>
+<div ng-controller="ImproveCtrl">
+    <issue-modal></issue-modal>
+</div>
+<div class="ldr-body">
+    <div>
+        <ui-view></ui-view>
+    </div>
+</div>
+<div ng-include="'/components/footer/footer.html'" class="ldr-footer"></div>

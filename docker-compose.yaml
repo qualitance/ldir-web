@@ -1,0 +1,91 @@
+version: '2'
+services:
+    lb:
+         image: 'dockercloud/haproxy:1.5.3'
+         links:
+           - node:node
+           - static:static
+         ports:
+           - '80:80'
+         volumes:
+           - /var/run/docker.sock:/var/run/docker.sock
+    node:
+        build:
+            context: .
+            dockerfile: Dockerfile-node
+        links:
+            - mongo1
+            - mongo2
+            - mongo3
+            - elasticsearch
+            - redis
+        volumes:
+            - ./server:/src/server
+        ports:
+            - "80"
+        environment:
+            - NODE_ENV=sandbox
+            - VIRTUAL_HOST=http://api.ldir.ro
+            - STATIC_SITE=http://ldir.ro
+            - FACEBOOK_API_URL=https://graph.facebook.com/v2.3/
+        entrypoint:
+            - node
+            - /src/server/app.js
+    kue:
+        build:
+            context: .
+            dockerfile: Dockerfile-node
+        links:
+            - mongo1
+            - mongo2
+            - mongo3
+            - redis
+        volumes:
+            - ./server:/src/server
+            - ~/ldir-volumes/storage/temp:/src/uploads
+        environment:
+            - NODE_ENV=sandbox
+        command: node server/queue.js
+    static:
+        build:
+            context: ./
+            dockerfile: Dockerfile-static
+        volumes:
+            - ./client:/usr/share/nginx/html
+            - ./configs/sites:/etc/nginx/conf.d
+        ports:
+            - "80"
+        environment:
+            - VIRTUAL_HOST=ldir.ro:80
+    elasticsearch:
+        image: elasticsearch:1.5
+        ports:
+            - "9200"
+            - "9300"
+        volumes:
+            -  ~/ldir-volumes/elasticsearch:/usr/share/elasticsearch/data/elasticsearch
+    mongo1:
+        image: mongo:3.3
+        volumes:
+            - ~/ldir-volumes/mongo/db-1:/data/db
+        command: mongod --replSet "rs"
+    mongo2:
+        image: mongo:3.3
+        volumes:
+            - ~/ldir-volumes/mongo/db-2:/data/db
+        command: mongod --replSet "rs"
+    mongo3:
+        image: mongo:3.3
+        volumes:
+            - ~/ldir-volumes/mongo/db-3:/data/db
+        command: mongod --replSet "rs"
+    redis:
+        image: redis:3.2
+        volumes:
+            - ~/ldir-volumes/redis:/data
+    mongosetup:
+        image: levino/mongo-rs-setup
+        links:
+          - mongo1:mongo1
+          - mongo2:mongo2
+          - mongo3:mongo3

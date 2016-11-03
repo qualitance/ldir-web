@@ -1,0 +1,102 @@
+<div class="ldr-holder">
+
+    <div class="tc-white-1" flex-container="row">
+        <div flex-item="5">
+            <div class="ldr-title">
+                <span class="fs-headline display-block tc-black-2">{{'views.engagedPiles.pilesIContributed' | translate}}</span>
+            </div>
+        </div>
+        <div flex-item="7" flex-item-order="2">
+            <div class="ldr-search-anchor">
+                <a href="">{{'views.engagedPiles.filter' | translate}}</a>
+            </div>
+            <div class="ldr-search-field">
+                <lx-text-field label="{{'views.engagedPiles.search' | translate}}" fixed-label="true" icon="magnify">
+                    <input type="text" ng-model="textFields.fixedFirstName" class="tc-black">
+                </lx-text-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="ldr-grid">
+        <div class="data-table-container">
+
+            <table class="data-table data-table--has-primary data-table--has-secondary tc-black-1">
+                <thead>
+                <tr>
+                    <th class="ldr-cell-option"><i class="icon icon--s mdi mdi-checkbox-blank"
+                                                   style="visibility: hidden"></i></th>
+                    <th ng-class="{'ldr-cell-pile-id ldr-sortable ldr-sorted-asc' : status,
+                                 'ldr-cell-pile-id ldr-sortable ldr-sorted-desc' : !status}">
+                        <span>{{'generic.pileID' | translate}}</span>
+                        </a>
+                    </th>
+                    <th>
+                        <lx-dropdown>
+                            <button class="btn btn--m btn--black" lx-ripple lx-dropdown-toggle>
+                                <span style="font: 16px 'Roboto-Medium';">{{'generic.status' | translate}} <span
+                                    ng-if="filters.status"> :{{filters.status}}</span></span>
+                            </button>
+
+                            <lx-dropdown-menu>
+                                <ul>
+                                    <li ng-repeat="status in statuses"><a
+                                        ng-click="filter('filter_by', 'status'); filter('filter_query', status.type, true)"
+                                        class="dropdown-link">{{status.type}}</a></li>
+                                </ul>
+                            </lx-dropdown-menu>
+                        </lx-dropdown>
+
+
+                    </th>
+                    <th
+                        ng-class="{'ldr-cell-pile-id ldr-sortable ldr-sorted-asc' : (filters.created_at == 1),'ldr-cell-pile-id ldr-sortable ldr-sorted-desc' : (filters.created_at == -1)}">
+                        <a ng-click="filter('sort_by', 'created_at'); filter('sort_order', null, true)">
+                            <span>{{'generic.reportedDate' | translate}}</span>
+                        </a>
+                    </th>
+                    <th
+                        ng-class="{'ldr-cell-pile-id ldr-sortable ldr-sorted-asc' : filters.last_update,'ldr-cell-pile-id ldr-sortable ldr-sorted-desc' : !filters.last_update}">
+                        <a ng-click="filter('sort_by', 'last_update'); filter('sort_order', null, true)">
+                            <span>{{'generic.updatedDate' | translate}}</span>
+                        </a>
+                    </th>
+                    <th class="ldr-cell-allocated-date ldr-sortable"><span>{{'views.engagedPiles.allocatedDate' | translate}}</span>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="data-table-container">
+            <table class="data-table data-table--has-primary data-table--has-secondary tc-black-1">
+
+                <tbody>
+
+                <tr class="data-table__clickable-row" ng-repeat="pile in piles">
+                    <td class="ldr-cell-option">
+                        <button class="btn btn--s btn--black btn--icon" lx-ripple>
+                            <a ui-sref="app.map.pile.edit({id: pile._id})">
+                                <i class="icon icon--s icon--white icon--flat mdi mdi-pencil"></i>
+                            </a>
+                        </button>
+                    </td>
+                    <td class="ldr-cell-pile-id"><span class="ldr-pile-id"># {{pile.nr_ord}}</span></td>
+                    <td class="ldr-cell-state"><span class="ldr-state {{pile.status}}">{{pile.status | parseAndTranslate : 'status'}}</span>
+                    </td>
+                    <td class="ldr-cell-reported-date"><span>{{pile.created_at | date: "dd/MM/yyyy"}}</span></td>
+                    <td class="ldr-cell-updated-date"><span>{{pile.last_update | date: "dd/MM/yyyy"}}</span></td>
+                    <td class="ldr-cell-allocated-date"><span>{{pile.due_date | date: "dd/MM/yyyy"}}</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="ldr-pagination-section">
+        <button type="button" ng-click="prev(config_obj)">{{'generic.previous' | translate}}</button>
+        <button type="button" ng-click="next(config_obj)">{{'generic.next' | translate}}</button>
+    </div>
+
+</div>
+

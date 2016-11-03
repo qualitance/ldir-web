@@ -1,0 +1,239 @@
+<style>
+    div {
+        font-size: 14px;
+    }
+
+    .input-wrapper {
+        width: 100%;
+        display: block;
+        z-index: 1;
+        float: left;
+        border-bottom: 1px solid #000000;
+    }
+
+    .input-wrapper.small {
+
+    }
+
+    .input-wrapper .input {
+        display: block;
+        float: left;
+        z-index: 2;
+        position: relative;
+    }
+
+    .input-wrapper .input:after {
+        content: ' ';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        border: 1px solid #ffffff;
+    }
+
+    .block100 {
+        display: block;
+        width: 100%;
+        float: left;
+    }
+
+    .block50 {
+        display: block;
+        width: 50%;
+        float: left;
+    }
+</style>
+<div style="display:inline-block; width:100%; page-break-after: always">
+    <div class="block100">
+        <div class="block100">
+            <div class="block50">
+                <img src="http://ldir-test.s3.amazonaws.com/resources/ldir_logo_small.png" style="width: 200px">
+            </div>
+            <div class="block50" style="text-align:right;font-size:14px;">
+                Str. 1 Decembrie, nr. 51, Parter ap Biroul Nr1<br>
+                Comuna Tunari Judeţul Ilfov, România<br>
+                Reg. Spec, 31PJ/25.05.2011 CIF: 28576004<br>
+                Mobil: 0756511222 / Fax: 0214043738
+            </div>
+        </div>
+        <div class="block100" style="text-align:center;font-weight:bold;padding-top:10px;font-size:14px">
+            Let’s Do It, Romania! proiect de monitorizare si raportare a zonelor cu deseuri, realizat in parteneriat cu
+            Ministerul Mediului, Apelor și Pădurilor și Garda Națională de Mediu
+        </div>
+    </div>
+    <div class="block100" style="padding: 50px 0 20px 0">
+        Nr: {{nr_ord}}
+    </div>
+    <div class="block100">Expeditor: Asociatia Viitorul in Zori</div>
+    <div class="block100">Catre Primaria: {{authority.name}}</div>
+    <div class="block100" style="padding-top:30px;font-weight:bold">
+        Stimate domnule primar,
+    </div>
+    <div class="block100" style="padding-top: 30px">
+        <p>Prin prezenta vă facem cunoscut că pe raza localității {{pile.city}}, județul {{pile.county}}, coordonatele
+            latitudine: {{pile.location.lat}}, longitudine: {{pile.location.lng}}, a fost găsit un depozit de deșeuri de
+            dimensiuni {{pile.size}}, dovadă fiind fotografiile din Anexa 1.</p>
+        <p>Ca asociație, misiunea noastră este de a dezvolta proiecte în domeniul și pentru protecția mediului
+            înconjurător.</p>
+        <p>Vă informăm că în conformitate cu art. 19, alin. (3) și (4) din Legea 211/2011 - privind regimul deșeurilor,
+            <strong>este interzisă abandonarea și eliminarea deșeurilor în afara spațiilor autorizate în acest
+                scop.</strong></p>
+        <p>Conform articolului 59, alin. (1), lit. a, din Legea 211/2011, Autoritatile administratiei publice locale,
+            inclusiv a municipiului Bucuresti, au obligatia la nivel de comune, orase si municipii, inclusiv la nivelul
+            municipiului Bucuresti să asigure implementarea la nivel local a obligatiilor privind gestionarea deseurilor
+            asumate prin Tratatul de aderare a Romaniei la Uniunea Europeana. În caz contrar, se sancționează cu amenda
+            de la 5.000 lei la 15.000 lei, neindeplinirea obligatiilor si responsabilitatilor ce le revin autoritatilor
+            administratiei publice locale, potrivit prevederilor art. 17 alin. (1), art. 31 alin. (1) si (3) si art.
+            59.</p>
+        <p>Va rugam sa ne raspundeti primirea acestei sesizari la numarul de fax: 0214043738.</p>
+        <p>Va rugam sa luati in considerare aceasta sesizare si sa actionati in consecinta pentru a reda natura curata.
+            Va atasam si Anexa 2, necesara completarii in momentul rezolvarii prezentei sesizari. In caz contrar, vom fi
+            nevoiti sa ne adresam organelor competente de control, Garda Națională de Mediu.</p>
+    </div>
+    <div class="block100" style="padding-top: 30px">
+        <div class="block50">
+            <label><strong>Semnatura</strong></label><br>
+            {{{signature}}}
+        </div>
+        <div class="block50" style="text-align: right">
+            <label><strong>Data</strong></label><br><br>
+            <label>{{sysdate}}</label>
+        </div>
+    </div>
+</div>
+<div style="display:inline-block;width:100%;page-break-before: always;page-break-after: always;">
+    <div class="block100">
+        <div class="block100">
+            <div class="block50">
+                <img src="http://ldir-test.s3.amazonaws.com/resources/ldir_logo_small.png" style="width: 200px">
+            </div>
+            <div class="block50" style="text-align:right;font-size:14px;">
+                Str. 1 Decembrie, nr. 51, Parter ap Biroul Nr1<br>
+                Comuna Tunari Judeţul Ilfov, România<br>
+                Reg. Spec, 31PJ/25.05.2011 CIF: 28576004<br>
+                Mobil: 0756511222 / Fax: 0214043738
+            </div>
+        </div>
+        <div class="block100" style="text-align:center;font-weight:bold;padding-top:10px;font-size:14px">
+            Let’s Do It, Romania! proiect de monitorizare si raportare a zonelor cu deseuri, realizat in parteneriat cu
+            Ministerul Mediului, Apelor și Pădurilor și Garda Națională de Mediu
+        </div>
+    </div>
+    <div class="block100" style="text-align: center; font-weight: bold; margin: 30px 0;">Anexa 1</div>
+    <div class="block100">
+        {{{images}}}
+    </div>
+</div>
+<div style="display:inline-block;width:100%;page-break-before: always;">
+    <div class="block100">
+        <div class="block100">
+            <div class="block50">
+                <img src="http://ldir-test.s3.amazonaws.com/resources/ldir_logo_small.png" style="width: 200px">
+            </div>
+            <div class="block50" style="text-align:right;font-size:14px;">
+                Str. 1 Decembrie, nr. 51, Parter ap Biroul Nr1<br>
+                Comuna Tunari Judeţul Ilfov, România<br>
+                Reg. Spec, 31PJ/25.05.2011 CIF: 28576004<br>
+                Mobil: 0756511222 / Fax: 0214043738
+            </div>
+        </div>
+        <div class="block100" style="text-align:center;font-weight:bold;padding-top:10px;font-size:14px">
+            Let’s Do It, Romania! proiect de monitorizare si raportare a zonelor cu deseuri, realizat in parteneriat cu
+            Ministerul Mediului, Apelor și Pădurilor și Garda Națională de Mediu
+        </div>
+    </div>
+    <div style="width: 100%; text-align: center; font-weight: bold; margin: 30px 0;">Anexa 2</div>
+    <div style="width: 100%">
+        <p>Va rugam sa completati detaliile referitoare la zona curatata.</p>
+        <p><strong>Datele de identificare ale organizatorului</strong></p>
+    </div>
+    <div class="input-wrapper">
+        <div class="input">Denumire:</div>
+    </div>
+    <div class="input-wrapper">
+        <div class="input">Adresa:</div>
+    </div>
+    <div class="input-wrapper">
+        <div class="input">Date de contact:</div>
+    </div>
+    <div class="input-wrapper">
+        <div class="input">Persoana de contact:</div>
+    </div>
+    <p><strong>Informatii referitoare la actiunea de curatenie</strong></p>
+    <div class="input-wrapper">
+        <div class="input">Numarul de identificare al zonei cu deseuri:</div>
+    </div>
+    <div class="input-wrapper">
+        <div class="input">Data actiunii de curatenie:</div>
+    </div>
+    <div class="input-wrapper">
+        <div class="input">Cantitate totala deseuri colectate:</div>
+    </div>
+    <div class="input-wrapper">
+        <div class="input">Colectare selectiva (Da/Nu):</div>
+    </div>
+    <div>
+        Cantitate deseuri colectate separat:
+    </div>
+    <div class="block100">
+        <div class="input-wrapper small">
+            <div class="input">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;Plastic:</div>
+        </div>
+    </div>
+    <div class="block100">
+        <div class="input-wrapper small">
+            <div class="input">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;Metal:</div>
+        </div>
+    </div>
+    <div class="block100">
+        <div class="input-wrapper small">
+            <div class="input">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;Hartie/Carton:</div>
+        </div>
+    </div>
+    <div class="block100">
+        <div class="input-wrapper small">
+            <div class="input">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;Sticla:</div>
+        </div>
+    </div>
+    <div class="block100">
+        <div class="input-wrapper small">
+            <div class="input">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;Altele:</div>
+        </div>
+    </div>
+    <div class="input-wrapper small">
+        <div class="input">Cantitate deseuri colectate amestecat:</div>
+    </div>
+    <div class="input-wrapper small">
+        <div class="input">Operatorul economic<br>care a preluat deseurile:</div>
+    </div>
+    <div class="input-wrapper small">
+        <div class="input">Metoda de gestionare<br>a deseurilor:</div>
+    </div>
+    <div class="input-wrapper small">
+        <div class="input">Operatorul economic la care<br>au fost transportate deseurile:</div>
+    </div>
+</div>
+<div style="display:inline-block;width:100%;page-break-before: always;page-break-after: always;">
+    <div class="block100">
+        <div class="block100">
+            <div class="block50">
+                <img src="http://ldir-test.s3.amazonaws.com/resources/ldir_logo_small.png" style="width: 200px">
+            </div>
+            <div class="block50" style="text-align:right;font-size:14px;">
+                Str. 1 Decembrie, nr. 51, Parter ap Biroul Nr1<br>
+                Comuna Tunari Judeţul Ilfov, România<br>
+                Reg. Spec, 31PJ/25.05.2011 CIF: 28576004<br>
+                Mobil: 0756511222 / Fax: 0214043738
+            </div>
+        </div>
+        <div class="block100" style="text-align:center;font-weight:bold;padding-top:10px;font-size:14px">
+            Let’s Do It, Romania! proiect de monitorizare si raportare a zonelor cu deseuri, realizat in parteneriat cu
+            Ministerul Mediului, Apelor și Pădurilor și Garda Națională de Mediu
+        </div>
+    </div>
+    <div class="block100" style="text-align: center; font-weight: bold; margin: 30px 0;">Anexa 3</div>
+    <div class="block100">
+        {{{screenshot}}}
+    </div>
+</div>
+

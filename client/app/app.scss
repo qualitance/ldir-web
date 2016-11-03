@@ -1,0 +1,97 @@
+//$fa-font-path: "/bower_components/font-awesome/fonts";
+
+@charset "UTF-8";
+
+@import 'vars';
+//@import 'font-awesome/scss/font-awesome';
+@import 'lumx/dist/scss/lumx';
+
+/**
+ * App-wide Styles
+ */
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+.lx-date-picker__day {
+    a:hover {
+        background-color: rgb(76, 175, 80) !important;
+    }
+}
+
+.lx-date-picker__current-date {
+    background-color: rgb(76, 175, 80) !important;
+}
+
+.lx-date-picker__current-day-of-week {
+    background-color: #309B41 !important;
+}
+
+.lx-date-picker__day--is-selected {
+    a {
+        background-color: rgb(76, 175, 80) !important;
+    }
+}
+
+.lx-date-filter {
+    z-index: 1000 !important;
+}
+
+.ldr-map-view {
+    overflow: hidden;
+}
+
+.custom-ui-select {
+    padding: 0;
+    margin: 10px 0;
+    width: 100%;
+    input {
+        width: 85%;
+    }
+    .select2-chosen {
+        span {
+            text-transform: capitalize;
+        }
+    }
+}
+
+.pile-size-container {
+    display: inline-flex;
+    .pile-size-label-container {
+        width: 57px;
+        text-align: center;
+        .pile-size-label {
+            font-size: 12px;
+        }
+    }
+}
+
+// Component styles are injected through grunt
+// injector
+@import '_vars.scss';
+@import 'account/activate/activate.scss';
+@import 'account/fpw/fpw.scss';
+@import 'account/login/login.scss';
+@import 'account/profile/profile.scss';
+@import 'account/signup/signup.scss';
+@import 'activity/activity.scss';
+@import 'admin/admin.scss';
+@import 'contact/contact.scss';
+@import 'dashboard/dashboard.scss';
+@import 'help/help.scss';
+@import 'helpers.scss';
+@import 'improve/improve.scss';
+@import 'main/main.scss';
+@import 'map/directives/viewPileDetails.scss';
+@import 'map/map.scss';
+@import 'map/templates/create_pile.scss';
+@import 'map/templates/view_pile.scss';
+// endinjector

@@ -1,0 +1,50 @@
+.thead-color {
+    background-color: $light-green-100;
+}
+
+.exit-issue-modal {
+    position: absolute;
+    top: 0;
+    width: 5%;
+    right: 0;
+    color: white;
+}
+
+.ldr-issue-container {
+    .ldr-issue-title {
+        width: 50%;
+        text-align: center;
+        > p {
+            width: 100%;
+            text-wrap: none;
+            white-space: nowrap;
+            font-size: 50px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 30px;
+            font-family: 'Roboto-Medium';
+        }
+    }
+    .ldr-issue-description {
+        width: 100%;
+        text-align: center;
+        margin-top: 5%;
+        > p {
+            width: 100%;
+            text-wrap: none;
+            white-space: pre-line;
+            font-size: 20px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 40px;
+            font-family: 'Roboto-Medium';
+        }
+    }
+}
+
+@include media-query(desk) {
+    #reportByEmail {
+        max-width: 500px;
+        margin-left: -250px;
+    }
+}

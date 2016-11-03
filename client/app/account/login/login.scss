@@ -1,0 +1,143 @@
+// Colors
+// --------------------------------------------------
+
+//$btnText:                           #fff;
+//$btnTextAlt:                        #000;
+//
+//$btnFacebookBackground:             #3B5998;
+//$btnFacebookBackgroundHighlight:    #133783;
+//$btnGithubBackground:               #fafafa;
+//$btnGithubBackgroundHighlight:      #ccc;
+
+// Social buttons
+// --------------------------------------------------
+
+.btn-facebook {
+    //@include button-variant($btnText, $btnFacebookBackgroundHighlight, $btnFacebookBackgroundHighlight);
+}
+
+.btn-github {
+    //@include button-variant($btnTextAlt, $btnGithubBackground, $btnGithubBackgroundHighlight);
+}
+
+.ldr-login {
+    background-image: url('/assets/images/ldir_background.png');
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    .ldr-back {
+        > div {
+            text-align: center;
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            a {
+                color: $white;
+                font-size: 30px;
+                line-height: 50px;
+                border: 1px solid $white;
+                border-radius: 50%;
+                display: inline-block;
+                width: 50px;
+                height: 50px;
+                &:hover {
+                    color: $blue-600;
+                    background: $white;
+                }
+            }
+        }
+    }
+    .ldr-logo {
+        > div {
+            margin-bottom: 50px;
+            img {
+                max-height: 50px;
+                width: auto;
+                margin: 0 auto;
+            }
+        }
+    }
+    .ldr-inside {
+        display: table;
+        width: 100%;
+        height: inherit;
+        > div {
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }
+    .ldr-delimiter {
+        margin: 20px 0;
+
+        .ldr-line {
+            height: 1px;
+            background-color: $white;
+            width: 40%;
+            display: inline-block;
+        }
+        span {
+            position: relative;
+            top: -12px;
+            padding: 0 5px;
+            font-size: 13px;
+            width: 10%;
+            display: inline-block;
+        }
+    }
+    .ldr-btn-login {
+        button {
+            font: 18px 'Roboto-Medium';
+            color: $blue-600;
+            padding: 10px 20px;
+            margin: 20px 0;
+        }
+    }
+    .ldr-links {
+        a {
+            color: $white !important;
+            text-decoration: none;
+            font: 14px 'Roboto-Regular';
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+    .ldr-btn-login-fb {
+        button {
+            color: $blue-600;
+            font: 18px 'Roboto-Bold';
+            text-transform: none !important;
+            padding: 10px;
+            margin: 20px 0 30px 0;
+
+            i {
+                font-size: 150%;
+            }
+            span {
+                position: relative;
+                top: -3px;
+            }
+        }
+    }
+    .text-field:not(.text-field--has-error) {
+        &:after {
+            background-color: $white;
+        }
+    }
+    .text-field--dark-theme:not(.text-field--has-error) {
+        &:before {
+            border-color: $white;
+        }
+    }
+    //.text-field--has-error {
+    //
+    //  &:before {
+    //    border-color: $red-500;
+    //  }
+    //
+    //}
+}

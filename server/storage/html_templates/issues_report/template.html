@@ -1,0 +1,50 @@
+<html>
+<head>
+    <style type="text/css">
+        table {
+            width: 100%;
+            clear: both;
+            /*border-left: 1px solid black;*/
+            /*border-top: 1px solid black;*/
+            border-collapse: collapse;
+        }
+
+        table td {
+            padding: 5px;
+            /*border-right: 1px solid black;*/
+            /*border-bottom: 1px solid black;*/
+        }
+
+        .title {
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .header {
+            padding-top: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .date_range {
+            padding: 5px;
+        }
+
+        img {
+            width: 200px;
+            /*float: left;*/
+        }
+    </style>
+</head>
+<body>
+<div class="title">
+    <img src="http://ldir-test.s3.amazonaws.com/resources/ldir_logo_small.png">
+</div>
+<div class="date_range">
+    Report interval: {{date_start}} - {{date_end}}
+</div>
+<table>
+    {{{issues}}}
+</table>
+</body>
+</html>

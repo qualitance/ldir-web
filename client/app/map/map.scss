@@ -1,0 +1,224 @@
+.angular-leaflet-map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.ldr-map-container {
+    overflow: auto;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 0;
+    .leaflet-popup-content {
+        padding-top: 10px;
+        width: 310px !important;
+        margin: 15px !important;
+    }
+}
+
+.ldr-legend {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    .dropdown {
+        i.mdi-chevron-double-up {
+            display: inline-block;
+        }
+        i.mdi-chevron-double-down {
+            display: none;
+        }
+
+    }
+    .dropdown--is-active {
+        i.mdi-chevron-double-up {
+            display: none;
+        }
+        i.mdi-chevron-double-down {
+            display: inline-block;
+        }
+    }
+    .ldr-legend-button {
+        font: 16px 'Roboto-Medium';
+        color: $grey-900;
+        text-transform: capitalize !important;
+        padding: 10px 15px;
+        i {
+            margin-left: 30px;
+        }
+
+    }
+}
+
+.ldr-legend-dropdown {
+    margin-right: -18px;
+    .dropdown-link--is-header {
+        color: $grey-900;
+        font: 14px 'Roboto-Medium';
+    }
+    .dropdown-link {
+        cursor: default;
+        span {
+            position: relative;
+            padding-left: 20px;
+            &:before, &:after {
+                font-family: MaterialDesignIcons;
+                position: absolute;
+                left: 0;
+                font-size: 17px;
+                display: inline-block;
+            }
+            &:before {
+                content: "\f1dd";
+                z-index: 1;
+            }
+            &:after {
+                display: none;
+                content: "\f1de";
+                z-index: 2;
+            }
+            &.own {
+                &:after {
+                    display: inline-block;
+                }
+            }
+            &:not(.own) {
+                &:before {
+                    font-size: 16px;
+                }
+            }
+            &.pending {
+                &:before {
+                    color: #F89921;
+                }
+                &:after {
+                    color: #b4692d;
+                }
+            }
+            &.unconfirmed {
+                &:before {
+                    color: #E24741;
+                }
+                &:after {
+                    color: #a71f24;
+                }
+            }
+            &.confirmed {
+                &:before {
+                    color: #1E6030;
+                }
+                &:after {
+                    color: #194523;
+                }
+            }
+            &.clean {
+                &:before {
+                    color: #ADD038;
+                }
+                &:after {
+                    color: #7f9639;
+                }
+            }
+            &.reported {
+                &:before {
+                    color: #59C6CB;
+                }
+                &:after {
+                    color: #16a1ae;
+                }
+            }
+        }
+        &:hover {
+            background-color: $white;
+        }
+    }
+}
+
+.ldr-progress {
+    .ldr-overlay {
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    .ldr-ticker {
+        background: #FFF;
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -25px;
+        margin-top: -25px;
+        box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.75);
+        z-index: 1002;
+    }
+}
+
+.ldr-map-buttons {
+
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    > div {
+        margin: 10px 0;
+        &.ldr-draggable-icon {
+            cursor: move;
+            width: 56px;
+            height: 56px;
+            line-height: 56px;
+            text-align: center;
+            vertical-align: middle;
+            img {
+                margin: 13px 0;
+                display: inline;
+            }
+            &.ldr-draggable-animate {
+                transition: all 0.2s ease;
+            }
+        }
+    }
+
+}
+
+.leaflet-top {
+    &.leaflet-right {
+        display: none;
+    }
+}
+
+.ldr-map-popup {
+    .ldr-texts {
+        p {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    }
+    .ldr-popup-ratings {
+        margin: 20px 0;
+        text-align: center;
+    }
+    .ldr-popup-buttons {
+        text-align: right;
+    }
+}
+
+.leaflet-bottom {
+    &.leaflet-right {
+        display: none;
+    }
+}
+
+.notification {
+    top: 165px;
+    bottom: auto !important;
+    @media (max-width: 1024px) {
+        top: 65px;
+    }
+}

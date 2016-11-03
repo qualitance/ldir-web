@@ -1,0 +1,88 @@
+<div class="ldr-login">
+    <div class="ldr-container">
+        <div class="ldr-back">
+            <div>
+                <a href="#" ui-sref="main"><span><i class="mdi mdi-arrow-left"></i></span></a>
+            </div>
+        </div>
+        <div class="ldr-inside">
+            <div>
+                <div class="tc-white-1" flex-container="row">
+                    <div flex-item="4" flex-item-order="2">
+
+                        <div class="ldr-logo">
+                            <div>
+                                <a ui-sref="main"><img src="../assets/images/logo_white.png"></a>
+                            </div>
+                        </div>
+
+                        <div class="ldr-btn-login-fb">
+                            <button class="btn btn--l btn--white btn--raised" lx-ripple
+                                    ng-click="loginOauth('facebook'); "><i class="mdi mdi-facebook"></i>&nbsp;<span>{{'views.login.loginFB' | translate}}</span>
+                            </button>
+                        </div>
+                        <div class="ldr-delimiter">
+                            <div class="ldr-line">&nbsp;</div>
+                            <span>{{'views.login.or' | translate}}</span>
+                            <div class="ldr-line">&nbsp;</div>
+                        </div>
+                        <form name="form" novalidate>
+                            <div ng-slide-down="fail.flag" style="height: 0" duration="0.2" ng-show="submitted">
+                                <div flex-item class="bgc-red-500 p+ p+" style="text-align: left">
+                                    <div ng-show="fail.reason == 'pending'">
+                                        <span class="fs-body-2">{{'views.login.notActiveMessageOne' | translate}}.<br><a
+                                            href='#' ng-click="resend()" class="tc-white">
+                                            {{'views.login.notActiveMessageTwo' | translate}}?</a></span>
+                                    </div>
+                                    <div ng-show="fail.reason == 'inactive'">
+                                        <span class="fs-body-2">{{'views.login.inactiveMessageOne' | translate}}.<br>{{'views.login.inactiveMessageTwo' | translate}} <a
+                                            href="{{'mailto:'+fail.admin}}" class='tc-white'>{{'views.login.inactiveMessageThree'
+                                            | translate}}</a>.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div flex-item>
+                                <lx-text-field label="{{'generic.emailAddress' | translate}}" theme="dark"
+                                               error="form.email.$invalid && submitted" fixed-label="true">
+                                    <input type="email" autofocus required name="email" ng-model="user.email"
+                                           ng-change="fail.flag = false">
+                                </lx-text-field>
+                                <div class="error-message-holder tc-red-500"
+                                     data-ng-show="(form.email.$invalid) && submitted">{{'views.login.invalidEmail' |
+                                    translate}}.
+                                </div>
+                            </div>
+                            <div flex-item>
+                                <lx-text-field label="{{'generic.password' | translate}}" theme="dark"
+                                               error="(form.password.$invalid) && submitted" fixed-label="true">
+                                    <input type="password" name="password" required ng-model="user.password"
+                                           ng-change="fail.flag = false">
+                                </lx-text-field>
+                                <div class="error-message-holder tc-red-500"
+                                     data-ng-show="(form.password.$invalid) && submitted">
+                                    {{'views.login.invalidPassword' | translate}}.
+                                </div>
+                            </div>
+                            <div flex-item class="ldr-btn-login">
+                                <button ng-click="login(user, form)" class="btn btn--xl btn--white btn--raised"
+                                        lx-ripple type="submit">{{'views.login.loginButton' | translate}}
+                                </button>
+                            </div>
+                        </form>
+                        <div class="ldr-links">
+                            <div flex-item>
+                                <a href="#" ui-sref="fpw">{{'views.login.forgot' | translate}}?</a>
+                            </div>
+                            <div flex-item>
+                                <a href="#" ui-sref="signup">{{'views.login.noAccount' | translate}}?</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div flex-item="4" flex-item-order="1">&nbsp;</div>
+                    <div flex-item="4" flex-item-order="3">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+.custom-ratings {
+    display: table-caption;
+    &:not([disabled]) {
+        ul li {
+            cursor: pointer;
+        }
+    }
+    ul {
+        display: inline-block;
+        height: 60px;
+        vertical-align: top;
+        margin: 0 !important;
+        padding: 0 !important;
+        li {
+            display: inline-block;
+            margin-left: -4px;
+            width: 60px;
+            height: 60px;
+            text-indent: -9999px;
+            background: url("../assets/images/pile.png") no-repeat top center;
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+    }
+    &.over-1, &.rating-1 {
+        ul li:nth-child(1) {
+            background-position: center -60px;
+        }
+    }
+    &.over-2, &.rating-2 {
+        ul li:nth-child(n+1):nth-child(-n+2) {
+            background-position: center -60px;
+        }
+    }
+    &.over-3, &.rating-3 {
+        ul li:nth-child(n+1):nth-child(-n+3) {
+            background-position: center -121px;
+        }
+    }
+    &.over-4, &.rating-4 {
+        ul li:nth-child(n+1):nth-child(-n+4) {
+            background-position: center -181px;
+        }
+    }
+    &.over-5, &.rating-5 {
+        ul li:nth-child(n+1):nth-child(-n+5) {
+            background-position: center -241px;
+        }
+    }
+}

@@ -1,0 +1,5 @@
+npm_modules
+elasticsearch
+nginx
+data/db
+.sass-cache

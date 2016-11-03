@@ -1,0 +1,206 @@
+<style type="text/css">
+    html, body {
+        background-color: #F8F9F9 !important;
+    }
+</style>
+<div class="ldr-dashboard">
+    <div class="ldr-container">
+        <div flex-container="row" flex-align="center center">
+            <div flex-item="12" flex-item-order="2">
+                <div class="ldr-holder">
+
+                    <div flex-item class="mt+">
+                        <div class="card p+">
+
+                            <div flex-container="row" flex-gutter="24">
+                                <div flex-item="4">
+                                    <custom-date-picker locale="currentLang" model="range.date_start"
+                                                        label="{{'views.improve.startDate' | translate}}"
+                                                        icon="calendar-today" fixed-label="true"
+                                                        class="ldr-custom-date-picker"
+                                                        end-date-limit="endDateLimit"></custom-date-picker>
+                                </div>
+                                <div flex-item="4">
+                                    <custom-date-picker locale="currentLang" model="range.date_end"
+                                                        label="{{'views.improve.endDate' | translate}}" icon="calendar"
+                                                        fixed-label="true" class="ldr-custom-date-picker"
+                                                        end-date-limit="endDateLimit"></custom-date-picker>
+                                </div>
+                                <div flex-item="4">
+                                    <button class="btn btn--l btn--red btn--raised" lx-ripple
+                                            ng-click="openDialog('reportByEmail')" ng-disabled="!issues.length"><i
+                                        class='mdi mdi-send'></i>&nbsp;{{'views.improve.sendEmail' | translate}}
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div flex-item ng-if="issues.length">
+
+                        <div class="ldr-grid">
+                            <div class="data-table-container">
+                                <table class="data-table data-table--has-primary data-table--has-secondary tc-black-1">
+                                    <thead>
+                                    <tr>
+                                        <th class="ldr-cell-issue align-center"><span>{{'views.improve.title' | translate}}</span>
+                                        </th>
+                                        <th class="ldr-cell-issue align-center"><span>{{'views.improve.who' | translate}}</span>
+                                        </th>
+                                        <th class="ldr-cell-issue align-center"><span>{{'views.improve.created' | translate}}</span>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="data-table-container">
+                                <table class="data-table data-table--has-primary data-table--has-secondary tc-black-1">
+                                    <tbody>
+                                    <tr class="data-table__clickable-row" ng-repeat="issue in issues"
+                                        ng-click="opendIssueVIew('viewIssue',issue)">
+                                        <td class="ldr-cell-issue align-center"><span>{{issue.message}}</span></td>
+                                        <td class="ldr-cell-issue align-center">{{issue.user.email}}</td>
+                                        <td class="ldr-cell-issue align-center">{{issue.date_added |date : format :
+                                            'yyyy-MM-dd'}}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="ldr-pagination-section" flex-container="row">
+                            <div class="pt+">
+                                <div class="ldr-showing-page">
+                                    {{'generic.page' | translate}}: <strong>{{pagination.page}}</strong>
+                                </div>
+                                <div class="ldr-showing-results">
+                                    {{'generic.show' | translate}} <strong>{{pagination.page * pagination.limit -
+                                    pagination.limit + 1}}</strong> - <strong>{{pagination.page * pagination.limit -
+                                    (pagination.limit - issues.length)}}</strong> {{'generic.of' | translate}} <strong>{{pagination.total}}</strong>
+                                    {{'generic.results' | translate}}
+                                </div>
+                                <div style="overflow: hidden">
+                                    <button ng-disabled="pagination.page <= 1" type="button"
+                                            class="btn btn--m btn--black btn--flat" lx-ripple ng-click="prev()">&laquo;
+                                        {{'generic.previous' | translate}}
+                                    </button>
+                                    <button
+                                        ng-disabled="issues.length < pagination.limit || issues.length * pagination.page >= pagination.total"
+                                        type="button" class="btn btn--m btn--black btn--flat" lx-ripple
+                                        ng-click="next()">{{'generic.next' | translate}} &raquo;</button>
+                                </div>
+                                <div ng-if="issues">
+                                    <page-skipper config="pagination" pages="totalNumberPages"></page-skipper>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div flex-item ng-if="!issues.length">
+                        <div class="card mt+">
+
+                            <div class="p+">
+                                <div class="paragraph fs-body-1">
+                                    <p style="text-align: center">
+                                        {{'views.improve.noIssues' | translate}}
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<lx-dialog class="dialog dialog--l" id="reportByEmail" close-modal-on-state-change>
+    <form ng-submit="sendErrors(form, 'reportByEmail')" name="form" novalidate>
+        <div class="dialog__header">
+
+            <div class="toolbar bgc-light-blue-500 pl++">
+            <span class="toolbar__label tc-white fs-title">
+                {{'views.improve.reportIssues' | translate}}
+            </span>
+
+                <div class="toolbar__right">
+                    <button class="btn btn--l btn--white btn--icon" lx-ripple
+                            ng-click="closeDialog('reportByEmail', form)" type="button">
+                        <i class="mdi mdi-close"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="dialog__content">
+            <div class="p++">
+                <div flex-item class="mb+">
+                    <p>{{'views.improve.receiverIssues' | translate}}:</p>
+                </div>
+                <div flex-item>
+                    <lx-text-field label="{{'views.improve.email' | translate}}"
+                                   error="(form.email.$error.required || form.email.$error.email) && (form.$submitted)"
+                                   fixed-label="true" icon="email" tabindex="1">
+                        <input type="email" ng-model="range.email" name="email" required>
+                    </lx-text-field>
+                    <span class="fs-body-2 display-block tc-red-500"
+                          ng-show="(form.email.$error.required || form.email.$error.email) && (form.$submitted)">{{'views.improve.errorEmail' | translate}}</span>
+                </div>
+                <div flex-item class="mt+">
+                    <p>{{'views.improve.toBeReported' | translate}}:</p>
+                    <p>{{'views.improve.startDate' | translate}}: <strong>{{range.date_start |date : format :
+                        'yyyy-MM-dd'}}</strong></p>
+                    <p>{{'views.improve.endDate' | translate}}: <strong>{{range.date_end |date : format :
+                        'yyyy-MM-dd'}}</strong></p>
+                    <p><strong>{{issues.length}} {{'views.improve.numberOfIssues' | translate}}</strong>
+                        {{'views.improve.willReport' | translate}}.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dialog__actions">
+            <button class="btn btn--m btn--black btn--flat" lx-ripple type="button"
+                    ng-click="closeDialog('reportByEmail', form)">{{'generic.cancel' | translate}}
+            </button>
+            <button class="btn btn--m btn--green btn--flat" lx-ripple type="submit">{{'views.improve.send' |
+                translate}}
+            </button>
+        </div>
+    </form>
+</lx-dialog>
+
+
+<lx-dialog class="dialog dialog--l" id="viewIssue" auto-close="true" close-modal-on-state-change>
+    <div class="dialog__header">
+        <div class="toolbar bgc-light-blue-500 pl++">
+            <span class="toolbar__label tc-white fs-title">
+                {{'views.improve.seeIssue' | translate}}
+            </span>
+
+            <div class="toolbar__right">
+                <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dialog-close>
+                    <i class="mdi mdi-close"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog__content">
+        <div class="p++">
+            <span class="fs-subhead display-block"><strong>{{'views.improve.title' | translate}}</strong></span>
+            <span class="fs-title display-block">{{viewPile.message}}</span>
+            <span class="fs-subhead display-block mt++"><strong>{{'views.improve.issueDescription' |
+                translate}}</strong></span>
+            <p>{{viewPile.description}}</p>
+        </div>
+    </div>
+
+    <div class="dialog__actions">
+        <button class="btn btn--m btn--red btn--flat" lx-ripple lx-dialog-close>{{'generic.close' | translate}}</button>
+    </div>
+</lx-dialog>

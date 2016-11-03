@@ -1,0 +1,72 @@
+<div class="ldr-help">
+    <div class="ldr-container">
+
+        <div class="mt++">
+            <span class="fs-headline display-block">{{'views.help.title' | translate}}</span>
+        </div>
+
+        <div class="mt++ mb++">
+
+            <div flex-container="row" flex-gutter="24">
+
+                <div flex-item="6">
+                    <div class="card">
+                        <div class="card__img card__img--top">
+                            <img ng-src="{{'../assets/images/help1_'+ helperLanguage +'.jpg'}}" id="img_help1"
+                                 bind-help-screen="0" style="cursor: pointer">
+                            <span class="fs-headline tc-white-1 display-block"
+                                  style="text-shadow: 0px 0px 1px rgba(0, 0, 0, 1);">{{'views.help.reporting' | translate}}</span>
+                        </div>
+
+                        <div class="p+">
+                            <span
+                                class="fs-subhead tc-black-2 display-block">{{'views.help.tutorialNoOne' | translate}}</span>
+
+                            <div class="paragraph fs-body-1">
+                                <p>
+                                    {{'views.help.reporting' | translate}}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card__actions">
+                            <button class="btn btn--m btn--orange btn--flat" lx-ripple bind-help-screen="0">
+                                {{'views.help.viewTutorial' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div flex-item="6">
+                    <div class="card">
+                        <div class="card__img card__img--top">
+                            <img ng-src="{{'../assets/images/diagram_'+ helperLanguage +'.jpg'}}" id="img_help2"
+                                 bind-help-screen="1" style="cursor: pointer">
+                            <span class="fs-headline tc-white-1 display-block"
+                                  style="text-shadow: 0px 0px 1px rgba(0, 0, 0, 1);">{{'views.help.pileFlow' | translate}}</span>
+                        </div>
+
+                        <div class="p+">
+                            <span
+                                class="fs-subhead tc-black-2 display-block">{{'views.help.tutorialNoTwo' | translate}}</span>
+
+                            <div class="paragraph fs-body-1">
+                                <p>
+                                    {{'views.help.pileFlow' | translate}}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card__actions">
+                            <button class="btn btn--m btn--orange btn--flat" lx-ripple bind-help-screen="1">
+                                {{'views.help.viewTutorial' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

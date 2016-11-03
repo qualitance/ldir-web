@@ -1,0 +1,34 @@
+<div class="ldr-map-popup">
+    <div flex-container="row">
+        <div flex-item="5">
+            <lx-thumbnail thumbnail-src="{{ marker.images[0].thumb_src || defaultPileImageSrc }}" thumbnail-width="75"
+                          thumbnail-height="75"></lx-thumbnail>
+        </div>
+        <div flex-item="7">
+            <div flex-container="column">
+                <div flex-item class="ldr-texts">
+                    <p data-fittext>{{'generic.pileID' | translate}}: <span><b>{{marker.nr_ord}}</b></span></p>
+                    <p><span class="fs-subhead display-block">{{'pile.status.' + marker.status | translate | capitalizeFirstLetter}} <i
+                        class="mdi mdi-checkbox-blank-circle"
+                        ng-class="{'tc-orange-500': marker.status == 'pending', 'tc-red-500': marker.status == 'unconfirmed', 'tc-green-900': marker.status == 'confirmed', 'tc-light-blue-500': marker.status == 'reported', 'tc-light-green-500':marker.status == 'clean'}"></i></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div flex-container="row">
+        <div flex-item>
+            <custom-ratings ng-model="marker.size" disabled class="ldr-popup-ratings"></custom-ratings>
+        </div>
+    </div>
+    <div flex-container="row">
+        <div flex-item class="ldr-popup-buttons">
+            <button ng-show="!hasRole('supervisor')" class="btn btn--s btn--teal btn--flat"
+                    ui-sref="app.map.pile.view({id: marker._id})" lx-ripple>{{'generic.view' | translate}}
+            </button>
+            <button ng-show="hasRole('supervisor')" class="btn btn--s btn--teal btn--flat"
+                    ui-sref="app.map.pile.edit({id: marker._id})" lx-ripple>{{'generic.edit' | translate}}
+            </button>
+        </div>
+    </div>
+</div>

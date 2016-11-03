@@ -1,0 +1,37 @@
+.ldr-activate {
+    background-image: url('/assets/images/ldir_background.png');
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    .ldr-logo {
+        > div {
+            margin-bottom: 50px;
+            img {
+                max-height: 50px;
+                width: auto;
+                margin: 0 auto;
+            }
+        }
+    }
+    .ldr-inside {
+        display: table;
+        width: 100%;
+        height: inherit;
+        > div {
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }
+    .ldr-btn-login {
+        button {
+            font: 18px 'Roboto-Medium';
+            color: $blue-600;
+            padding: 10px 20px;
+            margin: 20px 0;
+        }
+    }
+}

@@ -1,0 +1,34 @@
+<div class="ldr-map-container">
+    <leaflet class="statistics-map" ng-if="map"
+             defaults="map.defaults"
+             center="map.center"
+             layers="map.layers"
+             width="{{calculateMapWidth()}}px"
+             maxbounds="map.maxbounds"
+             height="{{calculateMapStatisticsResolution()}}px">
+    </leaflet>
+    <div class="ldr-statistics-info" ng-if="openInfo">
+        <div class="info-content">
+            <p style="margin-top:10px">{{'views.statistics.county' | translate}} : {{featureCounty.county}}</p>
+
+            <p><b>{{'views.statistics.piles' | translate}}</b></p>
+
+            <p>{{'views.statistics.pending' | translate}}: <span>{{featureCounty.pending}}</span></p>
+
+            <p>{{'views.statistics.confirmed' | translate}}: <span>{{featureCounty.confirmed}}</span></p>
+
+            <p>{{'views.statistics.uncofirmed' | translate}}: <span>{{featureCounty.unconfirmed}}</span></p>
+
+            <p>{{'views.statistics.reported' | translate}}: <span>{{featureCounty.reported}}</span></p>
+
+            <p>{{'views.statistics.cleaned' | translate}}: <span>{{featureCounty.cleaned}}</span></p>
+
+            <p>{{'views.statistics.total' | translate}}: {{featureCounty.total}}</p>
+
+            <button style="margin-bottom: 10px;margin-top:10px" ng-csv="getArray(featureCounty)"
+                    filename="Statistics_report.csv" class="btn btn--xs btn--green btn--raised" lx-ripple
+                    add-bom="true">{{'views.statistics.downloadCSVReport' | translate}}
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+.trash {
+    color: rgb(209, 91, 71);
+}
+
+.width50 {
+    width: 50%
+}
+
+.ldr-statistics-info {
+    width: 200px;
+    background-color: rgb(92, 156, 218);
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    opacity: 0.9;
+    -webkit-box-shadow: 5px 6px 5px 0 rgba(158, 155, 158, 0.73);
+    -moz-box-shadow: 5px 6px 5px 0 rgba(158, 155, 158, 0.73);
+    box-shadow: 5px 6px 5px 0 rgba(158, 155, 158, 0.73);
+    text-align: left;
+    color: white;
+    .info-content {
+        margin-left: 10px;
+    }
+}
+
+.ldr-headline {
+    &.modal-header {
+        margin-bottom: 5%;
+        width: 100%;
+        height: 100px;
+        background-color: $blue-color;
+        text-align: center;
+        color: $base-background-color;
+        > span {
+            margin-top: 34px;
+        }
+    }
+}
+
+.color-black {
+    color: $black-color;
+}
+
+.ldr-arrow-up {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid black;
+    //  margin-bottom: 5%;
+}
+
+.ldr-arrow-down {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid black;
+}
+
+.animate-enter {
+    -webkit-transition: 1s linear all; /* Chrome */
+    transition: 1s linear all;
+    opacity: 0;
+}
+
+.animate-enter.animate-enter-active {
+    opacity: 1;
+}
+
+.ldr-country-report {
+    position: absolute;
+    overflow: auto;
+    left: 15px;
+    bottom: -210%;
+}
+
+.lx-date-picker__current-date {
+    a {
+        pointer-events: none;
+    }
+}
+
+.no-action {
+    pointer-events: none;
+}
+
+.action {
+    pointer-events: auto;
+}

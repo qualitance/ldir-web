@@ -1,0 +1,109 @@
+<div class="ldr-dashboard">
+    <div class="ldr-container">
+        <div flex-container="row">
+            <div flex-item="3" flex-item-order="1">
+
+                <div>
+                    <ul class="list mt++ ldr-sidebar">
+                        <li class="list-row">
+                            <div class="list-row__content">
+                                <button ui-sref="app.admin.users" class="btn btn--m btn--raised" lx-ripple
+                                        ng-class="{'btn--green': state.is('app.admin.users'), 'btn--white': !state.is('app.admin.users')}">
+                                    {{'views.admin.userManagement' | translate}}
+                                </button>
+                            </div>
+                        </li>
+                        <li class="list-row">
+                            <div class="list-row__content">
+                                <button ui-sref="app.admin.statistics" class="btn btn--m btn--raised" lx-ripple
+                                        ng-class="{'btn--green': state.is('app.admin.statistics'), 'btn--white': !state.is('app.admin.statistics')}">
+                                    {{'views.admin.mapStats' | translate}}
+                                </button>
+                            </div>
+                        </li>
+                        <li class="list-row">
+                            <div class="list-row__content">
+                                <button ui-sref="app.admin.improve.list_issues" class="btn btn--m btn--raised" lx-ripple
+                                        ng-class="{'btn--green': state.is('app.admin.improve.list_issues'), 'btn--white': !state.is('app.admin.improve.list_issues')}">
+                                    {{'views.admin.improveReport' | translate}}
+                                </button>
+                            </div>
+                        </li>
+                        <li class="list-row" ng-show="state.current.name == 'app.admin.statistics'">
+                            <div class="list-row__content">
+                                <button class="btn btn--m btn--raised" lx-ripple
+                                        ng-click="openStatisticsModal('statisticsReport')">
+                                    {{'views.admin.countryReport' | translate}}
+                                    <i style="font-size: 1.2em;float: right;margin-top: 10px;"
+                                       class="mdi mdi-download"></i>
+                                </button>
+                            </div>
+                        </li>
+                        <li class="list-row" ng-show="state.current.name == 'app.admin.users'">
+                            <div class="list-row__content">
+                                <button class="btn btn--m btn--raised" lx-ripple ng-csv="getUsersCSV()"
+                                        filename="Users_report.csv">
+                                    {{'views.admin.userReport' | translate}}
+                                    <i style="font-size: 1.2em;float: right;margin-top: 10px;"
+                                       class="mdi mdi-download"></i>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div flex-item="9" flex-item-order="2">
+                <ui-view></ui-view>
+            </div>
+        </div>
+    </div>
+</div>
+
+<lx-dialog class="dialog dialog--l" id="statisticsReport" auto-close="true" close-modal-on-state-change>
+    <div class="dialog__header">
+        <div class="toolbar bgc-green-500 pl++">
+        <span class="toolbar__label tc-white fs-title">
+            <span>{{'views.admin.generateCountryReport' | translate}}</span>
+        </span>
+        </div>
+    </div>
+    <div class="dialog__content">
+        <div class="" flex-container="row">
+            <div flex-item="12" class="p++">
+                <p>{{'views.admin.selectDate' | translate}}</p>
+                <lx-date-picker model="datepicker.startDate"
+                                ng-click="switchBoolean(clickable1)"
+                                ng-class="{'no-action': clickable,'do-action':!clickable}"
+                                label="{{'views.admin.startDate' | translate}}"
+                                locale="ro"
+                                fixed-label="true"
+                                icon="calendar">
+                </lx-date-picker>
+                <div class="error-message-holder tc-red-500" ng-show="invalidStartDate">
+                    <div>{{'views.admin.invalidStartDate' | translate}}</div>
+                </div>
+                <lx-date-picker model="datepicker.endDate"
+                                ng-click="switchBoolean(clickable2)"
+                                label="{{'views.admin.endDate' | translate}}" locale="ro"
+                                fixed-label="true"
+                                icon="calendar">
+                </lx-date-picker>
+                <div class="error-message-holder tc-red-500" ng-show="invalidEndDate">
+                    <div>{{'views.admin.invalidEndDate' | translate}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dialog__actions">
+        <button class="btn btn--m btn--black btn--flat" ng-click="closeStatisticsModal('statisticsReport')" lx-ripple>
+            {{'generic.cancel' | translate}}
+        </button>
+        <button class="btn btn--m btn--green btn--flat" ng-click="createCountryReport('statisticsReport')"
+                ng-csv="getCountry(countryStatistics)" filename="Country_statistics_report.csv"
+                lx-ripple add-bom="true"
+                ng-disabled="!datepicker.startDate || !datepicker.endDate || invalidEndDate || invalidStartDate">
+            {{'views.admin.generateReport' | translate}}
+        </button>
+    </div>
+</lx-dialog>

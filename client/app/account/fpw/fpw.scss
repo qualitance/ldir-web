@@ -1,0 +1,69 @@
+.ldr-fpw {
+    background-image: url('/assets/images/ldir_background.png');
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    .ldr-back {
+        > div {
+            text-align: center;
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            a {
+                color: $white;
+                font-size: 30px;
+                line-height: 50px;
+                border: 1px solid $white;
+                border-radius: 50%;
+                display: inline-block;
+                width: 50px;
+                height: 50px;
+                &:hover {
+                    color: $blue-600;
+                    background: $white;
+                }
+            }
+        }
+    }
+    .ldr-logo {
+        > div {
+            margin-bottom: 50px;
+            img {
+                max-height: 50px;
+                width: auto;
+                margin: 0 auto;
+            }
+        }
+    }
+    .ldr-inside {
+        display: table;
+        width: 100%;
+        height: inherit;
+        > div {
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }
+    .ldr-btn-fpw {
+        button {
+            font: 18px 'Roboto-Medium';
+            color: $blue-600;
+            padding: 10px 20px;
+            margin: 20px 0;
+        }
+    }
+    .text-field:not(.text-field--has-error) {
+        &:after {
+            background-color: $white;
+        }
+    }
+    .text-field--dark-theme:not(.text-field--has-error) {
+        &:before {
+            border-color: $white;
+        }
+    }
+}

@@ -1,0 +1,84 @@
+<div class="ldr-container">
+    <div class="tc-white-1 mt++" flex-container="row" flex-gutter="24">
+        <div flex-item="6" flex-item-order="2">
+            <div class="ldr-profile-info" style="text-align: center">
+                <div class="fs-display-3 tc-black-1">{{user.first_name}} {{user.last_name}}</div>
+                <div class="fs-headline email">{{user.email}}</div>
+            </div>
+            <div class="ldr-avatar" style="text-align: center">
+                <div class="ldr-avatar-holder">
+                    <img ng-src="{{user.image?user.image.src:'assets/images/avatar_unknown.png'}}"
+                         class="img-round ldr-avatar-img">
+                </div>
+            </div>
+        </div>
+        <div flex-item="6" class="ldr-profile-form" flex-item-order="1">
+            <span class="fs-headline display-block tc-black">{{'views.editSingleUser.personal' | translate}}</span>
+            <lx-text-field label="{{'views.editSingleUser.firstName' | translate}}" fixed-label="true"
+                           error="form.first_name.$error.required" disabled="true">
+                <input ng-disabled="true" type="text" name="first_name" ng-model="user.first_name" class="" required>
+            </lx-text-field>
+            <lx-text-field label="{{'views.editSingleUser.lastName' | translate}}" fixed-label="true"
+                           error="form.last_name.$error.required" disabled="true">
+                <input ng-disabled="true" type="text" name="last_name" ng-model="user.last_name" class="" required>
+            </lx-text-field>
+            <br>
+            <span class="fs-headline display-block tc-black">{{'views.editSingleUser.contact' | translate}}</span>
+            <lx-text-field label="Email address" fixed-label="true" icon="email"
+                           error="form.email.$error.required || form.email.$error.email || form.email.$error.mongoose"
+                           disabled="true">
+                <input ng-disabled="true" type="email" name="email" ng-model="user.email" class="" required
+                       mongoose-error>
+            </lx-text-field>
+            <p class="form-error" ng-show="form.email.$error.email && submitted">
+                {{'views.editSingleUser.invalidEmail' | translate}}
+            </p>
+            <p class="form-error" ng-show="form.email.$error.mongoose && submitted">
+                {{errors.email}}
+            </p>
+            <lx-text-field label="{{'views.editSingleUser.address' | translate}}" fixed-label="true" icon="city"
+                           disabled="true">
+                <input ng-disabled="true" type="text" name="address" ng-model="user.address" class="">
+            </lx-text-field>
+            <lx-text-field label="{{'views.editSingleUser.phoneNumber' | translate}}" fixed-label="true" icon="phone"
+                           error="form.phone.$error.required" disabled="true">
+                <input ng-disabled="true" type="text" name="phone" ng-model="user.phone" class="" required>
+            </lx-text-field>
+            <br>
+            <span class="fs-headline display-block tc-black">{{'views.editSingleUser.county' | translate}}</span>
+            <div style="pointer-events: none;">
+                <ui-select ng-model="user.county" required theme="select2" class="custom-ui-select"
+                           style="margin-top: 0 !important">
+                    <ui-select-match placeholder="{{'views.profile.selectCounty' | translate}}">
+                        {{$select.selected.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="county in counties | filter: $select.search">
+                        <span ng-bind-html="county.code + '-' + county.name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <p class="form-error" ng-show="form.county.$error.required">
+                {{'views.editSingleUser.invalidCounty' | translate}}
+            </p>
+            <br>
+            <span class="fs-headline display-block tc-black">{{'views.editSingleUser.settings' | translate}}</span>
+            <div class="switch mt+">
+                <input ng-disabled="true" type="checkbox" id="switch1" class="switch__input"
+                       ng-model="user.flags.newsletter">
+                <label for="switch1" class="switch__label tc-black">{{'views.editSingleUser.emailNotifications' |
+                    translate}}</label>
+                <span class="switch__help" ng-show="user.flags.newsletter">{{'views.editSingleUser.emailNotificationsOn' | translate}}</span>
+                <span class="switch__help" ng-hide="user.flags.newsletter">{{'views.editSingleUser.emailNotificationsOff' | translate}}</span>
+            </div>
+            <div class="switch mt+">
+                <input ng-disabled="true" type="checkbox" id="switch2" class="switch__input" ng-model="user.flags.sync">
+                <label for="switch2" class="switch__label tc-black">{{'views.editSingleUser.cacheSync' |
+                    translate}}</label>
+                <span class="switch__help"
+                      ng-show="user.flags.sync">{{'views.editSingleUser.cacheSyncOn' | translate}}</span>
+                <span class="switch__help"
+                      ng-hide="user.flags.sync">{{'views.editSingleUser.cacheSyncOff' | translate}}</span>
+            </div>
+        </div>
+    </div>
+</div>

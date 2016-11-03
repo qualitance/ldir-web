@@ -1,0 +1,194 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <base href="/">
+    <title>Let's do it</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="assets/icons/1_2_logo_faces.png">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(client) app/vendor.css -->
+      <!-- bower:css -->
+      <link rel="stylesheet" href="bower_components/lumx/dist/lumx.css" />
+      <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+      <link rel="stylesheet" href="bower_components/magnific-popup/dist/magnific-popup.css" />
+      <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
+      <link rel="stylesheet" href="bower_components/select2/select2.css" />
+      <!-- endbower -->
+    <link rel="stylesheet" href="../bower_components/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="../bower_components/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="../bower_components/Leaflet.label/dist/leaflet.label.css" />
+    <!-- endbuild -->
+    <link rel="stylesheet" href="../bower_components/mdi/css/materialdesignicons.min.css" />
+    <!-- build:css({.tmp,client}) app/app.css -->
+    <link rel="stylesheet" href="app/app.css">
+      <!-- injector:css -->
+      <link rel="stylesheet" href="app/app.css">
+      <link rel="stylesheet" href="components/modal/modal.css">
+      <link rel="stylesheet" href="components/roboto-fontface/roboto-fontface.css">
+      <!-- endinjector -->
+    <!-- endbuild -->
+  </head>
+  <body ng-app="ldrWebApp" ng-cloak ng-class="{'ldr-map-view': $state.current.name == 'app.map.display'}">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <div ui-view="" ng-class="{'ldr-main-container': $state.current.name == 'main'}" class="ldr-all-page"></div>
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <!-- build:js({client,node_modules}) app/vendor.js -->
+      <!-- bower:js -->
+      <script src="bower_components/jquery/dist/jquery.js"></script>
+      <script src="bower_components/angular/angular.js"></script>
+      <script src="bower_components/angular-resource/angular-resource.js"></script>
+      <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+      <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+      <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+      <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+      <script src="bower_components/angular-messages/angular-messages.js"></script>
+      <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
+      <script src="bower_components/ng-file-upload-shim/ng-file-upload-shim.js"></script>
+      <script src="bower_components/velocity/velocity.js"></script>
+      <script src="bower_components/velocity/velocity.ui.js"></script>
+      <script src="bower_components/moment/moment.js"></script>
+      <script src="bower_components/lumx/dist/lumx.js"></script>
+      <script src="bower_components/leaflet/dist/leaflet-src.js"></script>
+      <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+      <script src="bower_components/leaflet-pip/leaflet-pip.js"></script>
+      <script src="bower_components/ngFitText/src/ng-FitText.js"></script>
+      <script src="bower_components/angular-utils-pagination/dirPagination.js"></script>
+      <script src="bower_components/magnific-popup/dist/jquery.magnific-popup.js"></script>
+      <script src="bower_components/angular-validation-match/dist/angular-validation-match.min.js"></script>
+      <script src="bower_components/ng-slide-down/dist/ng-slide-down.js"></script>
+      <script src="bower_components/jquery-ui/jquery-ui.js"></script>
+      <script src="bower_components/angular-dragdrop/src/angular-dragdrop.js"></script>
+      <script src="bower_components/angular-moment/angular-moment.js"></script>
+      <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+      <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+      <script src="bower_components/re-tree/re-tree.js"></script>
+      <script src="bower_components/ng-device-detector/ng-device-detector.js"></script>
+      <script src="bower_components/waypoints/lib/noframework.waypoints.min.js"></script>
+      <script src="bower_components/SHA-1/sha1.js"></script>
+      <script src="bower_components/leaflet-image/leaflet-image.js"></script>
+      <script src="bower_components/angular-translate/angular-translate.js"></script>
+      <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+      <script src="bower_components/angular-ui-select/dist/select.js"></script>
+      <script src="bower_components/select2/select2.js"></script>
+      <script src="bower_components/angular-ui-select2/src/select2.js"></script>
+      <script src="bower_components/raven-js/dist/raven.js"></script>
+      <!-- endbower -->
+    <script src="bower_components/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="bower_components/Leaflet.label/dist/leaflet.label.js"></script>
+    <script src="components/utils/leaflet-pip.min.js"></script>
+    <script src="bower_components/moment/locale/ro.js"></script>
+
+    <script src="assets/geojson/judete_ro.geojson"></script>
+    <script src="assets/geojson/judete_md.geojson"></script>
+    <script src="assets/geojson/localitati_minified_5.geojson"></script>
+    <!-- endbuild -->
+    <!-- Get Sentry error reporting -->
+    <script src="bower_components/raven-js/dist/plugins/angular.js"></script>
+    <script src="bower_components/raven-js/dist/plugins/console.js"></script>
+    <script>
+        Raven
+        .config('https://bf2754c926b34fc0a214f97ebc61f7cd@app.getsentry.com/94314')
+        .addPlugin(Raven.Plugins.Angular)
+        .addPlugin(Raven.Plugins.Console)
+        .install();
+    </script>
+
+        <!-- build:js({.tmp,client}) app/app.js -->
+        <script src="app/app.js"></script>
+          <!-- injector:js -->
+          <script src="app/account/account.js"></script>
+          <script src="app/account/activate/activate.controller.js"></script>
+          <script src="app/account/fpw/fpw.controller.js"></script>
+          <script src="app/account/login/login.controller.js"></script>
+          <script src="app/account/password/password.controller.js"></script>
+          <script src="app/account/password/setPasswordCtrl.js"></script>
+          <script src="app/account/profile/profile.controller.js"></script>
+          <script src="app/account/signup/signup.controller.js"></script>
+          <script src="app/account/signup/signup.directive.js"></script>
+          <script src="app/activity/activity.js"></script>
+          <script src="app/activity/controllers/activityCtrl.js"></script>
+          <script src="app/admin/admin.js"></script>
+          <script src="app/admin/controllers/admin.controller.js"></script>
+          <script src="app/admin/controllers/adminStatisticsCtrl.js"></script>
+          <script src="app/admin/controllers/adminUserCtrl.js"></script>
+          <script src="app/admin/controllers/adminUsersCtrl.js"></script>
+          <script src="app/admin/controllers/editUserCtrl.js"></script>
+          <script src="app/config.js"></script>
+          <script src="app/contact/contact.controller.js"></script>
+          <script src="app/contact/contact.js"></script>
+          <script src="app/dashboard/dashboard.controller.js"></script>
+          <script src="app/dashboard/dashboard.directive.js"></script>
+          <script src="app/dashboard/dashboard.js"></script>
+          <script src="app/directives.js"></script>
+          <script src="app/filters.js"></script>
+          <script src="app/help/help.controller.js"></script>
+          <script src="app/help/help.directive.js"></script>
+          <script src="app/help/help.js"></script>
+          <script src="app/improve/IssuesListCtrl/IssuesListCtrl.controller.js"></script>
+          <script src="app/improve/improve.controller.js"></script>
+          <script src="app/improve/improve.js"></script>
+          <script src="app/main/main.controller.js"></script>
+          <script src="app/main/main.directive.js"></script>
+          <script src="app/main/main.js"></script>
+          <script src="app/map/MapHelperService.js"></script>
+          <script src="app/map/MockMarkers.js"></script>
+          <script src="app/map/controllers/CreatePileCtrl.js"></script>
+          <script src="app/map/controllers/EditPileCtrl.js"></script>
+          <script src="app/map/controllers/MapCtrl.js"></script>
+          <script src="app/map/controllers/ViewPileDetailsCtrl.js"></script>
+          <script src="app/map/controllers/ViewPileOnMapCtrl.js"></script>
+          <script src="app/map/directives.js"></script>
+          <script src="app/map/directives/viewPileDetails.directive.js"></script>
+          <script src="app/map/filters/CreatePile.filter.js"></script>
+          <script src="app/map/filters/capitalizeLetter.js"></script>
+          <script src="app/map/map.js"></script>
+          <script src="app/parseAndTranslate.filter.js"></script>
+          <script src="app/privacy/privacy.controller.js"></script>
+          <script src="app/privacy/privacy.js"></script>
+          <script src="app/terms/terms.controller.js"></script>
+          <script src="app/terms/terms.js"></script>
+          <script src="components/IssueService/IssueService/IssueService.service.js"></script>
+          <script src="components/activities-service/activityService.js"></script>
+          <script src="components/auth/auth.service.js"></script>
+          <script src="components/auth/user.service.js"></script>
+          <script src="components/authorities-service/authoritiesService.js"></script>
+          <script src="components/browserLanguage-service/browserLanguageService.js"></script>
+          <script src="components/comments/comments.service.js"></script>
+          <script src="components/contact/contact.service.js"></script>
+          <script src="components/country/country.service.js"></script>
+          <script src="components/county/county.service.js"></script>
+          <script src="components/city/city.service.js"></script>
+          <script src="components/custom-ratings/custom-ratings.directive.js"></script>
+          <script src="components/date-picker/js/date-picker_directive.js"></script>
+          <script src="components/environment/environment.service.js"></script>
+          <script src="components/help/help.factory.js"></script>
+          <script src="components/helper-service/helperService.js"></script>
+          <script src="components/image-upload/image-upload.service.js"></script>
+          <script src="components/modal/modal.service.js"></script>
+          <script src="components/mongoose-error/mongoose-error.directive.js"></script>
+          <script src="components/navbar/navbar.controller.js"></script>
+          <script src="components/onepage-scroll/jquery.onepage-scroll.min.js"></script>
+          <script src="components/page-skipper/page-skipper.directive.js"></script>
+          <script src="components/pile-service/pilesService.js"></script>
+          <script src="components/preloader/preloader.factory.js"></script>
+          <script src="components/responseHandler/responseHandler.service.js"></script>
+          <script src="components/utils/leaflet-pip.min.js"></script>
+          <!-- endinjector -->
+        <!-- endbuild -->
+</body>
+</html>

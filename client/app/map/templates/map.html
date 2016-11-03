@@ -1,0 +1,145 @@
+<div class="ldr-map-container">
+    <leaflet class="map" ng-if="map"
+             defaults="map.defaults"
+             center="map.center"
+             markers="map.markers"
+             layers="map.layers"
+             maxbounds="map.maxbounds"
+             width="100%"
+             data-drop="true"
+             jqyoui-droppable="{onDrop : 'dropLocation($event)',containment:'offset', multiple: true }"
+             firefox-compatibility
+    >
+    </leaflet>
+    <div class="ldr-map-buttons">
+        <div>
+            <button class="btn btn--xl btn--white btn--fab current-location" ng-click="locateUser()" lx-ripple
+                    lx-tooltip="{{'views.map.locateMe' | translate}}" tooltip-position="left"><i
+                class="mdi mdi-crosshairs-gps"></i></button>
+        </div>
+        <div>
+            <button class="btn btn--xl btn--blue btn--fab report-pile" ng-click="openModal('createPile')" lx-ripple
+                    lx-tooltip="{{'views.map.reportNewPile' | translate}}" tooltip-position="left"><i
+                class="mdi mdi-plus"></i></button>
+        </div>
+        <div class="ldr-draggable-icon" data-drag="true"
+             jqyoui-draggable="{animate:true, containment: 'offset', onStart: 'startedDragging()', onStop:'finishedDragging()'}"
+             marker-draggable-util lx-tooltip="{{'views.map.dragToLocation' | translate}}" tooltip-position="left">
+            <img src="../assets/icons/pins-08.svg" style="width: 36px">
+        </div>
+    </div>
+    <div class="ldr-progress" ng-if="markersLoading">
+        <div class="ldr-overlay">
+            &nbsp;
+        </div>
+        <div class="ldr-ticker">
+            <lx-progress type="circular" color="#1B5E20"></lx-progress>
+        </div>
+    </div>
+
+    <div class="ldr-legend">
+        <div>
+            <lx-dropdown position="left" width="2">
+                <button class="btn btn--m btn--white btn--raised ldr-legend-button" lx-ripple lx-dropdown-toggle>
+                    {{'views.map.legend' | translate}} <i class="mdi mdi-chevron-double-up"></i><i
+                    class="mdi mdi-chevron-double-down"></i>
+                </button>
+
+                <lx-dropdown-menu class="ldr-legend-dropdown">
+                    <ul>
+                        <li><span
+                            class="dropdown-link dropdown-link--is-header">{{'views.map.otherPiles' | translate}}</span>
+                        </li>
+                        <li class="dropdown-link"><span class="pending">{{'views.map.pending' | translate}}</span></li>
+                        <li class="dropdown-link"><span
+                            class="unconfirmed">{{'views.map.unconfirmed' | translate}}</span></li>
+                        <li class="dropdown-link"><span class="confirmed">{{'views.map.confirmed' | translate}}</span>
+                        </li>
+                        <li class="dropdown-link"><span class="reported">{{'views.map.reported' | translate}}</span>
+                        </li>
+                        <li class="dropdown-link"><span class="clean">{{'views.map.cleaned' | translate}}</span></li>
+                        <li class="dropdown-divider"></li>
+                        <li><span
+                            class="dropdown-link dropdown-link--is-header">{{'views.map.myPiles' | translate}}</span>
+                        </li>
+                        <li class="dropdown-link"><span class="pending own">{{'views.map.pending' | translate}}</span>
+                        </li>
+                        <li class="dropdown-link"><span
+                            class="unconfirmed own">{{'views.map.unconfirmed' | translate}}</span></li>
+                        <li class="dropdown-link"><span
+                            class="confirmed own">{{'views.map.confirmed' | translate}}</span></li>
+                        <li class="dropdown-link"><span class="reported own">{{'views.map.reported' | translate}}</span>
+                        </li>
+                        <li class="dropdown-link"><span class="clean own">{{'views.map.cleaned' | translate}}</span>
+                        </li>
+                    </ul>
+                </lx-dropdown-menu>
+            </lx-dropdown>
+        </div>
+    </div>
+</div>
+
+
+<!-------------CREATE PILE SECTION---------------->
+<div ng-controller="CreatePileCtrl" ng-if="showModal">
+    <lx-dialog class="dialog dialog--l ldr-create-pile-modal" id="createPile" auto-close="false"
+               close-modal-on-state-change>
+
+        <div class="dialog__header">
+            <div class="ldr-modal-header">
+                <div>
+                    <div>
+                        <ul class="ldr-toolbar">
+                            <li ng-repeat="step in steps"
+                                ng-class="{active: currentStep===$index, 'is-available': canNavigateToStep($index)}">
+                                <span data-ng-click="goToStep($index)">{{ ::step.name }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <button class="btn btn--l btn--black btn--icon tc-black-2" lx-ripple
+                                ng-click="closeModal('createPile')" ng-disabled="saving">
+                            <i class="mdi mdi-close"></i>
+                        </button>
+                    </div>
+                    <div class="ldr-clearfix">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dialog__content">
+            <div class="ldr-modal-content">
+                <div class="ldr-vertical-align">
+                    <div>
+                        <div ng-if="currentStep===0" upload-photo></div>
+                        <div ng-if="currentStep===1" pile-creation></div>
+                        <div ng-if="currentStep===2" pile-comments></div>
+                        <div ng-if="currentStep===3" pile-summary></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dialog__actions">
+            <div style='overflow: hidden'>
+                <div style='float: left'>
+                    <button ng-if="canNavigateToStep(currentStep - 1)" class="btn btn--l btn--orange btn--flat"
+                            lx-ripple ng-click="previousStep()">{{'generic.back' | translate}}
+                    </button>
+                </div>
+                <div style='float: right'>
+                    <button ng-if="currentStep < steps.length - 1" class="btn btn--l btn--green btn--flat" lx-ripple
+                            ng-click="nextStep()">{{'generic.next' | translate}}
+                    </button>
+                    <button ng-if="currentStep===(steps.length - 1)" class="btn btn--l btn--green btn--raised" lx-ripple
+                            ng-click="createPile()" ng-disabled="saving">
+                        <span ng-hide="saving">{{'generic.save' | translate}}</span>
+                        <span ng-show="saving">{{'generic.saving' | translate}}...</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </lx-dialog>
+</div>

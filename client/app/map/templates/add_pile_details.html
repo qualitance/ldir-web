@@ -1,0 +1,28 @@
+<div class="ldr-pile-section">
+    <p class="ldr-p-helper">{{'views.addPile.details.size' | translate}}</p>
+    <p class="ldr-p-helper">{{'views.addPile.details.text' | translate}}</p>
+    <custom-ratings ng-model="pile.size"></custom-ratings>
+    <p class="ldr-p-helper ldr-second">{{'views.addPile.details.pileContents' | translate}}</p>
+
+    <div class="ldr-checkboxes" style="overflow: hidden">
+
+        <div ng-repeat="material in materials" style="width: 33.33%">
+            <div class="checkbox">
+                <input type="checkbox" id="checkbox{{$index}}" ng-model="material.selected" class="checkbox__input">
+                <label for="checkbox{{$index}}" class="checkbox__label">{{material.name}}</label>
+            </div>
+        </div>
+
+    </div>
+    <p class="ldr-p-helper" style="overflow: hidden">{{'views.addPile.details.area' | translate}}</p>
+
+    <div class="ldr-checkboxes">
+        <div ng-repeat="area in areas" style="width: 20%">
+            <div class="checkbox">
+                <input type="checkbox" id="area{{$index}}" ng-model="area.selected" class="checkbox__input">
+                <label for="area{{$index}}" class="checkbox__label">{{area.name}}</label>
+            </div>
+        </div>
+    </div>
+
+</div>

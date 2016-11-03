@@ -1,0 +1,212 @@
+<div class="ldr-container">
+    <div class="mt++" flex-container="row" flex-gutter="24">
+        <div flex-item="4">
+            <div class="ldr-profile-info" style="text-align: center">
+                <div class="fs-display-3 tc-black-1">{{user.first_name}} {{user.last_name}}</div>
+                <div class="fs-headline email">{{user.email}}</div>
+            </div>
+            <div class="ldr-avatar" style="text-align: center">
+                <div class="ldr-avatar-holder profile-avatar-holder">
+                    <img ng-hide="user.image" src="assets/images/avatar_unknown.png" class="img-round ldr-avatar-img">
+                    <div ng-if="user.image" class="image-holder" ng-style="user.image | setBackgroundImage"></div>
+                    <div class="ldr-take-photo-btn" id="progress">
+                        <button class="btn btn--m btn--green btn--fab" lx-ripple ngf-select="changeProfilePic($files)"
+                                ngf-multiple="false" ngf-accept="'image/*'">
+                            <i class="mdi mdi-camera"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div flex-item="8" class="ldr-profile-form">
+            <form name="form" novalidate>
+                <div class="fs-headline display-block  margintop10px">
+                    <i class="mdi mdi-account"></i> {{'views.profile.personalInfo' | translate}}
+                </div>
+                <div flex-container="row" flex-gutter="24">
+                    <div flex-item>
+                        <lx-text-field label="{{'views.profile.firstName' | translate}}" fixed-label="true"
+                                       error="form.first_name.$invalid">
+                            <input type="text" name="first_name" ng-model="user.first_name" class="" required
+                                   maxlength="25">
+                        </lx-text-field>
+                    </div>
+                    <div flex-item>
+                        <lx-text-field label="{{'views.profile.lastName' | translate}}" fixed-label="true"
+                                       error="form.last_name.$invalid">
+                            <input type="text" name="last_name" ng-model="user.last_name" class="" required
+                                   maxlength="25">
+                        </lx-text-field>
+                    </div>
+                </div>
+                <div class="fs-headline display-block  margintop40px"><i class="mdi mdi-email"></i>
+                    {{'views.profile.contactDetails' | translate}}
+                </div>
+                <div flex-container="row" flex-gutter="24">
+                    <div flex-item>
+                        <lx-text-field label="{{'generic.emailAddress' | translate}}" fixed-label="true"
+                                       error="form.email.$invalid" disabled="true">
+                            <input ng-disabled="true" type="email" name="email" ng-model="user.email" class="" required
+                                   mongoose-error>
+                        </lx-text-field>
+                    </div>
+                    <div flex-item>
+                        <lx-text-field label="{{'views.profile.phoneNumber' | translate}}" fixed-label="true"
+                                       error="form.phone.$invalid">
+                            <input type="text" name="phone" ro-phone-validation ng-model="user.phone" class="" required
+                                   maxlength="15">
+                        </lx-text-field>
+                        <div class="error-message-holder" data-ng-show="form.phone.$invalid">
+                            {{'views.profile.invalidPhone' | translate}}.
+                        </div>
+                    </div>
+                </div>
+                <div class="fs-headline display-block  margintop40px"><i class="mdi mdi-city"></i>
+                    {{'views.profile.contactAddress' | translate}}
+                </div>
+                <div flex-container="row" flex-gutter="24">
+                    <div flex-item>
+                        <lx-text-field label="{{'views.profile.address' | translate}}" fixed-label="true">
+                            <input type="text" name="address" ng-model="user.address" class="" maxlength="50">
+                        </lx-text-field>
+                    </div>
+                    <div flex-item="3">
+                        <div ng-class="{'has-error': form.country.$invalid}">
+                            <ui-select name="country" ng-model="country" required theme="select2"
+                                       class="custom-ui-select" ng-change="resetCounties(country)">
+                                <ui-select-match class="{{form.country.$invalid ? 'dropdown-error': ''}}"
+                                                 placeholder="{{'views.profile.selectCountry' | translate}}">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="country in countries | filter: $select.search">
+                                    <span ng-bind-html="country.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="error-message-holder" data-ng-show="form.country.$invalid">
+                            {{'views.profile.selectCountryInvalid' | translate}}.
+                        </div>
+                    </div>
+                    <div flex-item="3">
+                        <div ng-class="{'has-error': !user.county}">
+                            <ui-select name="county" ng-model="user.county" required theme="select2"
+                                       class="custom-ui-select">
+                                <ui-select-match class="{{!user.county ? 'dropdown-error': ''}}"
+                                                 placeholder="{{'views.profile.selectCounty' | translate}}">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="county in counties | filter: $select.search">
+                                    <span ng-bind-html="county.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="error-message-holder" data-ng-show="form.county.$invalid">
+                            {{'views.profile.selectCountyInvalid' | translate}}.
+                        </div>
+                    </div>
+                </div>
+                <div class="fs-headline display-block  margintop40px"><i class="mdi mdi-city"></i>
+                    {{'views.profile.language' | translate}}
+                </div>
+                <div flex-container="row" flex-gutter="24">
+                    <div flex-item="3">
+                        <div ng-class="{'has-error': !user.language}">
+                            <ui-select name="language" ng-model="selectedLanguage" required theme="select2"
+                                       class="custom-ui-select" ng-change="changeLanguage($select.selected)">
+                                <ui-select-match class="{{!user.language ? 'dropdown-error': ''}}"
+                                                 placeholder="{{'views.profile.selectLanguage' | translate}}">
+                                    {{$select.selected.value | parseAndTranslate: 'language'}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="lang in availableLanguages | filter: $select.search">
+                                    <span ng-bind-html="lang.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="error-message-holder" data-ng-show="form.language.$invalid">
+                            {{'views.profile.invalidLanguage' | translate}}.
+                        </div>
+                    </div>
+                </div>
+                <div class="fs-headline  margintop40px"><i class="mdi mdi-settings"></i> {{'views.profile.settings' |
+                    translate}}
+                </div>
+
+                <div flex-container="row" flex-gutter="24">
+                    <div flex-item>
+                        <div class="switch mt+">
+                            <input type="checkbox" id="switch1" class="switch__input" ng-model="user.flags.newsletter">
+                            <label for="switch1" class="switch__label ">{{'views.profile.emailNotifications' |
+                                translate}}</label>
+                            <span class="switch__help" ng-show="user.flags.newsletter">{{'views.profile.emailNotificationsOn' | translate}}</span>
+                            <span class="switch__help" ng-hide="user.flags.newsletter">{{'views.profile.emailNotificationsOff' | translate}}</span>
+                        </div>
+                    </div>
+                    <div flex-item>
+                        <div class="switch mt+">
+                            <input type="checkbox" id="switch2" class="switch__input" ng-model="user.flags.sync">
+                            <label for="switch2" class="switch__label ">{{'views.profile.cacheSync' |
+                                translate}}</label>
+                            <span class="switch__help" ng-show="user.flags.sync">{{'views.profile.cacheSyncOn' | translate}}</span>
+                            <span class="switch__help" ng-hide="user.flags.sync">{{'views.profile.cacheSyncOff' | translate}}</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="ldr-submit-btn margintop40px">
+                    <button class="btn btn--xl btn--black btn--flat" lx-ripple ng-click="openPasswordDialog()"
+                            type="button">
+                        <span ng-show="user.pass">{{'views.profile.changePassword' | translate}}</span>
+                        <span ng-hide="user.pass">{{'views.profile.setPassword' | translate}}</span>
+                    </button>
+                    <button data-ng-click="update(form)" style="float: right" class="btn btn--xl btn--green btn--raised"
+                            lx-ripple type="submit">{{'views.profile.saveChanges' | translate}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<lx-dialog class="dialog dialog--l" id="password" auto-close="true" onclose="pwd.$setPristine()"
+           close-modal-on-state-change>
+    <form name="pwd" ng-submit="closePasswordDialog(pwd, user)" novalidate>
+
+        <div class="dialog__header">
+            <div class="toolbar bgc-green-500 pl++">
+                        <span class="toolbar__label tc-white fs-title">
+                            <span ng-show="user.pass">{{'views.profile.changeAccPass' | translate}}</span>
+                            <span ng-hide="user.pass">{{'views.profile.setAccPass' | translate}}</span>
+                        </span>
+            </div>
+        </div>
+        <div class="dialog__content ldr-password-form">
+            <div class="tc-white-1" flex-container="row">
+                <div flex-item="12" class="p++">
+                    <lx-text-field label="{{'views.profile.currentPass' | translate}}" fixed-label="true"
+                                   error="(pwd.password0.$error.required || pwd.password0.$error.minlength) && submitted"
+                                   ng-if="user.pass">
+                        <input type="password" name="password0" ng-model="pass.password0" ng-minlength="3" required
+                               class="tc-black">
+                    </lx-text-field>
+                    <lx-text-field label="{{'views.profile.newPass' | translate}}" fixed-label="true"
+                                   error="(pwd.password1.$error.required || pwd.password1.$error.minlength) && submitted">
+                        <input type="password" name="password1" ng-model="pass.password1" class="tc-black"
+                               ng-minlength="3" required>
+                    </lx-text-field>
+                    <lx-text-field label="{{'views.profile.confirmNewPass' | translate}}" fixed-label="true"
+                                   error="(pwd.password2.$error.match || pwd.password2.$error.required || pwd.password2.$error.minlength) && submitted">
+                        <input type="password" name="password2" match="pass.password1" ng-model="pass.password2"
+                               class="tc-black" ng-minlength="3" required>
+                    </lx-text-field>
+                </div>
+            </div>
+        </div>
+        <div class="dialog__actions">
+            <button class="btn btn--m btn--black btn--flat" lx-ripple>{{'views.profile.saveChanges' | translate}}
+            </button>
+            <button class="btn btn--m btn--black btn--flat" lx-ripple lx-dialog-close type="button">{{'generic.cancel' |
+                translate}}
+            </button>
+        </div>
+    </form>
+</lx-dialog>

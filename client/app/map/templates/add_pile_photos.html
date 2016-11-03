@@ -1,0 +1,52 @@
+<div class="ldr-photo-section">
+    <lx-progress type="circular" color="#43A047" ng-if="inprogress"></lx-progress>
+    <div ng-if="!inprogress">
+        <div class="ldr-placeholder" ng-show="!files.length">
+            <div ngf-drop="selectFiles($files)" ngf-model="files" ngf-drag-over-class="'ldr-dragover'"
+                 ngf-multiple="true" ngf-accept="'image/*'">
+                <img src="/assets/images/map/add_photo.png">
+                <h2>{{'views.addPile.photos.drag' | translate}}</h2>
+                <span>- {{'views.addPile.photos.or' | translate}} -</span><br>
+                <button type="file" ngf-select="selectFiles($files)" ngf-multiple="true" ngf-accept="'image/*'">
+                    {{'views.addPile.photos.selectLocal' | translate}}
+                </button>
+            </div>
+        </div>
+        <div class="ldr-image-thumbnails">
+            <div ng-repeat="file in files">
+                <div class="card">
+                    <div class="card__img card__img--top" style="position: relative">
+                        <lx-thumbnail thumbnail-src="{{ file.thumbnailImage }}" thumbnail-width="200"
+                                      thumbnail-height="200"></lx-thumbnail>
+                    </div>
+                    <div class="ldr-delete-btn" ng-click="files.splice($index, 1)">
+                        <div>
+                            <i class="icon icon--l icon--red icon--circled mdi mdi-delete"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="files.length < 3 && files.length > 0">
+                <div class="card" ngf-drop="selectFiles($files)" ngf-model="files" ngf-allow-dir="false"
+                     ngf-multiple="false" ngf-accept="'image/*'" ngf-drag-over-class="'ldr-dragover'">
+                    <div class="ldr-placeholder">
+                        <div class="ldr-vertical-align">
+                            <div>
+                                <div>
+                                    <img src="/assets/images/map/add_photo.png">
+                                    <h2>{{'views.addPile.photos.drag' | translate}}</h2>
+                                    <span>- {{'views.addPile.photos.or' | translate}} -</span><br>
+                                    <button type="file" ngf-select="selectFiles($files)" ngf-multiple="true"
+                                            ngf-accept="'image/*'">
+                                        {{'views.addPile.photos.addMorePhotos' | translate}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

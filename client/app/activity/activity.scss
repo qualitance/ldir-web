@@ -1,0 +1,50 @@
+//  .mark-as-read {
+//    width: 15px;
+//    height: 15px;
+//    border-radius: 100%;
+//    background-color: blue;
+//    &:hover{
+//      background-color:grey;
+//    }
+////    &:visited{
+////    background-color:black;
+////      }
+//  }
+//.read{
+////  color: #808080 !important;
+//  display:none;
+//}
+//.unread{
+//  color : #5f9ea0 !important;
+//}
+//
+//.cursor-pointer{
+//  cursor:pointer;
+//}
+
+.ldr-notifications {
+    .data-table {
+        & > tbody > tr:nth-child(even):not(:hover) td {
+            //background-color: #f1f1f2;
+        }
+        .ldr-cell-option {
+            button {
+                visibility: hidden;
+            }
+        }
+        & > tbody > tr.ldr-unread > td {
+            background-color: $light-green-100;
+        }
+        & > tbody > tr:hover > td {
+            background-color: $light-green-600;
+            color: $white !important;
+        }
+        & > tbody > tr.ldr-unread:hover {
+            .ldr-cell-option {
+                button {
+                    visibility: visible;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,68 @@
+<div class="ldr-contact">
+    <div class="ldr-container">
+        <div class="mt++ mb++">
+            <span class="fs-headline display-block">{{'views.contact.title' | translate}}</span>
+        </div>
+        <div class="mt++ mb++">
+            <div class="card">
+                <div class="p+">
+                    <form name="form" ng-submit="sendMessage(form)" novalidate>
+                        <div flex-container="row" flex-gutter="24">
+                            <div flex-item="4" flex-item-order="1">
+                                <div flex-item>
+                                    <lx-text-field label="{{'views.contact.firstName' | translate}}"
+                                                   error="form.first_name.$error.required && form.first_name.$dirty">
+                                        <input type="text" name="first_name" ng-model="contact.first_name" required>
+                                    </lx-text-field>
+                                </div>
+                            </div>
+                            <div flex-item="4" flex-item-order="2">
+                                <div flex-item>
+                                    <lx-text-field label="{{'views.contact.lastName' | translate}}"
+                                                   error="form.last_name.$error.required && form.last_name.$dirty">
+                                        <input type="text" name="last_name" ng-model="contact.last_name" required>
+                                    </lx-text-field>
+                                </div>
+                            </div>
+                            <div flex-item="4" flex-item-order="3">
+                                <div flex-item>
+                                    <lx-text-field label="{{'views.contact.email' | translate}}"
+                                                   error="(form.email.$error.required || form.email.$error.invalidEmail) && form.email.$dirty">
+                                        <input type="text" name="email" ng-model="contact.email" required email-match>
+                                    </lx-text-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div flex-container="row">
+                            <div flex-item="12" flex-item-order="1">
+                                <div flex-item>
+                                    <lx-text-field label="{{'views.contact.subject' | translate}}"
+                                                   error="form.subject.$error.required && form.subject.$dirty">
+                                        <input type="text" name="subject" ng-model="contact.subject" required>
+                                    </lx-text-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div flex-container="row">
+                            <div flex-item="12" flex-item-order="1">
+                                <div flex-item>
+                                    <lx-text-field label="{{'views.contact.message' | translate}}"
+                                                   error="form.message.$error.required && form.message.$dirty">
+                                        <textarea name="message" ng-model="contact.message" required></textarea>
+                                    </lx-text-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div flex-item class="ldr-submit-btn mt++ mb++">
+                            <button class="btn btn--xl btn--green btn--raised" lx-ripple
+                                    ng-disabled="form.$invalid || !form.$dirty || messageSending" type="submit">
+                                <span ng-if="!messageSending">{{'views.contact.sendMessage' | translate}}</span>
+                                <span ng-if="messageSending">{{'views.contact.sendingMessage' | translate}}...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

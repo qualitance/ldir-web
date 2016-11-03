@@ -1,0 +1,198 @@
+<div class="ldr-dashboard">
+    <div class="ldr-container">
+        <div flex-container="row">
+            <div flex-item="3" flex-item-order="1" ng-if="hasRole('volunteer')">
+                <div>
+                    <ul class="list mt++ ldr-sidebar">
+                        <li class="list-row">
+                            <div class="list-row__content">
+                                <button ng-click="goToPiles()" class="btn btn--m btn--raised" lx-ripple
+                                        ng-class="{'btn--green': !config_obj.contributions, 'btn--white': config_obj.contributions}">
+                                    {{'views.dashboard.myReportedPiles' | translate}}
+                                </button>
+                            </div>
+                        </li>
+                        <li class="list-row">
+                            <div class="list-row__content">
+                                <button ng-click="goToContributions()" class="btn btn--m btn--raised" lx-ripple
+                                        ng-class="{'btn--green': config_obj.contributions, 'btn--white': !config_obj.contributions}">
+                                    {{'views.dashboard.myContrib' | translate}}
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div flex-item="{{flexDim}}" flex-item-order="2">
+                <div flex-container="row" flex-column="12" flex-gutter="24" class="margintop10px">
+                    <div ng-if="hasRole('supervisor')" flex-item="3" flex-item-order="2"
+                         ng-class="{'readonly-county': hasRole('supervisor')}">
+                        <ui-select ng-model="county" theme="select2" class="custom-ui-select"
+                                   ng-change="addFilter('county', $select.selected)">
+                            <ui-select-match placeholder="{{'views.dashboard.selectCounty' | translate}}...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="county in counties | filter: $select.search">
+                                <span ng-bind-html="county.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div ng-if="hasRole('supervisor')" flex-item="3" flex-item-order="3"
+                         ng-class="{'readonly-county': disableCitySelect || hasRole('volunteer')}">
+                        <ui-select ng-model="city" theme="select2" class="custom-ui-select"
+                                   ng-change="addFilter('city', $select.selected)">
+                            <ui-select-match placeholder="{{'views.profile.selectCity' | translate}}...">
+                                {{$select.selected.name | titleCase }}
+                            </ui-select-match>
+                            <ui-select-choices repeat="city in cities | filter: $select.search">
+                                <span ng-bind-html="city.name | titleCase | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <div ng-if="!hasRole('supervisor')" flex-item="6" flex-item-order="2">
+                        <ui-select ng-model="all_counties" theme="select2" class="custom-ui-select"
+                                   ng-change="addFilter('county', $select.selected)">
+                            <ui-select-match placeholder="{{'views.dashboard.selectCounty' | translate}}...">
+                                {{$select.selected.name}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="county in counties | filter: $select.search">
+                                <span ng-bind-html="county.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="ldr-grid">
+                    <div class="data-table-container">
+                        <table class="data-table data-table--has-primary data-table--has-secondary tc-black-1">
+                            <thead>
+                            <tr>
+                                <th style="width: 10%">
+                                    <span>{{'generic.pileID' | translate}}</span>
+                                </th>
+                                <th ng-if="hasRole('admin')"><span>{{'views.statistics.county' | translate}}</span></th>
+                                <th>
+                                    <span>{{'helperService.cityArea' | translate}}</span>
+                                </th>
+                                <th style="width: 16%">
+                                    <lx-dropdown>
+                                        <button class="pointerCur" lx-ripple lx-dropdown-toggle>
+                          <span><strong>{{'generic.status' | translate}}</strong>
+                          </span>
+                                            <i style="font-size: 1.5em; line-height: 1em" class="mdi mdi-menu-down"></i>
+                                        </button>
+
+                                        <lx-dropdown-menu>
+                                            <ul>
+                                                <li ng-repeat="status in statuses"><a
+                                                    ng-click="addFilter('status', status.type)"
+                                                    class="dropdown-link">{{status.name}}</a></li>
+                                            </ul>
+                                        </lx-dropdown-menu>
+                                    </lx-dropdown>
+                                    <span class="fs-body-2 display-block">[{{displayFilterValue('status') | capitalizeFirstLetter}}]</span>
+                                    <!--| capitalizeFirstLetter-->
+                                </th>
+                                <th style="width: 16%" ng-if="hasRole('admin')">
+                                    <a>
+                                        <span>{{'views.dashboard.reportedBy' | translate}}</span>
+                                    </a>
+                                </th>
+                                <th style="width: 16%" class="ldr-sortable"
+                                    ng-class="{'ldr-sorted-asc' : (sort.by == 'created_at' && sort.order == 1),'ldr-sorted-desc' : (sort.by == 'created_at' && sort.order == -1)}">
+                                    <a ng-click="applySort('created_at')" class="pointerCur">
+                                        <span>{{'generic.reportedDate' | translate}}</span>
+                                    </a>
+                                </th>
+                                <th style="width: 16%" class="ldr-sortable"
+                                    ng-class="{'ldr-sorted-asc' : (sort.by == 'last_update' && sort.order == 1),'ldr-sorted-desc' : (sort.by == 'last_update' && sort.order == -1)}">
+                                    <a ng-click="applySort('last_update')" class="pointerCur">
+                                        <span>{{'generic.updatedDate' | translate}}</span>
+                                    </a>
+                                </th>
+                                <th style="width: 16%" class="ldr-cell-allocated-date ldr-sortable"
+                                    ng-class="{'ldr-sorted-asc' : (sort.by == 'allocated.due_date' && sort.order == 1),'ldr-sorted-desc' : (sort.by == 'allocated.due_date' && sort.order == -1)}"
+                                    style="width: 20%">
+                                    <a ng-click="applySort('allocated.due_date')" class="pointerCur">
+                                        <span>{{'views.dashboard.dueDate' | translate}}</span>
+                                    </a>
+                                </th>
+                                <th style="width: 10%" ng-if="hasRole('admin')">
+                                    <span>{{'views.dashboard.hidden' | translate}}</span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="pile in data.piles | filter:{nr_ord: pileID}"
+                                ng-click="goToPile({id: pile._id})">
+                                <td class="ldr-cell-pile-id"><span class="ldr-pile-id"># {{pile.nr_ord}}</span></td>
+                                <td ng-if="hasRole('admin')" class="ldr-cell-pile-id"><span class="ldr-cell-pile-id">{{pile.county.name | emptyVal}}</span>
+                                </td>
+                                <td class="ldr-cell-pile-id"><span class="ldr-cell-pile-id">{{pile.city.name | emptyVal}}</span>
+                                </td>
+                                <td class="ldr-cell-state"><span style="margin-left: 0.5%;"
+                                                                 class="ldr-state {{pile.status}}">{{pile.status | parseAndTranslate: 'status'}}</span>
+                                </td>
+                                <td class="ldr-cell-email" ng-if="hasRole('admin')"><span>{{pile.user.email}}</span>
+                                </td>
+                                <td class="ldr-cell-reported-date"><span>{{pile.created_at | date: "dd/MM/yyyy"}}</span>
+                                </td>
+                                <td class="ldr-cell-updated-date"><span>{{pile.last_update | date: "dd/MM/yyyy"}}</span>
+                                </td>
+                                <td class="ldr-cell-allocated-date">
+                                    <span ng-show="pile.allocated.hasOwnProperty('authority')">{{pile.allocated.due_date | date: "dd/MM/yyyy"}}</span>
+                                    <span ng-hide="pile.allocated.hasOwnProperty('authority')">{{'generic.na' | translate}}</span>
+                                </td>
+                                <td class="ldr-cell-hidden" ng-if="hasRole('admin')">
+                                    <span ng-show="pile.is_hidden">{{'views.dashboard.yes' | translate}}</span>
+                                    <span ng-show="!pile.is_hidden">{{'views.dashboard.no' | translate}}</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div flex-item ng-if="data.piles && data.piles.length == 0">
+                    <div class="card">
+
+                        <div class="p+">
+                            <div class="paragraph fs-body-1" style="text-align: center;font-size: 18px;">
+                                <p>
+                                    {{'views.dashboard.noRecords' | translate}}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="ldr-pagination-section" ng-if="data.piles && data.piles.length > 0">
+                    <div class="mt mb">
+                        <div class="ldr-showing-page">
+                            {{'generic.page' | translate}}: <strong>{{config_obj.page}}</strong>
+                        </div>
+                        <div class="ldr-showing-results">
+                            {{'generic.showing' | translate}} <strong>{{config_obj.page * config_obj.skip -
+                            config_obj.skip + 1}}</strong> - <strong>{{config_obj.page * config_obj.skip -
+                            (config_obj.skip - data.piles.length)}}</strong> {{'generic.of' | translate}} <strong>{{totalNumberPiles}}</strong>
+                            {{'generic.results' | translate}}
+                        </div>
+                        <div style="overflow: hidden">
+                            <button ng-disabled="config_obj.page <= 1" class="btn btn--m btn--black btn--flat"
+                                    type="button" ng-click="setPage(config_obj.page - 1)" lx-ripple>&laquo;
+                                {{'generic.previous' | translate}}
+                            </button>
+                            <button ng-disabled="config_obj.page >= totalNumberPages"
+                                    class="btn btn--m btn--black btn--flat" type="button"
+                                    ng-click="setPage(config_obj.page + 1)" lx-ripple>{{'generic.next' | translate}}
+                                &raquo
+                            </button>
+                        </div>
+                        <div ng-if="data.piles">
+                            <page-skipper config="config_obj" pages="totalNumberPages"></page-skipper>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

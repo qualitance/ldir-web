@@ -1,0 +1,69 @@
+<div class="ldr-pile-summary">
+    <div class="ldr-info-blocks">
+        <div>
+            <dl>
+                <dt><span>{{'views.addPile.summary.size' | translate}}</span></dt>
+                <dt><span> {{'views.addPile.details.text' | translate}}</span></dt>
+                <dd>
+                    <div>
+                        <custom-ratings ng-model="pile.size" disabled></custom-ratings>
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <dl>
+                <dt><span>{{'views.addPile.summary.content' | translate}}</span></dt>
+                <dd>
+                    <div>
+                        <span ng-repeat="material in materials | filter: {selected: true}">{{material.name}}{{$last ? '' : ', '}}</span>
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        <div ng-if="hasAreas">
+            <dl>
+                <dt><span>{{'views.addPile.summary.areas' | translate}}</span></dt>
+                <dd>
+                    <div>
+                        <span
+                            ng-repeat="area in areas | filter: {selected: true}">{{area.name}}{{$last ? '' : ', '}}</span>
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <dl>
+                <dt><span>{{'views.addPile.summary.photos' | translate}} - {{files.length}}</span></dt>
+                <dd>
+                    <div>
+                        <lx-thumbnail style="display: inline-block" class="marginright20px" ng-repeat="file in files"
+                                      thumbnail-src="{{ file.thumbnailImage }}" thumbnail-width="60"
+                                      thumbnail-height="60"></lx-thumbnail>
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <dl>
+                <dt><span>{{'views.addPile.summary.gpsCoord' | translate}}</span></dt>
+                <dd>
+                    <div>
+                        <span ng-bind-html="pile.location.lat | decToDms:'lat'"></span> <span
+                        ng-bind-html="pile.location.lng | decToDms:'lng'"></span>
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        <div ng-if="pile.description.length">
+            <dl>
+                <dt><span>{{'views.addPile.summary.description' | translate}}</span></dt>
+                <dd>
+                    <div>
+                        {{pile.description}}
+                    </div>
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>

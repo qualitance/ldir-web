@@ -1,0 +1,46 @@
+<div class="ldr-fpw">
+    <div class="ldr-container">
+        <div class="ldr-back">
+            <div>
+                <a href="#" ui-sref="login"><span><i class="mdi mdi-arrow-left"></i></span></a>
+            </div>
+        </div>
+        <div class="ldr-inside">
+            <div>
+                <div class="tc-white-1" flex-container="row">
+                    <div flex-item="4" flex-item-order="2">
+                        <div class="ldr-logo">
+                            <div>
+                                <a ui-sref="main"><img src="../assets/images/logo_white.png"></a>
+                            </div>
+                        </div>
+                        <div class="well" ng-show="success">
+                            <p>{{'views.fpw.thanks' | translate}}.<br> {{'views.fpw.messageReceive' | translate}}.</p>
+                        </div>
+                        <form class="form" name="form" ng-submit="reset(form)" novalidate ng-if="!success">
+                            <div flex-item class="ldr-headline">
+                                <span class="fs-headline display-block">{{'views.fpw.title' | translate}}</span>
+                            </div>
+                            <div flex-item>
+                                <lx-text-field label="{{'views.fpw.email' | translate}}" theme="dark"
+                                               error="(form.email.$error.required || form.email.$error.invalidEmail) && form.email.$dirty"
+                                               fixed-label="true">
+                                    <input type="text" name="email" ng-model="user.email" required mongoose-error
+                                           email-match>
+                                </lx-text-field>
+                            </div>
+                            <div flex-item class="ldr-btn-fpw">
+                                <button class="btn btn--xl btn--white btn--raised" lx-ripple type="submit"
+                                        ng-disabled="form.$invalid || !form.$dirty">{{'views.fpw.resetButton' |
+                                    translate}}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div flex-item="4" flex-item-order="1">&nbsp;</div>
+                    <div flex-item="4" flex-item-order="3">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

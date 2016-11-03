@@ -1,0 +1,99 @@
+.ldr-container {
+
+    .ldr-avatar {
+        margin-top: 40px;
+
+        //    text-align: center;
+        .ldr-avatar-holder {
+            display: inline-block;
+            position: relative;
+            padding: 20px;
+            .image-holder {
+                width: 75px;
+                height: 75px;
+                background-size: cover;
+                border-radius: 100px;
+            }
+            &.profile-avatar-holder {
+                .image-holder {
+                    width: 200px;
+                    height: 200px;
+                }
+            }
+            .ldr-take-photo-btn {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+        }
+    }
+    .ldr-profile-info {
+        //    text-align: left;
+        .email {
+            color: $grey-500;
+            font-weight: $light-bold;
+        }
+
+    }
+    .ldr-avatar {
+        img {
+            width: 200px;
+            height: 200px;
+        }
+    }
+    .ldr-submit-btn {
+        //    text-align: center;
+        //    margin: 20px 0;
+    }
+    .ldr-password-set {
+        .btn {
+            width: 100%;
+        }
+    }
+    .ldr-links {
+        text-align: center;
+        a {
+            text-decoration: none;
+            color: $blue-700;
+            display: block;
+            margin: 10px 0;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.ldr-profile-form, .ldr-password-form {
+    .form-error {
+        color: #F44336;
+        font-size: 0.85em;
+        list-style: none;
+    }
+
+    .lx-select {
+        padding: 8px 0;
+        margin-top: 0;
+    }
+
+    .dropdown-error {
+        // used !important because select2 CSS also has !important for color property
+        color: #F44336 !important;
+    }
+
+    .has-error {
+        .lx-select {
+
+            &:before {
+                border-bottom-color: #F44336;
+                border-bottom-width: 2px;
+            }
+
+            .lx-select__selected {
+                > span {
+                    color: #F44336;
+                }
+            }
+        }
+    }
+}

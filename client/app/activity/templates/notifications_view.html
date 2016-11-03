@@ -1,0 +1,63 @@
+<div class="ldr-container">
+    <div class="ldr-notifications">
+        <div class="mt++">
+            <span class="fs-headline display-block">{{'views.notifications.title' | translate}}</span>
+        </div>
+        <div flex-container="column">
+            <div class="mt++ mb++">
+
+                <div class="data-table-container">
+
+                    <div infinite-scroll="nextPage()" infinite-scroll-disabled="busyLoading">
+                        <table class="data-table data-table--has-primary data-table--has-secondary">
+                            <tbody>
+                            <tr class="data-table__clickable-row" ng-repeat="activity in activities"
+                                ng-click="visitNotification(activity)" ng-class="{'ldr-unread': !activity.viewed}">
+                                <td style="width: 1%">
+                                    <img ng-src="{{activity.pile.images[0].thumb_src || defaultPileImageSrc}}"
+                                         width="40" height="40" class="img-round">
+                                </td>
+                                <td>
+                                    <span ng-if="activity.verb == 'pending'">{{'views.notifications.pending.messageOne' | translate}} <strong>#{{activity.pile.nr_ord}}</strong> {{'views.notifications.pending.messageTwo' | translate}}.</span>
+                                    <span ng-if="activity.verb == 'confirmation.confirm'">{{'views.notifications.confirm' | translate}} <strong>#{{activity.pile.nr_ord}}</strong>.</span>
+                                    <span ng-if="activity.verb == 'confirmation.unconfirm'">{{'views.notifications.pile' | translate}} <strong>#{{activity.pile.nr_ord}}</strong> {{'views.notifications.unCofirm' | translate}}.</span>
+                                    <span ng-if="activity.verb == 'reported'">{{'views.notifications.pile' | translate}} <strong>#{{activity.pile.nr_ord}}</strong> {{'views.notifications.reported' | translate}}.</span>
+                                    <span
+                                        ng-if="activity.verb == 'clean'">{{'views.notifications.pile' | translate}} <strong>#{{activity.pile.nr_ord}}</strong> {{'views.notifications.clean' | translate}}.</span>
+                                    <span ng-if="activity.verb == 'comment'">{{'views.notifications.comment' | translate}} <strong>#{{activity.pile.nr_ord}}</strong>.</span>
+                                    <span ng-if="activity.verb == 'confirmed'">{{'views.notifications.supervisorConfirm' | translate}} <strong>#{{activity.pile.nr_ord}}</strong>.</span>
+                                    <span ng-if="activity.verb == 'unconfirmed'">{{'views.notifications.supervisorUnConfirm' | translate}} <strong>#{{activity.pile.nr_ord}}</strong>.</span>
+                                    <div ng-if="activity.date_created">
+                                        <span class="fs-caption display-block"
+                                              am-time-ago="activity.date_created"></span>
+                                    </div>
+                                </td>
+                                <td style="width: 1%" class="ldr-cell-option">
+                                    <button class="btn btn--xs btn--white btn--fab" lx-ripple ad-stop-event
+                                            ng-click="markAsRead(activity)"><i class="mdi mdi-eye"
+                                                                               lx-tooltip="{{'views.notifications.markAsRead' | translate}}"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <lx-progress type="circular" color="#bdbdbd" ng-show="busyLoading"></lx-progress>
+                    </div>
+                </div>
+                <div flex-item ng-if="!activities.length && finishedLoading">
+                    <div class="card">
+
+                        <div class="p+">
+                            <div class="paragraph fs-body-1">
+                                <p>
+                                    {{'views.notifications.noNotifications' | translate}}.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

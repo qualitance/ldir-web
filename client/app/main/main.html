@@ -1,0 +1,378 @@
+<style type="text/css">
+    body, html {
+        margin: 0;
+        overflow: hidden;
+        -webkit-transition: opacity 400ms;
+        -moz-transition: opacity 400ms;
+        transition: opacity 400ms
+    }
+
+    .onepage-wrapper, body, html {
+        display: block;
+        position: static;
+        padding: 0;
+        width: 100%;
+        height: 100%
+    }
+
+    .onepage-wrapper {
+        width: 100%;
+        height: 100%;
+        display: block;
+        position: relative;
+        padding: 0;
+        -webkit-transform-style: preserve-3d
+    }
+
+    .onepage-wrapper .ops-section {
+        width: 100%;
+        height: 100%;
+        position: relative
+    }
+
+    .onepage-pagination {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        z-index: 5;
+        list-style: none;
+        margin: 0;
+        padding: 0
+    }
+
+    .onepage-pagination li {
+        padding: 0;
+        text-align: center
+    }
+
+    .onepage-pagination li a {
+        padding: 10px;
+        width: 4px;
+        height: 4px;
+        display: block
+    }
+
+    .onepage-pagination li a:before {
+        content: '';
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(0, 0, 0, .85);
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px
+    }
+
+    .onepage-pagination li a.active:before {
+        width: 10px;
+        height: 10px;
+        background: 0 0;
+        border: 1px solid #000;
+        margin-top: -4px;
+        left: 8px
+    }
+
+    .disabled-onepage-scroll, .disabled-onepage-scroll .wrapper {
+        overflow: auto
+    }
+
+    .disabled-onepage-scroll .onepage-wrapper .ops-section {
+        position: relative !important;
+        top: auto !important
+    }
+
+    .disabled-onepage-scroll .onepage-wrapper {
+        -webkit-transform: none !important;
+        -moz-transform: none !important;
+        transform: none !important;
+        -ms-transform: none !important;
+        min-height: 100%
+    }
+
+    .disabled-onepage-scroll .onepage-pagination {
+        display: none
+    }
+
+    .disabled-onepage-scroll .onepage-wrapper, body.disabled-onepage-scroll, html {
+        position: inherit
+    }
+</style>
+<div class="ldr-main" ldr-one-page remove-tooltip>
+    <section class="landing-section">
+        <div class="ldr-top">
+            <div class="tc-white-1" flex-container="row">
+                <div flex-item="1" flex-item-order="1">&nbsp;</div>
+                <div flex-item="2" flex-item-order="2">
+                    <div class="ldr-logo">
+                        <div>
+                            <img src="../assets/images/logo-ldir-%5BConverted%5D.png">
+                        </div>
+                    </div>
+                </div>
+                <div flex-item="6" flex-item-order="3">&nbsp;</div>
+                <div flex-item="2" flex-item-order="4">
+                    <div class="ldr-login-btn">
+                        <button class="btn btn--m btn--white btn--raised" lx-ripple="white" ui-sref="login">
+                            {{'views.main.auth' | translate}}
+                        </button>
+                    </div>
+                </div>
+                <div flex-item="1" flex-item-order="5">&nbsp;</div>
+            </div>
+        </div>
+        <div class="ldr-container">
+            <div class="ldr-inside">
+                <div class="ldr-dt">
+                    <div class="ldr-dt-cell">
+                        <div class="tc-white-1 opaque-bg" flex-container="row">
+                            <div flex-item="3" flex-item-order="1">&nbsp;</div>
+                            <div flex-item="6" flex-item-order="2">
+                                <div class="ldr-title">
+                                    <h1>{{'views.main.title' | translate}}</h1>
+                                </div>
+                                <div class="ldr-signup-btn centerBtn">
+                                    <button class="btn btn--xl btn--green btn--raised" lx-ripple ui-sref="signup">
+                                        {{'views.main.signup' | translate}}
+                                    </button>
+                                </div>
+                                <div class="ldr-subtitle">
+                                    <h2 style="width: 100%" class="text-center fontSize14px no-background">
+                                        {{'views.main.subtitle' | translate}}</h2>
+                                </div>
+                                <div class="appsList">
+                                    <ul class="fontSize14px">
+                                        <li><a class="gp" target="_blank"
+                                               href="https://play.google.com/store/apps/details?id=com.qualitanceEnterprise.ldr&hl=ro"
+                                               title="Android"></a></li>
+                                        <li><a class="as" target="_blank"
+                                               href="https://itunes.apple.com/ro/app/lets-do-it-romania/id1010637819?mt=8"
+                                               title="Ios"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div flex-item="3" flex-item-order="3">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="about-section">
+        <div class="ldr-container">
+            <div class="ldr-vertical-align">
+                <div>
+                    <div class="ldr-subtitle">
+                        <h2>{{'views.main.about' | translate}}</h2>
+                    </div>
+                    <div class="ldr-about-us">
+                        <div flex-container="row">
+                            <div flex-item="3" flex-item-order="1">&nbsp;</div>
+                            <div flex-item="6" flex-item-order="2">
+                                <p>
+                                    {{'views.main.aboutMore' | translate}}
+                                </p>
+                            </div>
+                            <div flex-item="3" flex-item-order="3">&nbsp;</div>
+                        </div>
+
+                    </div>
+                    <div flex-item="3" flex-item-order="3">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="why-section">
+        <div class="ldr-container">
+            <div class="ldr-vertical-align">
+                <div>
+                    <div class="ldr-subtitle why-subtitle">
+                        <h2>{{'views.main.why' | translate}}</h2>
+                    </div>
+                    <div class="ldr-about-us">
+                        <div flex-container="row">
+                            <div flex-item="3" flex-item-order="1">&nbsp;</div>
+                            <div flex-item="6" flex-item-order="2">
+                                <div class="ldr-about-us">
+                                    {{'views.main.whyMore' | translate}}
+                                    <ul>
+                                        <li>
+                                            {{'views.main.whyMoreItemOne' | translate}}
+                                        </li>
+                                        <li>
+                                            {{'views.main.whyMoreItemTwo' | translate}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div flex-item="3" flex-item-order="3">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features-section">
+        <div class="ldr-container">
+            <div class="ldr-vertical-align">
+                <div>
+                    <div class="ldr-subtitle">
+                        <h2>{{'views.main.how' | translate}}</h2>
+                    </div>
+                    <div flex-container="row">
+                        <div flex-item="1" flex-item-order="1">&nbsp;</div>
+                        <div flex-item="10" flex-item-order="2">
+                            <div class="tc-white-1 ldr-tiles ldr-first" flex-container="row">
+                                <div flex-item="5.5">
+                                    <div class="ldr-tile ldr-tile-1">
+                                        <div class="ldr-overlay">
+                                            <div class='ldr-vertical-align'>
+                                                <div>
+                                                    <!--<h3 data-fittext data-fittext-max="25px">Vim Ferri Elaboraret</h3>-->
+                                                    <p>{{'views.main.howItemOne' | translate}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div flex-item="1">&nbsp;</div>
+                                <div flex-item="5.5">
+                                    <div class="ldr-tile ldr-tile-2">
+                                        <div class="ldr-overlay">
+                                            <div class='ldr-vertical-align'>
+                                                <div>
+                                                    <!--<h3 data-fittext data-fittext-max="25px">Vim Ferri Elaboraret</h3>-->
+                                                    <p>
+                                                        {{'views.main.howItemTwo' | translate}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tc-white-1 ldr-tiles ldr-first" flex-container="row">
+                                <div flex-item="5.5">
+                                    <div class="ldr-tile ldr-tile-3">
+                                        <div class="ldr-overlay">
+                                            <div class='ldr-vertical-align'>
+                                                <div>
+                                                    <p>
+                                                        {{'views.main.howItemThree' | translate}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div flex-item="1">&nbsp;</div>
+                                <div flex-item="5.5">
+                                    <div class="ldr-tile ldr-tile-4">
+                                        <div class="ldr-overlay">
+                                            <div class='ldr-vertical-align'>
+                                                <div>
+                                                    <p>{{'views.main.howItemFour' | translate}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tc-white-1 ldr-tiles" flex-container="row">
+                                <div flex-item="5.5">
+                                    <div class="ldr-tile ldr-tile-5">
+                                        <div class="ldr-overlay">
+                                            <div class='ldr-vertical-align'>
+                                                <div>
+                                                    <p>{{'views.main.howItemFive' | translate}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div flex-item="1">&nbsp;</div>
+                                <div flex-item="5.5">
+                                    <div class="ldr-tile ldr-tile-6">
+                                        <div class="ldr-overlay">
+                                            <div class='ldr-vertical-align'>
+                                                <div>
+                                                    <p>{{'views.main.howItemSix' | translate}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="contact-section">
+        <div class="ldr-container">
+            <div class="ldr-vertical-align">
+                <div>
+                    <div class="ldr-subtitle">
+                        <h2><span class="fs-headline display-block">{{'views.main.contact' | translate}}</span></h2>
+                    </div>
+                    <div class="ldr-contact-p">
+                        <div flex-container="row">
+                            <div flex-item="3" flex-item-order="1">&nbsp;</div>
+                            <div flex-item="6" flex-item-order="2">
+                                <p>
+                                    {{'views.main.contactMore' | translate}}
+                                </p>
+                            </div>
+                            <div flex-item="3" flex-item-order="3">&nbsp;</div>
+                        </div>
+                        <form name="form" ng-submit="contact(form)" novalidate>
+                            <div class="tc-white-1" flex-container="row" flex-gutter="24">
+                                <div flex-item="4" flex-item-order="1">
+                                    <div flex-item>
+                                        <lx-text-field label="{{'views.main.contactForm.lastName' | translate}}"
+                                                       error="form.last_name.$error.required && form.last_name.$dirty">
+                                            <input type="text" name="last_name" ng-model="contact.last_name" required>
+                                        </lx-text-field>
+                                    </div>
+                                </div>
+                                <div flex-item="4" flex-item-order="2">
+                                    <div flex-item>
+                                        <lx-text-field label="{{'views.main.contactForm.firstName' | translate}}"
+                                                       error="form.first_name.$error.required && form.first_name.$dirty">
+                                            <input type="text" name="first_name" ng-model="contact.first_name" required>
+                                        </lx-text-field>
+                                    </div>
+                                </div>
+                                <div flex-item="4" flex-item-order="3">
+                                    <div flex-item>
+                                        <lx-text-field label="{{'views.main.contactForm.email' | translate}}"
+                                                       error="(form.email.$error.required || form.email.$error.invalidEmail) && form.email.$dirty">
+                                            <input type="text" name="email" ng-model="contact.email" required
+                                                   email-match>
+                                        </lx-text-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tc-white-1" flex-container="row">
+                                <div flex-item="12" flex-item-order="1">
+                                    <div flex-item>
+                                        <lx-text-field label="{{'views.main.contactForm.message' | translate}}"
+                                                       error="form.message.$error.required && form.message.$dirty">
+                                            <textarea name="message" ng-model="contact.message" required></textarea>
+                                        </lx-text-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div flex-item class="ldr-submit-btn">
+                                <button class="btn btn--l btn--orange btn--raised" lx-ripple
+                                        ng-disabled="form.$invalid || !form.$dirty">
+                                    {{'views.main.contactForm.sendMessage' | translate}}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

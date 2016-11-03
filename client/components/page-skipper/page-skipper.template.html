@@ -1,0 +1,24 @@
+<div flex-item style="width: 200px">
+    <span class="float-left">{{'generic.skipToPage' | translate}} :</span>
+    <div class="float-right" ng-class="{'has-error': !pagesList}">
+        <ui-select
+            name="country"
+            theme="select2"
+            ng-model="selectedPage"
+            search-enabled="false"
+            class="custom-ui-select  margintop0px marginbottom0px"
+            on-select="skipToPage($item)">
+
+            <ui-select-match
+                allow-clear="true"
+                class="{{!pagesList ? 'dropdown-error': ''}}"
+                placeholder="{{'generic.page' | translate}}">
+                {{$select.selected}}
+            </ui-select-match>
+
+            <ui-select-choices repeat="page in pagesList | filter: $select.search">
+                <span ng-bind-html="page | highlight: $select.search"></span>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</div>

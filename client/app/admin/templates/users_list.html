@@ -1,0 +1,269 @@
+<div class="ldr-holder">
+    <div flex-container="row" flex-gutter="8">
+        <div flex-item="4" data-ng-class="{'readonly': !isAdmin()}">
+            <ui-select ng-model="user.country" theme="select2" class="custom-ui-select" on-select="enableFilterBtn()">
+                <ui-select-match placeholder="{{'views.usersList.selectCountry' | translate}}">
+                    {{$select.selected.name}}
+                </ui-select-match>
+                <ui-select-choices repeat="country in countries | filter: $select.search">
+                    <span ng-bind-html="country.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div flex-item="4" data-ng-class="{'readonly': !isAdmin()}">
+            <ui-select ng-model="user.county" theme="select2" class="custom-ui-select" on-select="enableFilterBtn()">
+                <ui-select-match placeholder="{{'views.usersList.selectCounty' | translate}}">
+                    {{$select.selected.name}}
+                </ui-select-match>
+                <ui-select-choices repeat="county in counties | filter: $select.search">
+                    <span ng-bind-html="county.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div flex-item="4" data-ng-class="{'readonly': !isAdmin()}">
+            <ui-select ng-model="user.role" theme="select2" class="custom-ui-select" on-select="enableFilterBtn()">
+                <ui-select-match placeholder="{{'views.usersList.selectRole' | translate}}">{{$select.selected.name}}
+                </ui-select-match>
+                <ui-select-choices repeat="role in roles | filter: $select.search">
+                    <span ng-bind-html="role.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+    <div flex-container="row" flex-gutter="8">
+        <div flex-item="4">
+            <lx-text-field lx-label="First name">
+                <input type="text" placeholder="{{'views.usersList.searchByFirstName' | translate}}"
+                       ng-model="user.first_name" ng-keyup="enableFilterBtn()">
+            </lx-text-field>
+        </div>
+        <div flex-item="4">
+            <lx-text-field lx-label="Last name">
+                <input type="text" placeholder="{{'views.usersList.searchByLastName' | translate}}"
+                       ng-model="user.last_name" ng-keyup="enableFilterBtn()">
+            </lx-text-field>
+        </div>
+        <div flex-item="4">
+            <lx-text-field lx-label="Email">
+                <input type="text" placeholder="{{'views.usersList.searchByEmail' | translate}}" name="emailFilterInput"
+                       ng-model="user.email" ng-keyup="enableFilterBtn()">
+            </lx-text-field>
+        </div>
+    </div>
+    <div flex-container="row" flex-gutter="8">
+        <div flex-item="3" flex-item-order="1">
+            <div class="ldr-add-supervisor" style="text-align:left">
+                <button class="btn btn--l btn--green btn--raised" ng-click="openSupervisorModal('createSupervisor')"
+                        lx-ripple>{{'views.usersList.addSupervisor' | translate}}
+                </button>
+            </div>
+        </div>
+
+        <div flex-item="8" flex-item-order="2" flex-align="">
+            <div class="ldr-add-supervisor" style="text-align:right">
+                <button class="btn btn--l btn--red btn--raised" ng-disabled="disableBtn" lx-ripple
+                        ng-click="resetUserFilters()">{{'views.usersList.resetFilter' | translate}}
+                </button>
+            </div>
+        </div>
+
+        <div flex-item="1" flex-item-order="3" flex-align="">
+            <div class="ldr-add-supervisor" style="text-align:right">
+                <button class="btn btn--l btn--light-blue btn--raised" ng-disabled="disableBtn" lx-ripple
+                        ng-click="filterUsers()">{{'views.usersList.filter' | translate}}
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <div class="ldr-grid">
+        <div class="data-table-container">
+            <table class="data-table data-table--has-primary data-table--has-secondary tc-black-1">
+                <thead>
+                <tr>
+                    <th class="ldr-sortable"
+                        ng-class="{'ldr-sorted-asc' : (config_obj.sort_by == 'first_name' && config_obj.sort_order == 1),'ldr-sorted-desc' : (config_obj.sort_by == 'first_name' && config_obj.sort_order == -1)}">
+                        <a ng-click="filter('sort_by', 'first_name'); filter('sort_order', null, true)"
+                           class="pointerCur">
+                            <span>{{'views.usersList.firstName' | translate}}</span>
+                        </a>
+                    </th>
+                    <th class="ldr-sortable"
+                        ng-class="{'ldr-sorted-asc' : (config_obj.sort_by == 'last_name' && config_obj.sort_order == 1),'ldr-sorted-desc' : (config_obj.sort_by == 'last_name' && config_obj.sort_order == -1)}">
+                        <a ng-click="filter('sort_by', 'last_name'); filter('sort_order', null, true)"
+                           class="pointerCur">
+                            <span>{{'views.usersList.lastName' | translate}}</span>
+                        </a>
+                    </th>
+                    <th>
+                        <span><strong>{{'views.usersList.role' | translate}}</strong></span>
+                    </th>
+                    <th class="ldr-sortable"
+                        ng-class="{'ldr-sorted-asc' : (config_obj.sort_by == 'email' && config_obj.sort_order == 1),'ldr-sorted-desc' : (config_obj.sort_by == 'email' && config_obj.sort_order == -1)}">
+                        <a ng-click="filter('sort_by', 'email'); filter('sort_order', null, true)" class="pointerCur">
+                            <span>{{'views.usersList.email' | translate}}</span>
+                        </a>
+                    </th>
+                    <th>
+                        <span>Country</span>
+                    </th>
+                    <th>
+                        <span>{{'views.usersList.county' | translate}}</span>
+                    </th>
+                    <th class="ldr-cell-option">
+                        <i class="icon icon--s mdi mdi-checkbox-blank" style="visibility: hidden"></i>
+                        <i class="icon icon--s mdi mdi-checkbox-blank" style="visibility: hidden"></i>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr class="" ui-sref="app.admin.user.view({id: user._id})" ng-repeat="user in data.users"
+                    style="cursor: pointer">
+                    <td class="ldr-cell-state"><span>{{user.first_name}}</span></td>
+                    <td class="ldr-cell-reported-date"><span>{{user.last_name}}</span></td>
+                    <td class="ldr-cell-updated-date"><span>{{user.role | parseAndTranslate : 'roles'}}</span></td>
+                    <td class="ldr-cell-allocated-date"><span>{{user.email}}</span></td>
+                    <td class="ldr-cell-allocated-date"><span>{{user.county.country.name}}</span></td>
+                    <td class="ldr-cell-allocated-date"><span>{{user.county.name}}</span></td>
+                    <td class="ldr-cell-option">
+                        <div ad-stop-event style="display: inline">
+                            <button ng-disabled="user._id == currentUser._id" class="btn btn--s btn--white btn--fab"
+                                    lx-ripple lx-tooltip="{{'views.usersList.edit' | translate}}"
+                                    ng-click="state.go('app.admin.user.edit', {id: user._id, type: edit})">
+                                <i class="mdi mdi-pencil"></i>
+                            </button>
+                        </div>
+
+                        <div ad-stop-event style="display: inline">
+                            <button ng-disabled="user.status == 'inactive' || user._id == currentUser._id"
+                                    class="btn btn--s btn--white btn--fab" ng-click="alertAdmin('alertAdmin',user)"
+                                    lx-ripple lx-tooltip="{{'views.usersList.delete' | translate}}">
+                                <i class="mdi mdi-account-remove"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div data-ng-show="data.users && data.users.length == 0">
+            <div class="card">
+
+                <div class="p+">
+                    <div class="paragraph fs-body-1" style="text-align: center;font-size: 18px;">
+                        <p>
+                            {{'views.usersList.noRecords' | translate}}
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div flex-container="row">
+        <div class="ldr-pagination-section">
+            <div class="ldr-showing-page">
+                {{'generic.page' | translate}}: <strong>{{config_obj.page}}</strong>
+            </div>
+            <div class="ldr-showing-results">
+                {{'generic.showing' | translate}} <strong>{{config_obj.page * config_obj.skip - config_obj.skip +
+                1}}</strong> - <strong>{{config_obj.page * config_obj.skip - (config_obj.skip -
+                data.users.length)}}</strong> {{'generic.of' | translate}} <strong>{{totalNumberUsers}}</strong>
+                {{'generic.results' | translate}}
+            </div>
+            <div style="overflow: hidden">
+                <button class="btn btn--m btn--black btn--flat" type="button" ng-click="setPage(config_obj.page - 1)"
+                        ng-disabled="config_obj.page <= 1" lx-ripple>&laquo; {{'generic.previous' | translate}}
+                </button>
+                <button class="btn btn--m btn--black btn--flat" type="button" ng-click="setPage(config_obj.page + 1)"
+                        ng-disabled="config_obj.page >= totalNumberPages" lx-ripple>{{'generic.next' |
+                    translate}} &raquo;</button>
+            </div>
+            <div ng-if="data.users">
+                <page-skipper config="config_obj" pages="totalNumberPages"></page-skipper>
+            </div>
+        </div>
+    </div>
+</div>
+<lx-dialog class="dialog dialog--l" id="createSupervisor" auto-close="true" close-modal-on-state-change>
+    <form name="supervisorForm" ng-submit="createSupervisor('createSupervisor',supervisorForm)" novalidate
+          ng-if="!success">
+        <div class="dialog__header">
+            <div class="toolbar bgc-green-500 pl++">
+        <span class="toolbar__label tc-white fs-title">
+            <span>{{'views.usersList.createSupervisor.new' | translate}}</span>
+        </span>
+            </div>
+        </div>
+        <div class="dialog__content ldr-password-form">
+            <div class="" flex-container="row">
+                <div flex-item="12" class="p++">
+                    <lx-text-field label="{{'generic.emailAddress' | translate}}"
+                                   error="supervisorForm.email.$invalid && submitted" fixed-label="true">
+                        <input type="email" required name="email" ng-model="supervisor.email">
+                    </lx-text-field>
+                    <div class="tc-red-500 error-message-holder"
+                         data-ng-show="(supervisorForm.email.$invalid&& submitted)">
+                        {{'views.usersList.createSupervisor.invalidEmail' | translate}}.
+                    </div>
+
+                    <lx-text-field label="{{'views.usersList.createSupervisor.lastName' | translate}}"
+                                   fixed-label="true" error="supervisorForm.first_name.$invalid && submitted">
+                        <input type="text" name="first_name" ng-minlength="2" ng-model="supervisor.first_name" required
+                               mongoose-error>
+                    </lx-text-field>
+                    <div class="tc-red-500 error-message-holder"
+                         data-ng-show="(supervisorForm.first_name.$invalid && submitted )">
+                        {{'views.usersList.createSupervisor.invalidName' | translate}}
+                    </div>
+
+                    <lx-text-field label="{{'views.usersList.createSupervisor.firstName' | translate}}"
+                                   fixed-label="true" error="supervisorForm.last_name.$invalid && submitted">
+                        <input type="text" name="last_name" ng-minlength="2" ng-model="supervisor.last_name" required
+                               mongoose-error>
+                    </lx-text-field>
+                    <div class="tc-red-500 error-message-holder"
+                         data-ng-show="(supervisorForm.last_name.$invalid && submitted)">
+                        {{'views.usersList.createSupervisor.invalidName' | translate}}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="dialog__actions">
+            <button class="btn btn--m btn--black btn--flat" ng-click="closeSupervisorModal('createSupervisor')"
+                    lx-ripple type="button">{{'generic.cancel' | translate}}
+            </button>
+            <button class="btn btn--m btn--green btn--flat" lx-ripple>{{'generic.save' | translate}}</button>
+        </div>
+    </form>
+</lx-dialog>
+<lx-dialog class="dialog dialog--l" id="alertAdmin" auto-close="false"
+           onscrollend="scrollEndDialog()" close-modal-on-state-change>
+    <div class="dialog__header">
+        <div class="toolbar bgc-green-500 pl++">
+        <span class="toolbar__label tc-white fs-title">
+            <span>{{'views.usersList.deactivateUser.title' | translate}}</span>
+        </span>
+        </div>
+    </div>
+    <div class="dialog__content">
+        <div class="alert-modal-content ldr-issue-description"
+             style="text-align:center;margin-top: 3%;margin-bottom: 1%;padding-top: 5%;">
+            <p style="font-size: larger;">{{'views.usersList.deactivateUser.messageOne' | translate}} <b>{{temp_user.first_name}}
+                {{temp_user.last_name}}</b> {{'views.usersList.deactivateUser.messageTwo' | translate}}?</p>
+            <br>
+        </div>
+    </div>
+    <br>
+    <div class="dialog__actions">
+        <button class="btn btn--m btn--black btn--flat" type="button" lx-ripple ng-click="cancelAlert('alertAdmin')">
+            {{'generic.cancel' | translate}}
+        </button>
+        <button class="btn btn--m btn--green btn--flat" type="button"
+                ng-click="makeUserInactive(temp_user,'alertAdmin')" lx-ripple>{{'views.usersList.deactivateUser.yes' |
+            translate}}
+        </button>
+    </div>
+</lx-dialog>
