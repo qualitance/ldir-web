@@ -9,7 +9,6 @@ angular.module('ldrWebApp')
      * @requires Auth
      * @property {String} message - hello message
      * @property {String} helperLanguage - current user language
-
      */
     .controller('HelpCtrl', function ($scope, Auth) {
         $scope.message = 'Hello';
