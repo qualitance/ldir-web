@@ -1,3 +1,11 @@
+/**
+ * @ngdoc directive
+ * @name bindHelpScreen
+ * @description binds help screen popup to specified element
+ * @example
+ * <pre><button class="btn btn--m btn--orange btn--flat" lx-ripple bind-help-screen="0">
+ * {{'views.help.viewTutorial' | translate}}</button></pre>
+ */
 angular.module('ldrWebApp').directive('bindHelpScreen', ['Help', 'LxNotificationService', '$translate',
     function (Help, LxNotificationService, $translate) {
         return {
