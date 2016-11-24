@@ -1,6 +1,26 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc controller
+     * @name AdminCtrl
+     * @description admin's view main controller
+     * @requires $state
+     * @requires $scope
+     * @requires LxDialogService
+     * @requires LxNotificationService
+     * @requires Pile
+     * @requires HelperService
+     * @requires $filter
+     * @requires $q
+     * @requires User
+     * @requires $translate
+     * @requires responseHandler
+     * @property {Object} state - current state object
+     * @property {Object} datepicker - datepicker's information
+     * @property {Boolean} clickable1 - calendar opened flag
+     * @property {Boolean} clickable2 - calendar opened flag
+     */
     .controller('AdminCtrl', ['$state', '$scope', 'LxDialogService', 'LxNotificationService', 'Pile', 'HelperService',
         '$filter', '$q', 'User', '$translate', 'responseHandler',
         function ($state, $scope, LxDialogService, LxNotificationService, Pile, HelperService,
@@ -15,13 +35,22 @@ angular.module('ldrWebApp')
                 LxDialogService.open(dialogId);
             };
 
+            /**
+             * @ngdoc
+             * @name AdminCtrl#getUsersCSV
+             * @methodOf AdminCtrl
+             * @example
+             * <pre><button class="btn btn--m btn--raised" lx-ripple ng-csv="getUsersCSV()"
+             filename="Users_report.csv">{{'views.admin.userReport' | translate}}</button></pre>
+             * @description
+             * formats stats, inserts header and all data
+             * @returns {Promise} Resolves to an empty response/error
+             */
             $scope.getUsersCSV = function () {
                 var deferred = $q.defer();
                 User.getUsersStatistics().$promise.then(function (resp) {
                     var stats = responseHandler.getData(resp);
-                    //format stats
                     var formatted = [];
-                    //first, insert the header
                     formatted.push({
                         email: 'Email',
                         county: 'County',
@@ -30,7 +59,6 @@ angular.module('ldrWebApp')
                         role: 'Role',
                         created_at: 'Created at'
                     });
-                    //then insert all data
                     for (var i = 0; i < stats.length; i++) {
                         formatted.push({
                             email: stats[i].email,
@@ -46,6 +74,17 @@ angular.module('ldrWebApp')
                 return deferred.promise;
             };
 
+            /**
+             * @ngdoc
+             * @name AdminCtrl#getCountry
+             * @methodOf AdminCtrl
+             * @example
+             <button class="btn btn--m btn--raised" lx-ripple ng-csv="getUsersCSV()"
+             filename="Users_report.csv">{{'views.admin.userReport' | translate}}</button>
+             * @description
+             * prepares country stats array to generate CSV from
+             * @returns {Array} countryArray - country stats array to generate CSV from
+             */
             $scope.getCountry = function (countryArray) {
                 if (!angular.isArray(countryArray)) {
                     countryArray = [countryArray];
@@ -57,12 +96,6 @@ angular.module('ldrWebApp')
                 return $scope.countryArray;
             };
 
-            /*
-             *Country report creation based on datepicker validation
-             *see moment.js library function details
-             *watcher to check validations
-             *generate report
-             */
             $scope.createCountryReport = function (dialogId) {
 
                 LxDialogService.close(dialogId);
@@ -71,6 +104,13 @@ angular.module('ldrWebApp')
 
             };
 
+            /**
+             * @ngdoc
+             * @name AdminCtrl#$watchCollection
+             * @methodOf AdminCtrl
+             * @description
+             * watcher to check validations and then generate country report
+             */
             $scope.$watchCollection('datepicker', function () {
 
 
@@ -127,7 +167,13 @@ angular.module('ldrWebApp')
                 LxDialogService.close(dialogId);
             };
 
-            // evaluate calendar is open or not
+            /**
+             * @ngdoc
+             * @name AdminCtrl#switchBoolean
+             * @methodOf AdminCtrl
+             * @description
+             * check if calendar is open
+             */
             $scope.switchBoolean = function (bool) {
 
                 var calendar = document.getElementsByClassName('lx-date-picker--is-shown');

@@ -1,5 +1,15 @@
 'use strict';
-
+/**
+ * @ngdoc controller
+ * @name AdminUserCtrl
+ * @description admin user controller
+ * @requires $scope
+ * @requires User
+ * @requires $state
+ * @requires Auth
+ * @requires responseHandler
+ * @property {Boolean} user - selected user object
+ */
 angular.module('ldrWebApp')
     .controller('AdminUserCtrl', ['$scope',
         'User',

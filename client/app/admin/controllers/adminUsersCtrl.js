@@ -1,6 +1,32 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc controller
+     * @name AdminUsersCtrl
+     * @description admin statistics controller
+     * @requires $scope
+     * @requires User
+     * @requires CountyService
+     * @requires CountryService
+     * @requires LxDialogService
+     * @requires LxNotificationService
+     * @requires HelperService
+     * @requires Auth
+     * @requires $state
+     * @requires $translate
+     * @requires responseHandler
+     * @property {Object} currentUser - current user object
+     * @property {Object} supervisor - supervisor to create object
+     * @property {Object} data - data to show
+     * @property {Boolean} disableBtn - filter button flag
+     * @property {Object} user - user to search object
+     * @property {Object} all_counties - all counties object
+     * @property {Object} all_countries - all countries object
+     * @property {Object} state - current state object
+     * @property {Object} allUserRoles - all roles object
+     * @property {Object} config_obj - params object
+     */
     .controller('AdminUsersCtrl', [
         '$scope',
         'User',
@@ -89,15 +115,23 @@ angular.module('ldrWebApp')
             };
 
             /**
+             * @ngdoc
+             * @name AdminUsersCtrl#$watch
+             * @methodOf AdminUsersCtrl
              * @description watch for changes on the config page that may be triggered when press on
-             * the page skipper select and then get the according page data
-             * @return {Undefined}
+             * the page skipper select and then gets the according page data
              */
             $scope.$watch('config_obj.page', function () {
                 $scope.getUsers();
             });
 
-            //get users and pagination info
+            /**
+             * @ngdoc
+             * @name AdminUsersCtrl#getUsers
+             * @methodOf AdminUsersCtrl
+             * @description
+             * gets users and pagination info
+             */
             $scope.getUsers = function () {
                 User.all($scope.config_obj, function (data, headers) {
                     $scope.data.users = responseHandler.getData(data);
@@ -106,16 +140,27 @@ angular.module('ldrWebApp')
                 });
             };
 
-            //function to reset filters
+            /**
+             * @ngdoc
+             * @name AdminUsersCtrl#resetFilter
+             * @methodOf AdminUsersCtrl
+             * @description
+             * resets filters
+             */
             $scope.resetFilter = function (property, fetchResults) {
                 $scope.config_obj[property] = null;
                 if (fetchResults)
                     $scope.filter(null, null, true);
             };
 
-            // updates config object & fetches piles if required
-            // fetchresults get users and reset the page counter
-            // gets property to filter by and the value, and modify the config object and do the query
+            /**
+             * @ngdoc
+             * @name AdminUsersCtrl#filter
+             * @methodOf AdminUsersCtrl
+             * @description
+             * updates config object & fetches piles if required, fetch results get users and reset the page counter,
+             * gets property to filter by and the value, and modify the config object and do the query
+             */
             $scope.filter = function (property, value, fetchResults) {
                 if (property) {
                     $scope.config_obj[property] = (value) ? value :
@@ -134,9 +179,10 @@ angular.module('ldrWebApp')
             };
 
             /**
-             * Enable/disable filter and reset filter buttons
-             * @name enableFilterBtn
-             * @return {undefined}
+             * @ngdoc
+             * @name AdminUsersCtrl#enableFilterBtn
+             * @methodOf AdminUsersCtrl
+             * @description enable/disable filter and reset filter buttons
              */
             $scope.enableFilterBtn = function () {
                 $scope.clearFilterEmptyVals();
@@ -150,9 +196,10 @@ angular.module('ldrWebApp')
             };
 
             /**
-             * Clear the filters with empty values
-             * @name clearFilterEmptyVals
-             * @return {undefined}
+             * @ngdoc
+             * @name AdminUsersCtrl#clearFilterEmptyVals
+             * @methodOf AdminUsersCtrl
+             * @description clear the filters with empty values
              */
             $scope.clearFilterEmptyVals = function () {
                 angular.forEach($scope.user, function (value, key) {
@@ -164,9 +211,10 @@ angular.module('ldrWebApp')
             };
 
             /**
-             * generate filters from the user selections
-             * @name filterUsers
-             * @return {undefined}
+             * @ngdoc
+             * @name AdminUsersCtrl#filterUsers
+             * @methodOf AdminUsersCtrl
+             * @description generate filters from the user selections
              */
             $scope.filterUsers = function () {
                 var index = 0;
@@ -182,19 +230,10 @@ angular.module('ldrWebApp')
                 });
             };
 
-            /**
-             *
-             * @name setFetchResults
-             * @param index
-             * @returns {boolean}
-             */
             $scope.setFetchResults = function (index) {
                 return (Object.keys($scope.user).length === index);
             };
 
-            /**
-             *
-             */
             $scope.resetUserFilters = function () {
                 $scope.disableBtn = true;
                 angular.forEach($scope.user, function (value, key) {
@@ -212,7 +251,6 @@ angular.module('ldrWebApp')
                 }
             };
 
-            //reset page on pagination
             $scope.resetPage = function () {
                 $scope.config_obj.page = 1;
             };
@@ -227,9 +265,6 @@ angular.module('ldrWebApp')
                 $scope.getUsers();
             };
 
-            /*
-             Modal functions start from here
-             */
             $scope.alertAdmin = function (dialogId, user) {
                 $scope.temp_user = user;
                 LxDialogService.open(dialogId);
@@ -251,7 +286,18 @@ angular.module('ldrWebApp')
                 LxNotificationService.info($translate.instant('views.usersList.noChanges'));
             };
 
-            //creates a supervisor after validation and sync it on the list until refresh
+            /**
+             * @ngdoc
+             * @name AdminUsersCtrl#createSupervisor
+             * @methodOf AdminUsersCtrl
+             * @param {Object} dialogId - new supervisor dialog id
+             * @param {Object} form - new supervisor form object
+             * @example
+             * <pre><form name="supervisorForm" ng-submit="createSupervisor('createSupervisor',supervisorForm)"
+             * novalidate ng-if="!success"></pre>
+             * @description
+             * creates new supervisor, updates the supervisors list
+             */
             $scope.createSupervisor = function (dialogId, form) {
                 $scope.submitted = true;
                 if (form.$valid) {
@@ -268,6 +314,19 @@ angular.module('ldrWebApp')
                 }
             };
 
+            /**
+             * @ngdoc
+             * @name AdminUsersCtrl#makeUserInactive
+             * @methodOf AdminUsersCtrl
+             * @param {Object} user - user to make inactive object
+             * @param {Object} dialogId - dialog id
+             * @example
+             * <pre><button class="btn btn--m btn--green btn--flat" type="button"
+             * ng-click="makeUserInactive(temp_user,'alertAdmin')" lx-ripple>{{'views.usersList.deactivateUser.yes' |
+             * translate}}</button></pre>
+             * @description
+             * makes user inactive
+             */
             $scope.makeUserInactive = function (user, dialogId) {
                 user.role = 'inactive';
                 User.updateUser({id: user._id}, {status: user.role}).$promise.then(function (data) {
@@ -280,8 +339,5 @@ angular.module('ldrWebApp')
                     LxNotificationService.info($translate.instant('generic.errorSaving'));
                 });
             };
-            /*
-             Modal functions end here
-             */
             $scope.init();
         }]);
