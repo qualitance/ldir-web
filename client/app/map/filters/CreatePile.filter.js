@@ -1,6 +1,13 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc filter
+     * @name decToDms
+     * @description formats coordinates
+     * @example
+     *  <pre><span ng-bind-html="location.lng | decToDms:'lng'"></span></pre>
+     */
     .filter('decToDms', ['$sce', function ($sce) {
         return function (input, latlng) {
             var v = input.toString().split('.');
