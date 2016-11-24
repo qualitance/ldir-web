@@ -1,6 +1,27 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc controller
+     * @name DashboardCtrl
+     * @description dashboard controller
+     * @requires $scope
+     * @requires Pile
+     * @requires Auth
+     * @requires HelperService
+     * @requires CountyService
+     * @requires $state
+     * @requires $translate
+     * @requires responseHandler
+     * @requires CityService
+     * @property {Object} counties - all counties object
+     * @property {Object} all_cities - all cities object
+     * @property {Object} statuses - pile statuses object
+     * @property {Object} data - data to show object
+     * @property {Object} config_obj - query config object
+     * @property {Function} isAdmin - auth function to determine is user has admin role
+     * @property {Function} hasRole - auth function to compare with given role
+     */
     .controller('DashboardCtrl', [
         '$scope',
         'Pile',
@@ -45,7 +66,6 @@ angular.module('ldrWebApp')
 
                 $scope.data = {};
 
-                //query config object
                 $scope.config_obj = {
                     page: 1,
                     skip: 15,
@@ -67,12 +87,24 @@ angular.module('ldrWebApp')
                 $scope.isAdmin = Auth.isAdmin;
                 $scope.hasRole = Auth.hasRole;
 
+                /**
+                 * @ngdoc
+                 * @name DashboardCtrl#goToPile
+                 * @methodOf DashboardCtrl
+                 * @param {object} obj - pile object
+                 * @description redirects to pile view
+                 */
                 $scope.goToPile = function (obj) {
                     var url = $state.href($scope.hasRole('supervisor') ? 'app.map.pile.edit' : 'app.map.pile.view', obj);
                     window.open(url, '_blank');
                 };
 
-                // use case function to display county by user role
+                /**
+                 * @ngdoc
+                 * @name DashboardCtrl#displayDefaultCounty
+                 * @methodOf DashboardCtrl
+                 * @description displays user county or all acounties for admin
+                 */
                 $scope.displayDefaultCounty = function () {
                     if ($scope.user.role === 'admin') {
                         return $scope.counties[0];
@@ -86,9 +118,11 @@ angular.module('ldrWebApp')
             };
 
             /**
+             * @ngdoc
+             * @name DashboardCtrl#$watch
+             * @methodOf DashboardCtrl
              * @description watch for changes on the config page that may be triggered when press on
-             * the page skipper select and then get the according page data
-             * @return {Undefined}
+             * the page skipper select and then gets the according page data
              */
             $scope.$watch('config_obj.page', function () {
                 $scope.getPiles();
@@ -99,6 +133,14 @@ angular.module('ldrWebApp')
             var filter = {};
             var sort = {};
 
+            /**
+             * @ngdoc
+             * @name DashboardCtrl#applySort
+             * @methodOf DashboardCtrl
+             * @description
+             * calls refresh filter function after setting sort object
+             * @param {String} sort_by - user property to sort by
+             */
             $scope.applySort = function (sort_by) {
                 if (sort_by) {
                     if (sort.by === sort_by) {
@@ -114,6 +156,17 @@ angular.module('ldrWebApp')
                 }
             };
 
+            /**
+             * @ngdoc
+             * @name DashboardCtrl#addFilter
+             * @methodOf DashboardCtrl
+             * @example <pre><ui-select ng-model="county" theme="select2" class="custom-ui-select"
+             * ng-change="addFilter('county', $select.selected)"></pre>
+             * @description
+             * adds filter from select values
+             * @param {String} filter_name - filter name
+             * @param {String} filter_value - filter value
+             */
             $scope.addFilter = function (filter_name, filter_value) {
                 if (filter_name && filter_name !== 'city') {
                     if (filter_name === 'county') {
@@ -127,6 +180,14 @@ angular.module('ldrWebApp')
                 }
             };
 
+            /**
+             * @ngdoc
+             * @name DashboardCtrl#removeFilter
+             * @methodOf DashboardCtrl
+             * @description
+             * removes specifie filter from filters array
+             * @param {String} filter_name - filter name
+             */
             $scope.removeFilter = function (filter_name) {
                 if (filter_name) {
                     filter[filter_name] = null;
@@ -135,9 +196,11 @@ angular.module('ldrWebApp')
             };
 
             /**
-             *
-             * @param filter_value
-             * @return {undefined}
+             * @ngdoc
+             * @name DashboardCtrl#applyCityFilter
+             * @methodOf DashboardCtrl
+             * @param {String} filter_value - filter value
+             * @description redirects to pile view
              */
             $scope.applyCityFilter = function (filter_value) {
                 if (filter_value._id === 0) {
@@ -148,6 +211,13 @@ angular.module('ldrWebApp')
                 refreshFilters();
             };
 
+            /**
+             * @ngdoc
+             * @name DashboardCtrl#displayFilterValue
+             * @methodOf DashboardCtrl
+             * @param {String} filter_name - filter name
+             * @description gets translation of filter name
+             */
             $scope.displayFilterValue = function (filter_name) {
                 if (filter_name === 'status') {
                     for (var i = 0; i < $scope.statuses.length; i++) {
@@ -158,21 +228,28 @@ angular.module('ldrWebApp')
                 return '';
             };
 
+            /**
+             * @ngdoc
+             * @name DashboardCtrl#refreshFilters
+             * @methodOf DashboardCtrl
+             * @description updates config object & fetches piles if required
+             */
             function refreshFilters() {
                 $scope.config_obj.sort = sort;
                 $scope.config_obj.filter = filter;
                 $scope.getPiles();
             }
 
-            // updates config object & fetches piles if required
-            // fetchresults get piles and reset the page counter
-            // gets property to filter by and the value, and modify the config object and do the query
-            //same as adminUsers ctrl
-
             $scope.resetPage = function () {
                 $scope.config_obj.page = 1;
             };
 
+            /**
+             * @ngdoc
+             * @name DashboardCtrl#getPiles
+             * @methodOf DashboardCtrl
+             * @description gets required piles
+             */
             $scope.getPiles = function () {
                 Pile.query($scope.config_obj, function (data, headers) {
                     $scope.data.piles = responseHandler.getData(data);
@@ -191,15 +268,27 @@ angular.module('ldrWebApp')
                 $scope.getPiles();
             };
 
+            /**
+             * @ngdoc
+             * @name DashboardCtrl#goToContributions
+             * @methodOf DashboardCtrl
+             * @description gets contribute piles
+             */
             $scope.goToContributions = function () {
-                if (!$scope.config_obj.contributions) { //to not make a call if same button is pressed
+                if (!$scope.config_obj.contributions) {
                     $scope.config_obj.contributions = true;
                     $scope.getPiles();
                 }
             };
 
+            /**
+             * @ngdoc
+             * @name DashboardCtrl#goToPiles
+             * @methodOf DashboardCtrl
+             * @description gets reported piles
+             */
             $scope.goToPiles = function () {
-                if ($scope.config_obj.contributions) { //to not make a call if same button is pressed
+                if ($scope.config_obj.contributions) {
                     $scope.config_obj.contributions = false;
                     $scope.getPiles();
                 }
@@ -209,7 +298,6 @@ angular.module('ldrWebApp')
              * @ngdoc method
              * @name DashboardCtrl#populateCity
              * @methodOf DashboardCtrl
-             * @return {undefined}
              * @description
              * populate city select
              */
