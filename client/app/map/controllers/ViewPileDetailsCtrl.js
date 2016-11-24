@@ -1,4 +1,27 @@
 'use strict';
+/**
+ * @ngdoc controller
+ * @name ViewPileCtrl
+ * @description view pile controller
+ * @requires $scope
+ * @requires $state
+ * @requires Pile
+ * @requires CommentsService
+ * @requires HelperService
+ * @requires $sce
+ * @requires ImageUpload
+ * @requires currentPile
+ * @requires LxDialogService
+ * @requires LxNotificationService
+ * @requires Auth
+ * @requires $translate
+ * @requires responseHandler
+ * @property {Integer} comment - comment to add
+ * @property {Boolean} mapdialog - map dialog opened flag
+ * @property {Object} pile - pile object
+ * @property {Object} bgImage - default background image
+ * @property {Function} hasRole - authentication function that checks if user has specified role
+ */
 angular.module('ldrWebApp').controller('ViewPileCtrl', [
     '$scope',
     '$state',
@@ -31,12 +54,25 @@ angular.module('ldrWebApp').controller('ViewPileCtrl', [
             $scope.comments = responseHandler.getData(data);
         });
 
+        /**
+         * @ngdoc
+         * @name ViewPileCtrl#confirmStatus
+         * @methodOf ViewPileCtrl
+         * @description pile status is confirmed
+         */
         $scope.confirmStatus = function (what) {
             Pile.confirm({action: what, pile: $scope.pile._id}).$promise.then(function success(data) {
                 angular.extend($scope.pile, responseHandler.getData(data));
             });
         };
 
+        /**
+         * @ngdoc
+         * @name ViewPileCtrl#hidePile
+         * @methodOf ViewPileCtrl
+         * @param {Object} pile - pile to hide
+         * @description hides pile from normal users, is shown only for admin
+         */
         $scope.hidePile = function (pile) {
             pile.is_hidden = true;
             Pile.hide({id: pile._id}, pile).$promise.then(function (data) {
@@ -45,6 +81,13 @@ angular.module('ldrWebApp').controller('ViewPileCtrl', [
             });
         };
 
+        /**
+         * @ngdoc
+         * @name ViewPileCtrl#unhidePile
+         * @methodOf ViewPileCtrl
+         * @param {Object} pile - pile to unhide
+         * @description unhides pile from normal users
+         */
         $scope.unhidePile = function (pile) {
             pile.is_hidden = false;
             Pile.hide({id: pile._id}, pile).$promise.then(function (data) {
@@ -80,18 +123,18 @@ angular.module('ldrWebApp').controller('ViewPileCtrl', [
             $scope.comment.description = '';
         };
 
-        $scope.selectFiles = function (files) {
-            angular.forEach(files, function (file) {
-                HelperService.generateThumbnail(file).then(function (imageUrl) {
-                    file.thumbnailImage = $sce.trustAsResourceUrl(imageUrl);
-                    $scope.files.push(file);
-                });
-            });
-        };
         $scope.addComment = function (comment) {
             $scope.comments.unshift(comment);
         };
 
+        /**
+         * @ngdoc
+         * @name ViewPileCtrl#postComment
+         * @methodOf ViewPileCtrl
+         * @param {Object} form - comment form object
+         * @param {String} dialogId - dialog id
+         * @description creates new comment for specified pile
+         */
         $scope.postComment = function (form, dialogId) {
             if (form.$valid) {
                 CommentsService.create({pile: $state.params.id}, {

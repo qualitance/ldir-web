@@ -1,4 +1,40 @@
 'use strict';
+/**
+ * @ngdoc controller
+ * @name EditPileCtrl
+ * @description edit pile controller
+ * @requires $scope
+ * @requires $rootScope
+ * @requires Pile
+ * @requires $state
+ * @requires HelperService
+ * @requires CommentsService
+ * @requires Auth
+ * @requires currentPile
+ * @requires Authority
+ * @requires LxNotificationService
+ * @requires LxDialogService
+ * @requires ImageUpload
+ * @requires $sce
+ * @requires preloader
+ * @requires $translate
+ * @requires responseHandler
+ * @property {Integer} comment - environment maximum upload size
+ * @property {Object} pile - pile object
+ * @property {Object} allImages - image files
+ * @property {Integer} maxSize - maximum number of images, 3/4 depending on existing screenshot
+ * @property {Integer} minSize - maximum number of images, 1/2 depending on existing screenshot
+ * @property {Object} truePileLocation - save pile location on $rootScope
+ * @property {Object} user - current user object
+ * @property {Object} showEditableMarker - show editable marker flag used in get pile screenshot
+ * @property {Object} selectedImage - check if at least one image is selected flag
+ * @property {Object} saving - saving in progress flag
+ * @property {Object} uploadMaxFileSize - environment maximum upload size
+ * @property {Object} pile_statuses - all pile available statuses
+ * @property {Object} authorities - authorities object
+ * @property {Object} comments - comments object
+ * @property {Object} allocate - allocate info object
+ */
 angular.module('ldrWebApp').controller('EditPileCtrl', [
     '$scope',
     '$rootScope',
@@ -55,6 +91,12 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
             $scope.comments = responseHandler.getData(data);
         });
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#confirmStatus
+         * @methodOf EditPileCtrl
+         * @description pile status is confirmed
+         */
         $scope.confirmStatus = function (what) {
             Pile.confirm({action: what, pile: $scope.pile._id}).$promise.then(function success(data) {
                 angular.extend($scope.pile, responseHandler.getData(data));
@@ -65,6 +107,13 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
             date: moment().add(parseInt($rootScope.environment.pile.min_reported_days), 'day')
         };
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#allocatePile
+         * @methodOf EditPileCtrl
+         * @param {Object} form - allocate pile form object
+         * @description allocate pile to selected authority
+         */
         $scope.allocatePile = function (form) {
             $scope.bgImage = '#FFF url("../assets/images/map/type_description_' + Auth.getCurrentUser().language + '.svg") no-repeat center center';
             if (form.$valid) {
@@ -87,6 +136,13 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
             }
         };
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#setStatus
+         * @methodOf EditPileCtrl
+         * @param {Object} status - allocate pile form object
+         * @description updates pile status
+         */
         $scope.setStatus = function (status) {
 
             Pile.query({id: $state.params.id}).$promise.then(function (data) {
@@ -108,6 +164,12 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
 
         };
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#printPile
+         * @methodOf EditPileCtrl
+         * @description generates pdf with pile info
+         */
         $scope.printPile = function () {
 
             Pile.query({id: $state.params.id}).$promise.then(function (data) {
@@ -195,6 +257,12 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
             LxDialogService.close(dialogID);
         };
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#deleteImage
+         * @methodOf EditPileCtrl
+         * @description removes image from pile images
+         */
         $scope.deleteImage = function (dialogId) {
             ImageUpload.remove($scope.allImages[$scope.allImages.index]._id).then(function () {
                 $scope.allImages.splice($scope.allImages.index, 1);
@@ -210,6 +278,12 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
             $scope.newImage = {};
         };
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#selectImage
+         * @methodOf EditPileCtrl
+         * @description generates selected image thumbnail
+         */
         $scope.selectImage = function ($files) {
             $scope.selectedImage = false;
             var file = $files[0];
@@ -245,6 +319,13 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
             }
         };
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#saveImage
+         * @methodOf EditPileCtrl
+         * @param {String} dialogId - dialog id
+         * @description uploads new image and refreshes allImages array
+         */
         $scope.saveImage = function (dialogId) {
             $scope.saving = true;
             ImageUpload.upload($scope.newImage, 'pile', $scope.pile._id).then(function success(image) {
@@ -260,6 +341,12 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
             });
         };
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#$watch
+         * @methodOf EditPileCtrl
+         * @description sets can delete flag depending on number of remaining images(at least one photo that is not screenshot)
+         */
         $scope.$watch('allImages.index', function () {
             $scope.canDelete = ($scope.allImages[$scope.allImages.index].is_screenshot &&
             $scope.allImages.index === $scope.allImages.length - 1);
@@ -269,6 +356,14 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
             $scope.comments.unshift(comment);
         };
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#postComment
+         * @methodOf EditPileCtrl
+         * @param {Object} form - comment form object
+         * @param {String} dialogId - dialog id
+         * @description creates new comment for specified pile
+         */
         $scope.postComment = function (form, dialogId) {
             if (typeof $scope.comment.description === 'undefined') {
                 LxNotificationService.info($translate.instant('views.editViewPile.addCommentDialog.commentTenChars'));
@@ -286,6 +381,14 @@ angular.module('ldrWebApp').controller('EditPileCtrl', [
             }
         };
 
+        /**
+         * @ngdoc
+         * @name EditPileCtrl#editDescription
+         * @methodOf EditPileCtrl
+         * @param {Object} form - description form object
+         * @param {String} dialogId - dialog id
+         * @description updates description for specified pile
+         */
         $scope.editDescription = function (form, dialogId) {
             if (form.$valid) {
                 $scope.description = $scope.pile.description;

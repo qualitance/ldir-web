@@ -1,5 +1,32 @@
 'use strict';
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc controller
+     * @name CreatePileCtrl
+     * @description create pile view controller
+     * @requires $scope
+     * @requires leafletData
+     * @requires $rootScope
+     * @requires Pile
+     * @requires HelperService
+     * @requires $timeout
+     * @requires LxNotificationService
+     * @requires LxDialogService
+     * @requires Auth
+     * @requires deviceDetector
+     * @requires Help
+     * @requires $compile
+     * @requires LxProgressService
+     * @requires MapHelperService
+     * @requires $translate
+     * @requires responseHandler
+     * @property {Object} options - map options object
+     * @property {Function} hasRole - authentication function that checks if user has specified role
+     * @property {Object} regionBounds - map bounds
+     * @property {Boolean} markersLoading - markers loading flags
+     * @property {Object} map - map object
+     * @property {Object} userMarker - user marker object
+     */
     .controller('MapCtrl', [
         '$scope',
         'leafletData',
@@ -7,7 +34,8 @@ angular.module('ldrWebApp')
         'Pile',
         'HelperService',
         '$timeout',
-        'LxNotificationService', 'LxDialogService',
+        'LxNotificationService',
+        'LxDialogService',
         'Auth',
         'deviceDetector',
         'Help',
@@ -43,6 +71,14 @@ angular.module('ldrWebApp')
             var moldLayer = window.mdcounties;
             var mdLayer = L.geoJson(moldLayer);
 
+            /**
+             * @ngdoc
+             * @name MapCtrl#locateUser
+             * @methodOf MapCtrl
+             * @param {Object} args - object containing location to dra marker
+             * @param {Object} map - map object
+             * @description draws or sets user marker on specified location
+             */
             self.locateUser = function (args, map) {
 
                 var userMarker;
@@ -139,6 +175,15 @@ angular.module('ldrWebApp')
 
                 });
 
+                /**
+                 * @ngdoc
+                 * @name MapCtrl#locateUser
+                 * @methodOf MapCtrl
+                 * @param {Object} map - map object
+                 * @param {Object} cluster - cluster to add layer with drawn marker to
+                 * @param {Object} pile - pile object
+                 * @description draws pile on map, gets pile details on marker click event
+                 */
                 var addPileOnMap = function (map, cluster, pile) {
                     var icon, marker;
                     icon = MapHelperService.getPileIcon($scope.currentUserId, pile);
@@ -203,6 +248,13 @@ angular.module('ldrWebApp')
                     self.options.mozilla.ypos = args.data.ypos + 100;
                 });
 
+                /**
+                 * @ngdoc
+                 * @name MapCtrl#dropLocation
+                 * @methodOf MapCtrl
+                 * @param {Object} event - event object
+                 * @description get location of dropped object depending on browser
+                 */
                 $scope.dropLocation = function (event) {
                     if (MapHelperService.getBrowser() === 'chrome' || MapHelperService.getBrowser() === 'ie') {
                         self.options.pointOnMap = self.options.map.containerPointToLatLng([event.clientX -
@@ -227,6 +279,12 @@ angular.module('ldrWebApp')
 
             };
 
+            /**
+             * @ngdoc
+             * @name MapCtrl#locateUser
+             * @methodOf MapCtrl
+             * @description sets user marker on specified location
+             */
             $scope.locateUser = function () {
                 angular.extend($scope.map, {
                     center: {
@@ -239,6 +297,13 @@ angular.module('ldrWebApp')
                 LxNotificationService.success($translate.instant('views.map.located'));
             };
 
+            /**
+             * @ngdoc
+             * @name MapCtrl#openModal
+             * @methodOf MapCtrl
+             * @param {String} dialogId - dialog id
+             * @description opens help modal and updates user with viewed help presentation flag
+             */
             $scope.openModal = function (dialogId) {
                 if (!Auth.hasSeenWizard() && Auth.hasRole('volunteer')) {
                     var items = Help.tutorial(0);

@@ -92,7 +92,7 @@ angular.module('ldrWebApp')
              * @name IssuesListCtrl#sendErrors
              * @methodOf IssuesListCtrl
              * @param {Object} form - issue form object
-             * @param {Object} dialogId - dialog ids
+             * @param {String} dialogId - dialog ids
              * @description sends issues in range to specified email
              */
             $scope.sendErrors = function (form, dialogId) {

@@ -290,7 +290,7 @@ angular.module('ldrWebApp')
              * @ngdoc
              * @name AdminUsersCtrl#createSupervisor
              * @methodOf AdminUsersCtrl
-             * @param {Object} dialogId - new supervisor dialog id
+             * @param {String} dialogId - new supervisor dialog id
              * @param {Object} form - new supervisor form object
              * @example
              * <pre><form name="supervisorForm" ng-submit="createSupervisor('createSupervisor',supervisorForm)"
@@ -319,7 +319,7 @@ angular.module('ldrWebApp')
              * @name AdminUsersCtrl#makeUserInactive
              * @methodOf AdminUsersCtrl
              * @param {Object} user - user to make inactive object
-             * @param {Object} dialogId - dialog id
+             * @param {String} dialogId - dialog id
              * @example
              * <pre><button class="btn btn--m btn--green btn--flat" type="button"
              * ng-click="makeUserInactive(temp_user,'alertAdmin')" lx-ripple>{{'views.usersList.deactivateUser.yes' |

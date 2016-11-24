@@ -1,4 +1,29 @@
 'use strict';
+/**
+ * @ngdoc controller
+ * @name ViewPileCtrl
+ * @description view pile controller
+ * @requires $scope
+ * @requires $rootScope
+ * @requires $filter
+ * @requires leafletData
+ * @requires Pile
+ * @requires $q
+ * @requires Auth
+ * @requires ImageUpload
+ * @requires LxNotificationService
+ * @requires MapHelperService
+ * @requires $translate
+ * @requires responseHandler
+ * @property {Function} hasRole - authentication function that checks if user has specified role
+ * @property {Object} center - pile object
+ * @property {Boolean} savableScreenshot - screenshot can be saved depending on pile status
+ * @property {Boolean} savingScreenshot - saving screenshot in progress
+ * @property {Object} defaults - map options
+ * @property {Object} regionBounds - map bounds
+ * @property {Integer} marker - pile marker, icon color depending on status
+ * @property {Integer} markerOpts - marker options
+ */
 angular.module('ldrWebApp').controller('ViewPileOnMapCtrl', ['$scope', '$rootScope', '$filter', 'leafletData', 'Pile',
     '$q', 'Auth', 'ImageUpload', 'LxNotificationService', 'MapHelperService', '$translate', 'responseHandler',
     function ($scope, $rootScope, $filter, leafletData, Pile,
@@ -93,13 +118,24 @@ angular.module('ldrWebApp').controller('ViewPileOnMapCtrl', ['$scope', '$rootSco
                 $scope.editableMarker = new L.marker(parent.pile.location, markerOpts).setZIndexOffset(999999999).addTo(map);
             });
         }
-
+        /**
+         * @ngdoc
+         * @name ViewPileOnMapCtrl#$watch
+         * @methodOf ViewPileOnMapCtrl
+         * @description saves location on marker move
+         */
         $scope.$watch('editableMarker._latlng', function () {
             if ($scope.editableMarker) {
                 $scope.location = $scope.editableMarker.getLatLng();
             }
         });
 
+        /**
+         * @ngdoc
+         * @name ViewPileOnMapCtrl#saveLocation
+         * @methodOf ViewPileOnMapCtrl
+         * @description updates pile and parent pile object with new location
+         */
         $scope.saveLocation = function () {
             var myPile = angular.copy(parent.pile);
             myPile.location = $scope.editableMarker.getLatLng();
@@ -109,6 +145,12 @@ angular.module('ldrWebApp').controller('ViewPileOnMapCtrl', ['$scope', '$rootSco
             });
         };
 
+        /**
+         * @ngdoc
+         * @name ViewPileOnMapCtrl#takeScreenshot
+         * @methodOf ViewPileOnMapCtrl
+         * @description takes map screenshot
+         */
         $scope.takeScreenshot = function () {
             $scope.savingScreenshot = false;
             leafletData.getMap().then(function (map) {
@@ -116,6 +158,12 @@ angular.module('ldrWebApp').controller('ViewPileOnMapCtrl', ['$scope', '$rootSco
             });
         };
 
+        /**
+         * @ngdoc
+         * @name ViewPileOnMapCtrl#makeImage
+         * @methodOf ViewPileOnMapCtrl
+         * @description draws canvas with shown map, converts it to image, uploads image and updates parent images object
+         */
         $scope.makeImage = function (err, canvas) {
             function getDataURL() {
                 var deferred = $q.defer();
