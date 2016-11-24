@@ -1,6 +1,13 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc directive
+     * @name emailMatch
+     * @description sets entered email validity
+     * @example
+     * <pre><input type="text" name="email" ng-model="contact.email" required email-match></pre>
+     */
     .directive('emailMatch', [function () {
         return {
             require: 'ngModel',
@@ -13,6 +20,13 @@ angular.module('ldrWebApp')
             }
         };
     }])
+    /**
+     * @ngdoc directive
+     * @name ldrOnePage
+     * @description adds scroll animation on main page
+     * @example
+     * <pre><div class="ldr-main" ldr-one-page remove-tooltip></pre>
+     */
     .directive('ldrOnePage', [function () {
         return {
             restrict: 'A',
