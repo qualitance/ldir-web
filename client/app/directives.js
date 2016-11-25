@@ -1,5 +1,12 @@
 'use strict';
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc directive
+     * @name roPhoneValidation
+     * @description phone number validation for Roumania
+     * @example
+     * <pre><input type="text" name="phone" ro-phone-validation ng-model="user.phone" class="" required maxlength="15"></pre>
+     */
     .directive('roPhoneValidation', function () {
         return {
             require: 'ngModel',
@@ -24,6 +31,14 @@ angular.module('ldrWebApp')
             }
         };
     })
+    /**
+     * @ngdoc directive
+     * @name closeModalOnStateChange
+     * @description closes modal on state change
+     * @example
+     * <pre><lx-dialog class="dialog dialog--l ldr-create-pile-modal" auto-close="false" id="viewPileDialog"
+     * onclose="closingMapDialog('viewPileDialog')" close-modal-on-state-change></pre>
+     */
     .directive('closeModalOnStateChange', function (LxDialogService) {
         return {
             restrict: 'A',
@@ -36,6 +51,13 @@ angular.module('ldrWebApp')
             }
         };
     })
+    /**
+     * @ngdoc directive
+     * @name removeTooltip
+     * @description remove tooltip from element
+     * @example
+     * <pre><div class="ldr-main" ldr-one-page remove-tooltip></pre>
+     */
     .directive('removeTooltip', function () {
         return {
             restrict: 'A',

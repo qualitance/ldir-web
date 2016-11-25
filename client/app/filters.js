@@ -1,12 +1,8 @@
-/**
- * Created by razvan on 29/09/16.
- */
-/**
- *
- */
 
 angular.module('ldrWebApp')
 /**
+ * @ngdoc filter
+ * @name titleCase
  * @return {String}
  * @description filter used to convert words to first upper case first letter
  */
@@ -21,6 +17,8 @@ angular.module('ldrWebApp')
         };
     })
     /**
+     * @ngdoc filter
+     * @name yesNo
      * @return {String}
      * @description filter used to translate true/false values in Yes/No
      */
@@ -30,6 +28,8 @@ angular.module('ldrWebApp')
         };
     })
     /**
+     * @ngdoc filter
+     * @name emptyVal
      * @return {String}
      * @description filter used to apply " - " string for empty vals
      */
