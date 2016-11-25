@@ -1,6 +1,14 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc service
+     * @service
+     * @name City
+     * @description Get cities service
+     * @requires $resource
+     * @requires API_URL
+     */
     .factory('City', function ($resource,API_URL) {
         return $resource(API_URL + 'cities/:id/:county/:countyId',
             {

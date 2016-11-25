@@ -1,6 +1,20 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc service
+     * @service
+     * @name Auth
+     * @description The authentication service
+     * @requires $location
+     * @requires $rootScope
+     * @requires $http
+     * @requires $cookieStore
+     * @requires $q
+     * @requires responseHandler
+     * @requires $translate
+     * @requires AUTH_URL
+     */
     .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q, responseHandler,
                                    $translate, AUTH_URL) {
         var currentUser = {};
@@ -10,10 +24,16 @@ angular.module('ldrWebApp')
 
         return {
             /**
-             * Authenticate user and save token
-             * @param  {Object}   user     - login info
+             * @ngdoc
+             * @name Auth#login
+             * @methodOf Auth
+             * @param  {Object} user - login info
              * @param  {Function} callback - optional
-             * @return {Promise}
+             * @example
+             * Auth.login({email: user.email,password: user.password})
+             * @description
+             * Tries to login a user
+             * @returns {Promise} Resolves to an empty response/error
              */
             login: function (user, callback) {
                 var cb = callback || angular.noop;
@@ -37,6 +57,10 @@ angular.module('ldrWebApp')
             },
 
             /**
+             * @ngdoc
+             * @name Auth#logout
+             * @methodOf Auth
+             * @description
              * Delete access token and user info
              */
             logout: function () {
@@ -46,10 +70,17 @@ angular.module('ldrWebApp')
             },
 
             /**
-             * Create a new user
-             * @param  {Object}   user     - user info
+             * @ngdoc
+             * @name Auth#createUser
+             * @methodOf Auth
+             * @param  {Object} user - user info
              * @param  {Function} callback - optional
-             * @return {Promise}
+             * @example
+             *  Auth.createUser({terms: user.terms, pass: true,email: user.email, password: user.password1,
+             *  first_name: user.first_name, last_name: user.last_name, language: mailLanguage})
+             * @description
+             * Tries to create a user
+             * @returns {Promise} Resolves to an empty response/error
              */
             createUser: function (user, callback) {
                 var cb = callback || angular.noop;
@@ -64,11 +95,17 @@ angular.module('ldrWebApp')
             },
 
             /**
-             * Change password
+             * @ngdoc
+             * @name Auth#changePassword
+             * @methodOf Auth
              * @param  {String}   oldPassword
              * @param  {String}   newPassword
              * @param  {Function} callback    - optional
-             * @return {Promise}
+             * @example
+             * Auth.changePassword($scope.pass.password0, $scope.pass.password1)
+             * @description
+             * Tries to change the password
+             * @returns {Promise} Resolves to an empty response/error
              */
             changePassword: function (oldPassword, newPassword, callback) {
                 var cb = callback || angular.noop;
@@ -84,7 +121,9 @@ angular.module('ldrWebApp')
             },
 
             /**
-             * Gets all available info on authenticated user
+             * @ngdoc
+             * @name Auth#getCurrentUser
+             * @description - Gets all available info on authenticated user
              * @return {Object} user
              */
             getCurrentUser: function () {
@@ -92,7 +131,9 @@ angular.module('ldrWebApp')
             },
 
             /**
-             * Check if a user is logged in
+             * @ngdoc
+             * @name Auth#isLoggedIn
+             * @description - Check if a user is logged in
              * @return {Boolean}
              */
             isLoggedIn: function () {
@@ -100,7 +141,9 @@ angular.module('ldrWebApp')
             },
 
             /**
-             * Waits for currentUser to resolve before checking if user is logged in
+             * @ngdoc
+             * @name Auth#isLoggedInAsync
+             * @description - Waits for currentUser to resolve before checking if user is logged in
              */
             isLoggedInAsync: function (cb) {
                 if (currentUser.hasOwnProperty('$promise')) {
@@ -117,23 +160,30 @@ angular.module('ldrWebApp')
             },
 
             /**
-             * Check if a user is an admin
+             * @ngdoc
+             * @name Auth#isAdmin
+             * @description - Check if a user is an admin
              * @return {Boolean}
              */
             isAdmin: function () {
                 return responseHandler.getData(currentUser).role === 'admin';
             },
             /**
-             * check user's role
+             * @ngdoc
+             * @name Auth#hasRole
+             * @description - check user's role
              * @param role
-             * @returns {boolean}
+             * @returns {Boolean}
              */
             hasRole: function (role) {
                 return responseHandler.getData(currentUser).role === role;
             },
 
             /**
-             * Get auth token
+             * @ngdoc
+             * @name Auth#getToken
+             * @description - Get auth token
+             * @returns {String}
              */
             getToken: function () {
                 return $cookieStore.get('token');
