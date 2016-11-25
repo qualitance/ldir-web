@@ -1,4 +1,11 @@
 'use strict';
+/**
+ * @ngdoc service
+ * @service
+ * @name map helper service
+ * @description The subsidy service
+ * @requires deviceDetector
+ */
 angular.module('ldrWebApp').factory('MapHelperService', ['deviceDetector',
     function (deviceDetector) {
 
@@ -20,6 +27,18 @@ angular.module('ldrWebApp').factory('MapHelperService', ['deviceDetector',
         var detector = deviceDetector;
 
         return {
+            /**
+             * @ngdoc method
+             * @name MapHelperService#getPileIcon
+             * @methodOf MapHelperService
+             * @example
+             *  icon = MapHelperService.getPileIcon($scope.currentUserId, pile);
+             * @description
+             * if pile is reported by current user sets different pile icon style
+             * @param {String} currentUserId - current user id
+             * @param {String} pile - pile object
+             * @returns {Object} icon object
+             */
             getPileIcon: function (currentUserId, pile) {
                 switch (pile.status) {
                     case 'confirmed':
@@ -52,6 +71,16 @@ angular.module('ldrWebApp').factory('MapHelperService', ['deviceDetector',
                 return detector.browser;
             },
 
+            /**
+             * @ngdoc method
+             * @name MapHelperService#calculateMapResolution
+             * @methodOf MapHelperService
+             * @example
+             *  resolution: MapHelperService.calculateMenuResolution()
+             * @description
+             * calculates map resolution depending on screen resolution and browser used
+             * @returns {Object} icon object
+             */
             calculateMapResolution: function () {
                 var mapResolution;
                 var mapContainerDesktop;
@@ -78,15 +107,7 @@ angular.module('ldrWebApp').factory('MapHelperService', ['deviceDetector',
             },
 
             calculateMenuResolution: function () {
-                var menuResolution;
-
-                if (window.innerWidth > 1023) {
-                    menuResolution = window.innerHeight - this.calculateMapResolution();
-                }
-                else {
-                    menuResolution = window.innerHeight - this.calculateMapResolution();
-                }
-                return menuResolution;
+                return window.innerHeight - this.calculateMapResolution();
             },
 
             createMap: function () {
