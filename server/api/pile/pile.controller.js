@@ -20,13 +20,17 @@ var env = require('../../config/environment');
 var Q = require('q');
 var async = require('async');
 
-//find piles for map
+/**
+ * @name findOnMap
+ * @function
+ * @description find piles for map (with is_hidden false or undefined) depending on user role
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.findOnMap = function (req, res) {
-    //find piles without is_hidden field or with is_hidden field set to false
     if (req.user.role !== 'admin') {
         var query = {$or: [{is_hidden: false}, {is_hidden: {$exists: false}}]};
         if (req.user.role === 'volunteer') {
-            //find piles with a not pending status and pending piles reported by this user
             query = {$and: [{$or: [{status: {$ne: 'unconfirmed'}}, {user: req.user._id}]}, {$or: [{is_hidden: false}, {is_hidden: {$exists: false}}]}]};
         }
     }
@@ -39,7 +43,17 @@ exports.findOnMap = function (req, res) {
     });
 };
 
-//find piles for tabled view
+/**
+ * @name find
+ * @function
+ * @description find pile for dashboard view
+ * get all params, allow only certain filters to pass and only if they have a value, differentiate query based on role
+ * for volunteer, find piles contributed to, except piles created by this volunteer
+ * for supervisor, find piles located in this supervisor's county
+ * proceed to pagination and sorting, using a cursor
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.find = function (req, res) {
     var id = req.query.id;
     if (id) {
@@ -53,7 +67,6 @@ exports.find = function (req, res) {
             return res.handleResponse(200, {success: pile});
         });
     } else {
-        //get all params
         var contributions = req.query.contributions;
         var page = req.query.page || 1;
         var limit = req.query.limit || env.defaultPaginationLimit;
@@ -82,20 +95,15 @@ exports.find = function (req, res) {
             }
         }
 
-        //form a complex query object based on the params above
         var query = {};
 
-        //======================================================================= differentiate query based on role
         async.parallel([
             function (callback) {
                 if (user.role === 'volunteer') {
-                    //=================================================================================== VOLUNTEER
                     if (contributions !== 'true') {
-                        //find piles reported by this volunteer
                         query['user'] = user._id;
                         callback();
                     } else {
-                        //find piles this volunteer contributed to, except piles created by this volunteer
                         ActivityService.getIdsOfPilesContributedTo(user._id).then(
                             function (pile_ids) {
                                 query['user'] = {$ne: user._id};
@@ -108,8 +116,6 @@ exports.find = function (req, res) {
                         );
                     }
                 } else if (user.role === 'supervisor') {
-                    //================================================================================== SUPERVISOR
-                    //find piles located in this supervisor's county
                     if (!user.county) {
                         callback('Supervisor has no county');
                     } else {
@@ -122,13 +128,10 @@ exports.find = function (req, res) {
                         }
                     }
                 } else {
-                    //======================================================================================= ADMIN
-                    //please proceed, sir
                     callback();
                 }
             },
             function (callback) {
-                //filter by field value
                 if (cleanedFilter) {
                     _.assign(query, cleanedFilter);
                 }
@@ -138,8 +141,6 @@ exports.find = function (req, res) {
             if (err) {
                 handleError(res, err);
             } else {
-                //proceed to pagination and sorting
-                //use a cursor for this
                 var cursor = {};
                 if (user.role === 'admin') {
                     cursor = Pile.find(query).populate('images user city county');
@@ -164,8 +165,17 @@ exports.find = function (req, res) {
     }
 };
 
+
 /**
- *
+ * @name create
+ * @function
+ * @description uses the "multer" plugin to parse our form data request and places any text field on req.body[field]
+ * and any file field on req.files[field]
+ * the text fields should already be parsed in a previous middleware and we should have the pile details on req.body
+ * validate files
+ * create empty images and add their references to the pile
+ * set the references to the empty images created
+ * @param {Object} res
  * @param {Object} req - request object
  * @param {String} req.body.siruta - Unique code given to cities/counties by authorities
  * @param {number} req.body.size - Pile size
@@ -173,13 +183,9 @@ exports.find = function (req, res) {
  * @param {Object} req.body.location.lat - Latitude
  * @param {Object} req.body.location.lng - Longitude
  * @param {String[]} req.body.content - Array of pile types
- * @param {String[]} req.body.areas - ????
- * @param res
+ * @param {String[]} req.body.areas - Array of pile areas
  */
 exports.create = function (req, res) {
-    // the 'multer' plugin parses our form data request and places any text field on req.body[field] and any file field on req.files[field]
-    // the text fields should already be parsed in a previous middleware and we should have the pile details on req.body
-    // validate files
     for (var key in req.files) {
         var file = req.files[key];
         if (file.truncated) {
@@ -206,7 +212,7 @@ exports.create = function (req, res) {
                 CounterService.getNextSequence('pile').then(
                     function (seq) {
                         pile.nr_ord = seq;
-                        // create empty images and add their references to the pile
+
                         var imageIds = [];
                         async.each(req.files, function processFile(file, callback) {
                             ImageService.createEmpty()
@@ -223,7 +229,6 @@ exports.create = function (req, res) {
                             if (err) {
                                 return handleError(res, err);
                             } else {
-                                // set the references to the empty images created
                                 pile.images = imageIds;
                                 pile.save(function (err, pile) {
                                     if (err) {
@@ -246,7 +251,13 @@ exports.create = function (req, res) {
     }
 };
 
-// Updates an existing pile in the DB.
+/**
+ * @name update
+ * @function
+ * @description updates existing pile
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.update = function (req, res) {
     UtilsService.allowFields(req.body, ['status', 'description']);
     Pile.findById(req.query.id).exec(function (err, pile) {
@@ -272,6 +283,13 @@ exports.update = function (req, res) {
     });
 };
 
+/**
+ * @name updateLocation
+ * @function
+ * @description updates pile location
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.updateLocation = function (req, res) {
     UtilsService.allowFields(req.body, ['location', 'siruta']);
     Pile.findById(req.query.id).exec(function (err, pile) {
@@ -306,6 +324,13 @@ exports.updateLocation = function (req, res) {
     });
 };
 
+/**
+ * @name hide
+ * @function
+ * @description sets pile hidden flag to true
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.hide = function (req, res) {
     UtilsService.allowFields(req.body, ['is_hidden']);
     Pile.findById(req.query.id).exec(function (err, pile) {
@@ -331,7 +356,13 @@ exports.hide = function (req, res) {
     });
 };
 
-//allocate pile to authority
+/**
+ * @name allocate
+ * @function
+ * @description allocate pile to authority, generate pdf and send to authority async
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.allocate = function (req, res) {
     var due_date = req.body.due_date;
     if (!due_date) {
@@ -384,7 +415,6 @@ exports.allocate = function (req, res) {
                                     res.handleResponse(200, {success: pile});
                                 }
                             });
-                            //generate pdf and send to authority async
                             PileService.generateAuthorityReport(pile_id).then(
                                 function (buffer) {
                                     AuthorityService.sendToAuthority(authority_id, buffer);
@@ -404,6 +434,13 @@ exports.allocate = function (req, res) {
     });
 };
 
+/**
+ * @name pileConfirmation
+ * @function
+ * @description confirm/unconfirm pile, prevent multiple actions on the same pile
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.pileConfirmation = function (req, res) {
     var action = req.body.action;
     var notAction;
@@ -416,15 +453,11 @@ exports.pileConfirmation = function (req, res) {
         } else {
             notAction = 'confirm';
         }
-        //parse modify query; user can make a single confirm / unconfirm on a pile
         var add = {};
         var remove = {};
         add[action] = req.user._id;
         remove[notAction] = req.user._id;
         var modifyQuery = {$addToSet: add, $pull: remove, last_update: new Date()};
-        //parse find query
-        //prevent self confirm / unconfirm of pile
-        //prevent multiple confirm / unconfirm of the same pile, otherwise too many notifications will be triggered
         var query = {_id: pile_id, user: {$ne: req.user._id}};
         query[action] = {$nin: [req.user._id]};
         Pile.update(query, modifyQuery, function (err, wres) {
@@ -448,6 +481,13 @@ exports.pileConfirmation = function (req, res) {
     }
 };
 
+/**
+ * @name getStatistics
+ * @function
+ * @description get statistics for specified county, within the date range
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.getStatistics = function (req, res) {
     var siruta = req.body.siruta;
     var date_start = req.body.date_start;
