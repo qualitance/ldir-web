@@ -34,11 +34,16 @@ ImageSchema
         this.thumb_src = this.thumb_src || this.src;
     });
 
+/**
+ * @name post
+ * @function
+ * @description removes image and thumbnail from amazon, then from users or piles
+ * @param {String} 'remove'
+ */
 ImageSchema.post('remove', function (image) {
     if (!image.not_local) {
         async.parallel([
             function (callback) {
-                //remove image from amazon
                 var key = image.src.replace(env.amazonPrefix, '');
                 amazon.deleteObjectS3(key, function (err, success) {
                     if (err) console.log(err);
@@ -46,7 +51,6 @@ ImageSchema.post('remove', function (image) {
                 });
             },
             function (callback) {
-                //remove image thumbnail from amazon
                 var key = image.thumb_src.replace(env.amazonPrefix, '');
                 amazon.deleteObjectS3(key, function (err, success) {
                     if (err) console.log(err);
@@ -54,7 +58,6 @@ ImageSchema.post('remove', function (image) {
                 });
             },
             function (callback) {
-                //remove image from users
                 UserService.removeImage(image._id).then(
                     function (success) {
                         callback();
@@ -66,7 +69,6 @@ ImageSchema.post('remove', function (image) {
                 );
             },
             function (callback) {
-                //remove image from piles
                 PileService.removeImage(image._id).then(
                     function (success) {
                         callback()

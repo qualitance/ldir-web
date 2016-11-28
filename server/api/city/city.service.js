@@ -6,7 +6,7 @@ var County = require('../county/county.model');
 var Q = require('q');
 
 /**
- * @name show
+ * @name getCity
  * @function
  * @description gets single city by siruta code, if no city checks counties from Moldova
  * @param {String} siruta

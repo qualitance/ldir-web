@@ -12,7 +12,18 @@ var TemporaryStorage = require('../../components/temporaryStorage');
 var env = require('../../config/environment');
 var Q = require('q');
 
-// Creates a new image in the DB.
+/**
+ * @name create
+ * @function
+ * @description creates a new image
+ * for screenshot generates thumbnail and uploads to S3 then updates image and pile
+ * for normal image, we use the "multer" plugin which parses our form data request and places any text field
+ * on req.body[field] and any file field on req.files[field], then we open file from disk, establish our params for
+ * updating the document that the image refers to, process image, add to DB, add to S3 and update image
+
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.create = function (req, res) {
     try {
         if (req.body.screenshotBase64) {
@@ -62,7 +73,6 @@ exports.create = function (req, res) {
             });
         }
         else {
-            //the "multer" plugin parses our form data request and places any text field on req.body[field] and any file field on req.files[field]
             if (!(req.body.imageType && req.files && req.files.file)) {
                 return res.handleResponse(400, {}, 'image_6');
             }
@@ -74,13 +84,11 @@ exports.create = function (req, res) {
                 return res.handleResponse(400, {}, 'image_3');
             }
 
-            // open file from disk
             TemporaryStorage.getResource(file.name)
                 .then(function (buffer) {
                     var referenceID; //id of the document that the image refers to
                     var service; //the service that will be used to update the document that the image refers to
 
-                    //establish our params for updating the document that the image refers to
                     if (imageType === 'user') {
                         service = UserService;
                         referenceID = req.user._id;
@@ -95,14 +103,11 @@ exports.create = function (req, res) {
                         return res.handleResponse(400, 'image_5');
                     }
 
-                    //process image
                     ImageService.resizeImage(buffer, 'image').then(
                         function (success) {
                             var resizedImageBuffer = success.buffer;
                             var resizedImageDimensions = success.dimensions;
-                            //upload image
 
-                            //first, add image to db
                             var image = new Image();
                             image.user = req.user._id;
                             image.dimensions = {
@@ -112,20 +117,15 @@ exports.create = function (req, res) {
                                 if (err) {
                                     return handleError(res, err);
                                 } else {
-                                    //get image extension
                                     var extension = file.originalname.split('.').pop();
-                                    //form amazon keys
                                     var key = imageType + '/' + referenceID + '/images/' + image._id + '.' + extension;
                                     var thumbnailKey = imageType + '/' + referenceID + '/images/' + image._id + 'thumb.' + extension;
-                                    //add thumbnail async
                                     ImageService.generateThumbnail(image._id, thumbnailKey, resizedImageBuffer).then(function (success) {
                                         image = success;
-                                        //add image to amazon
                                         ImageService.addToS3(key, resizedImageBuffer, function (err, data) {
                                             if (err) {
                                                 return handleError(res, err);
                                             } else {
-                                                //update image src
                                                 image.src = env.amazonPrefix + key;
                                                 image.save(function (err, image) {
                                                     if (err) {
@@ -161,7 +161,13 @@ exports.create = function (req, res) {
     }
 };
 
-// Deletes a image from the DB.
+/**
+ * @name destroy
+ * @function
+ * @description deletes an image from the DB, "supervisor" role required
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.destroy = function (req, res) {
     Image.findOne({_id: req.query.id}, function (err, image) {
         if (err) {
@@ -188,6 +194,12 @@ function handleError(res, err) {
     return res.handleResponse(500);
 }
 
+/**
+ * @name decodeBase64Image
+ * @function
+ * @description decodes a image from a base 64 string
+ * @param {String} dataString
+ */
 function decodeBase64Image(dataString) {
     var deferred = Q.defer();
     var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);

@@ -12,6 +12,13 @@ var isValid = function (field, max_length) {
     return typeof field === 'string' && field.length < max_length;
 };
 
+/**
+ * @name find
+ * @function
+ * @description finds single record or records in dates range, sends mail if query mail_to
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.find = function (req, res) {
     if (req.query.id) {
         Improve.findById(req.query.id).populate('user').exec(function (err, improve) {
@@ -30,10 +37,8 @@ exports.find = function (req, res) {
         var limit = req.query.limit || env.defaultPaginationLimit;
         var mail_to = req.query.mail_to;
 
-        //parse query object
         var query = {};
 
-        //parse date start / date end into query object
         try {
             var date_query = {};
             if (date_start) {
@@ -78,7 +83,13 @@ exports.find = function (req, res) {
     }
 };
 
-// Creates a new improve in the DB.
+/**
+ * @name create
+ * @function
+ * @description creates a new improve in the DB
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.create = function (req, res) {
     if (!isValid(req.body.description, 100) || !isValid(req.body.message, 500)) {
         return res.handleResponse(422, {}, 'improve_2');
