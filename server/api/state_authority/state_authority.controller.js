@@ -3,7 +3,13 @@
 var _ = require('lodash');
 var StateAuthority = require('./state_authority.model');
 
-// Get list of state_authoritys
+/**
+ * @name index
+ * @function
+ * @description gets list of all authorities
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.index = function (req, res) {
     StateAuthority.find(function (err, state_authoritys) {
         if (err) {
@@ -13,7 +19,13 @@ exports.index = function (req, res) {
     });
 };
 
-// Get a single state_authority
+/**
+ * @name show
+ * @function
+ * @description gets single authority
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.show = function (req, res) {
     StateAuthority.findById(req.params.id, function (err, state_authority) {
         if (err) {
@@ -26,7 +38,13 @@ exports.show = function (req, res) {
     });
 };
 
-// Creates a new state_authority in the DB.
+/**
+ * @name create
+ * @function
+ * @description creates new authority
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.create = function (req, res) {
     StateAuthority.create(req.body, function (err, state_authority) {
         if (err) {
@@ -36,7 +54,13 @@ exports.create = function (req, res) {
     });
 };
 
-// Updates an existing state_authority in the DB.
+/**
+ * @name update
+ * @function
+ * @description updates requested authority
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.update = function (req, res) {
     if (req.body._id) {
         delete req.body._id;
@@ -58,7 +82,13 @@ exports.update = function (req, res) {
     });
 };
 
-// Deletes a state_authority from the DB.
+/**
+ * @name destroy
+ * @function
+ * @description removes specified authority
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.destroy = function (req, res) {
     StateAuthority.findById(req.params.id, function (err, state_authority) {
         if (err) {
