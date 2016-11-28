@@ -24,11 +24,12 @@ function handleError(res, err) {
     return res.handleResponse(500);
 }
 
-//=========================================================================================================== ROLE ADMIN
-
 /**
- * Get list of users
- * restriction: 'admin'
+ * @name query_users
+ * @function
+ * @description gets list of all users, except "admin"
+ * @param {Object} req
+ * @param {Object} res
  */
 exports.query_users = function (req, res) {
     if (req.query.id) {
@@ -93,6 +94,13 @@ exports.query_users = function (req, res) {
     }
 };
 
+/**
+ * @name edit_user
+ * @function
+ * @description updates user, protecting user's private data from being altered
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.edit_user = function (req, res) {
     User.findOne({_id: req.query.id}, function (err, user) {
         if (err) {
@@ -102,7 +110,6 @@ exports.edit_user = function (req, res) {
         } else if (user.role === 'admin') {
             res.handleResponse(403);
         } else {
-            //protect user's private data from being altered
             UtilsService.discardFields(req.body, [
                 'created_at', 'updated_at', 'image', 'pile_count', 'newsletter',
                 'sync', 'pass', 'password', 'hashedPassword', 'provider', 'salt', 'facebook',
@@ -121,6 +128,13 @@ exports.edit_user = function (req, res) {
     });
 };
 
+/**
+ * @name delete_user
+ * @function
+ * @description deletes user
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.delete_user = function (req, res) {
     User.remove({_id: req.query.id}, function (err, wRes) {
         if (err) {
@@ -131,7 +145,13 @@ exports.delete_user = function (req, res) {
     });
 };
 
-// create an account from an admin account
+/**
+ * @name create_supervisor
+ * @function
+ * @description creates supervisor from admin account
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.create_supervisor = function (req, res) {
 
     if (!req.body.first_name || !req.body.last_name || !req.body.email) {
@@ -181,6 +201,13 @@ exports.create_supervisor = function (req, res) {
     });
 };
 
+/**
+ * @name getStatisticsAll
+ * @function
+ * @description get statistics for all users
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.getStatisticsAll = function (req, res) {
     User.find({}, {
         first_name: 1,
@@ -199,10 +226,12 @@ exports.getStatisticsAll = function (req, res) {
     });
 };
 
-//======================================================================================================== GENERIC USER
-
 /**
- * Get my info
+ * @name me
+ * @function
+ * @description get logged in user info
+ * @param {Object} req
+ * @param {Object} res
  */
 exports.me = function (req, res, next) {
     var userId = req.user._id;
@@ -219,7 +248,13 @@ exports.me = function (req, res, next) {
     });
 };
 
-//update user profile
+/**
+ * @name update
+ * @function
+ * @description updates logged in user profile
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.update = function (req, res) {
     UtilsService.discardFields(req.body, [
         '_id', 'email', 'created_at', 'updated_at', 'pile_count', 'role', 'status', 'password',
@@ -261,7 +296,11 @@ exports.update = function (req, res) {
 };
 
 /**
- * Delete own profile
+ * @name destroy
+ * @function
+ * @description removes logged in user
+ * @param {Object} req
+ * @param {Object} res
  */
 exports.destroy = function (req, res) {
     User.findByIdAndRemove(req.user._id, function (err, user) {
@@ -273,7 +312,11 @@ exports.destroy = function (req, res) {
 };
 
 /**
- * Change own password
+ * @name changePasswordbyAuth
+ * @function
+ * @description changes logged in user password
+ * @param {Object} req
+ * @param {Object} res
  */
 exports.changePasswordbyAuth = function (req, res, next) {
 
@@ -312,7 +355,13 @@ exports.changePasswordbyAuth = function (req, res, next) {
     });
 };
 
-//get personal statistics
+/**
+ * @name getUserStatistics
+ * @function
+ * @description gets logged in user stats
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.getUserStatistics = function (req, res) {
     UserService.getStats(req.user._id).then(
         function (stats) {
@@ -324,6 +373,13 @@ exports.getUserStatistics = function (req, res) {
     );
 };
 
+/**
+ * @name subscribeDevice
+ * @function
+ * @description subscribes device for push notifications
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.subscribeDevice = function (req, res) {
     var deviceType = req.body.deviceType;
     var deviceToken = req.body.deviceToken;
@@ -341,6 +397,13 @@ exports.subscribeDevice = function (req, res) {
     }
 };
 
+/**
+ * @name unsubscribeDevice
+ * @function
+ * @description unsubscribes device for push notifications
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.unsubscribeDevice = function (req, res) {
     var deviceToken = req.body.deviceToken;
     if (!deviceToken) {
@@ -357,9 +420,13 @@ exports.unsubscribeDevice = function (req, res) {
     }
 };
 
-//=============================================================================================================== PUBLIC
-
-// creates a new account
+/**
+ * @name create
+ * @function
+ * @description creates new user
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.create = function (req, res) {
 
     var email = req.body.email;
@@ -400,7 +467,13 @@ exports.create = function (req, res) {
     });
 };
 
-//identify user created (by an admin) by token
+/**
+ * @name findUserByToken
+ * @function
+ * @description finds user by token
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.findUserByToken = function (req, res) {
     if (!req.params.token) {
         return res.handleResponse(400);
@@ -418,7 +491,13 @@ exports.findUserByToken = function (req, res) {
     });
 };
 
-//set password for user created by an admin
+/**
+ * @name setPassByToken
+ * @function
+ * @description sets password by user created by admin
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.setPassByToken = function (req, res) {
     if (!req.body.token || !req.body.password) {
         res.handleResponse(400, {}, 'user_4');
@@ -446,7 +525,13 @@ exports.setPassByToken = function (req, res) {
     }
 };
 
-//resend activation mail
+/**
+ * @name resendActivation
+ * @function
+ * @description resends activation email
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.resendActivation = function (req, res) {
     if (!req.body.email) {
         return res.handleResponse(400);
@@ -460,7 +545,13 @@ exports.resendActivation = function (req, res) {
     });
 };
 
-//finds user account based on temporary token
+/**
+ * @name reset
+ * @function
+ * @description finds user based n temporary token
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.reset = function (req, res, next) {
 
     var token = req.params.token;
@@ -485,7 +576,13 @@ exports.reset = function (req, res, next) {
 
 };
 
-// changes user password based on temporary token
+/**
+ * @name changePasswordByToken
+ * @function
+ * @description changes user password based on temporary token
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.changePasswordByToken = function (req, res) {
 
     var token = req.params.token;
@@ -519,7 +616,13 @@ exports.changePasswordByToken = function (req, res) {
 
 };
 
-// sends e-mail with link to reset password
+/**
+ * @name fpw
+ * @function
+ * @description sends e-mail with link to reset password
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.fpw = function (req, res, next) {
 
     if (!req.body.email) {
@@ -577,7 +680,13 @@ exports.fpw = function (req, res, next) {
 
 };
 
-// activates user account based on temporary token
+/**
+ * @name activate
+ * @function
+ * @description activates user account based on temporary token
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.activate = function (req, res, next) {
 
     var token = req.params.token;
@@ -612,7 +721,11 @@ exports.activate = function (req, res, next) {
 };
 
 /**
- * Authentication callback
+ * @name authCallback
+ * @function
+ * @description authentication callback
+ * @param {Object} req
+ * @param {Object} res
  */
 exports.authCallback = function (req, res, next) {
     res.redirect('/');
