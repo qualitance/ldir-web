@@ -7,7 +7,15 @@ var PileService = require('../pile/pile.service');
 
 var Q = require('q');
 
-// Creates a new activity
+/**
+ * @name create
+ * @function
+ * @description creates a new activity
+ * @param {String} actor_id
+ * @param {String} verb
+ * @param {String} pile_id
+ * @returns {Promise}
+ */
 exports.create = function (actor_id, verb, pile_id) {
     var deferred = Q.defer();
     var activity = new Activity({
@@ -33,6 +41,13 @@ exports.create = function (actor_id, verb, pile_id) {
     return deferred.promise;
 };
 
+/**
+ * @name countUnread
+ * @function
+ * @description counts unread activities
+ * @param {Object} user
+ * @returns {Promise}
+ */
 exports.countUnread = function (user) {
     var deferred = Q.defer();
     var county;
@@ -56,6 +71,13 @@ exports.countUnread = function (user) {
     return deferred.promise;
 };
 
+/**
+ * @name getIdsOfPilesContributedTo
+ * @function
+ * @description gets piles that specified user contributed to
+ * @param {String} user_id
+ * @returns {Promise}
+ */
 exports.getIdsOfPilesContributedTo = function (user_id) {
     var deferred = Q.defer();
     Activity.aggregate([
