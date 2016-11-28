@@ -4,6 +4,13 @@ var Mustache = require('mustache');
 var env = require('../../config/environment');
 var pushMessages = require('../../storage/language/pushNotifications');
 
+/**
+ * @name activityNotify
+ * @function
+ * @description map activity details, format notification message,
+ * use PushServerNotify function to send a message to a user
+ * @param {Object} activity
+ */
 exports.activityNotify = function (activity) {
     if (activity.actor._id && activity.actor.role && activity.pile.user._id && activity.pile.user.flags.receivePushNotifications && activity.pile.user.role && activity.pile.nr_ord) {
         var actor = {
@@ -17,13 +24,8 @@ exports.activityNotify = function (activity) {
             language: activity.pile.user.language
         };
         var verb = activity.verb;
-        // We now have all the details of the new activity.
-        // Place all of the sending logic below.
-        // Use pushServerNotify function to send a message to a user
         if (pileOwner.notificationsEnabled) {
-            //we can proceed
-            if (actor.id !== pileOwner.id) { //prevent self notify
-                //format a nice message to send as notification
+            if (actor.id !== pileOwner.id) {
                 var messageCode;
                 var data = {
                     nr_ord: activity.pile.nr_ord
@@ -57,6 +59,13 @@ exports.activityNotify = function (activity) {
     }
 };
 
+/**
+ * @name pushServerNotify
+ * @function
+ * @description creates a request to push notifications server
+ * @param {String} user_id
+ * @param {String} message
+ */
 var pushServerNotify = function (user_id, message) {
     try {
         var formattedUsers = [env.pushNotifications.userPrefix + user_id.toString()];
@@ -96,17 +105,24 @@ var pushServerNotify = function (user_id, message) {
     }
 };
 
+/**
+ * @name subscribe
+ * @function
+ * @description subscribe user for push notifications,
+ * first, unsubscribe this device to prevent conflicts with logging in different users on same device
+ * @param {String} deviceName
+ * @param {String} deviceToken
+ * @param {String} user_id
+ * @return {Promise}
+ */
 exports.subscribe = function (deviceName, deviceToken, user_id) {
 
     var deferred = Q.defer();
 
-    // if user logs in from a device, subscribe user for push notifications
-
     if (deviceName && deviceToken) {
-        //first, unsubscribe this device to prevent conflicts with logging in different users on same device
+        //
         unsubscribeUser(user_id).then(
             function (success) {
-                //subscribe user for push notifications
                 var subscribeData = {
                     'user': env.pushNotifications.userPrefix + user_id.toString(),
                     'type': deviceName,
@@ -136,6 +152,13 @@ exports.subscribe = function (deviceName, deviceToken, user_id) {
     return deferred.promise;
 };
 
+/**
+ * @name unsubscribeDevice
+ * @function
+ * @description unsubscribe device from push notifications,
+ * @param {String} deviceToken
+ * @return {Promise}
+ */
 var unsubscribeDevice = function (deviceToken) {
     var deferred = Q.defer();
     if (deviceToken) {
@@ -153,6 +176,13 @@ var unsubscribeDevice = function (deviceToken) {
     return deferred.promise;
 };
 
+/**
+ * @name unsubscribeUser
+ * @function
+ * @description unsubscribe user from push notifications,
+ * @param {String} user_id
+ * @return {Promise}
+ */
 var unsubscribeUser = function (user_id) {
     var deferred = Q.defer();
     if (user_id) {
@@ -170,6 +200,14 @@ var unsubscribeUser = function (user_id) {
     return deferred.promise;
 };
 
+/**
+ * @name unsubscribe
+ * @function
+ * @description unsubscribe from push notifications,
+ * @param {String} usType
+ * @param {String} usData
+ * @return {Promise}
+ */
 var unsubscribe = function (usType, usData) {
 
     var deferred = Q.defer();
@@ -198,6 +236,14 @@ var unsubscribe = function (usType, usData) {
     return deferred.promise;
 };
 
+/**
+ * @name generateMessage
+ * @function
+ * @description generates message
+ * @param {String} messageCode
+ * @param {Object} data
+ * @param {String} language
+ */
 function generateMessage(messageCode, data, language) {
     var message = pushMessages[language][messageCode];
     return Mustache.render(message, data)

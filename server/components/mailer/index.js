@@ -14,6 +14,17 @@ var VariableTranslations = {
     'NEW_PILE_STATUS': require('../../storage/language/pileStatuses')
 };
 
+/**
+ * @name send
+ * @function
+ * @description sends simple mail
+ * @param {Object} template
+ * @param {Object} to
+ * @param {Object} vars
+ * @param {Object} tags
+ * @param {Object} from
+ * @param {Object} options
+ */
 var send = function (template, to, vars, tags, from, options) {
 
     //validate params
@@ -86,6 +97,17 @@ var send = function (template, to, vars, tags, from, options) {
 
 exports.send = send;
 
+/**
+ * @name sendToExistingUser
+ * @function
+ * @description sends mail to existing user
+ * @param {Object} template
+ * @param {String} user_id
+ * @param {Object} vars
+ * @param {Object} tags
+ * @param {Object} from
+ * @param {Object} options
+ */
 var sendToExistingUser = function (user_id, template, vars, tags, from, options) {
     var User = require('../../api/user/user.model');
     var deferred = Q.defer();
@@ -103,7 +125,6 @@ var sendToExistingUser = function (user_id, template, vars, tags, from, options)
             vars.push({name: 'LAST_NAME', content: user.last_name});
             vars.push({name: 'LANG', content: user.language});
             vars = tranlateVariables(vars, user.language);
-            //get the translated subject
             if (options.subject) {
                 options.subject = MailSubjects[user.language][options.subject]
             }

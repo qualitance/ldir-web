@@ -2,6 +2,14 @@ var City = require('../../api/city/city.model');
 var County = require('../../api/county/county.model');
 var Q = require('q');
 
+/**
+ * @name getSiruta
+ * @function
+ * @description gets siruta code
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
 var getSiruta = function (req, res, next) {
     if (!req.body.location) {
         return res.handleResponse(400, {}, 'geoJsonMiddleware_1');
@@ -37,6 +45,12 @@ var getSiruta = function (req, res, next) {
     });
 };
 
+/**
+ * @name checkMoldova
+ * @function
+ * @description checks if given location is in Moldova's county, return its siruta
+ * @param {Object} pileLocation
+ */
 function checkMoldova(pileLocation) {
     var deferred = Q.defer();
     County.findOne({

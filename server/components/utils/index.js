@@ -1,6 +1,13 @@
 var Q = require('q');
 var spawn = require('child_process').spawn;
 
+/**
+ * @name discardFields
+ * @function
+ * @description discard fields from object
+ * @param {String} obj
+ * @param {Array} fieldsArray
+ */
 exports.discardFields = function (obj, fieldsArray) {
     fieldsArray = fieldsArray || [];
     for (var key in obj) {
@@ -9,6 +16,14 @@ exports.discardFields = function (obj, fieldsArray) {
         }
     }
 };
+
+/**
+ * @name allowFields
+ * @function
+ * @description discard not allowed fields from object
+ * @param {String} obj
+ * @param {Array} fieldsArray
+ */
 exports.allowFields = function (obj, fieldsArray) {
     fieldsArray = fieldsArray || [];
     for (var key in obj) {
@@ -26,6 +41,14 @@ exports.isArray = function (obj) {
 exports.isEmptyObject = function (obj) {
     return Object.keys(obj).length === 0;
 };
+
+/**
+ * @name formatDate
+ * @function
+ * @description format date
+ * @param {String} date
+ * @param {Object} options
+ */
 exports.formatDate = function (date, options) {
     options = options || {};
     var language = options.language || 'ro';
@@ -74,6 +97,12 @@ exports.resetTimeInDate = function (date) {
     return date.setHours(0, 0, 0, 0);
 };
 
+/**
+ * @name latinLettersOnly
+ * @function
+ * @description replaces special characters
+ * @param {String} str
+ */
 exports.latinLettersOnly = function (str) {
     if (typeof str !== 'string') {
         str = '';
@@ -96,6 +125,12 @@ exports.latinLettersOnly = function (str) {
         .replace(/[^a-zA-Z]/g, '');
 };
 
+/**
+ * @name latinLettersAndNumbersOnly
+ * @function
+ * @description replaces special characters
+ * @param {String} str
+ */
 exports.latinLettersAndNumbersOnly = function (str) {
     if (typeof str !== 'string') {
         str = '';
@@ -118,6 +153,13 @@ exports.latinLettersAndNumbersOnly = function (str) {
         .replace(/[^a-zA-Z0-9]/g, '');
 };
 
+/**
+ * @name decToDms
+ * @function
+ * @description formats location
+ * @param {Object} input
+ * @param {String} latlng
+ */
 exports.decToDms = function (input, latlng) {
     var v = input.toString().split('.');
     var pole = (latlng === 'lat' ? (parseInt(v[1]) < 0 ? 'S' : 'N') : (parseInt(v[1]) < 0) ? 'V' : 'E');
