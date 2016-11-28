@@ -1,6 +1,14 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc controller
+     * @name customDatePickerController
+     * @description custom date picker controller
+     * @requires $scope
+     * @requires $timeout
+     * @requires $window
+     */
     .controller('customDatePickerController', ['$scope', '$timeout', '$window', function ($scope, $timeout, $window) {
         var self = this,
             activeLocale,
@@ -170,6 +178,15 @@ angular.module('ldrWebApp')
 
         }
     }])
+    /**
+     * @ngdoc directive
+     * @name customDatePicker
+     * @description custom date picker directive
+     * @example
+     * <pre><custom-date-picker locale="currentLang" model="range.date_start"
+     * label="{{'views.improve.startDate' | translate}}" icon="calendar-today" fixed-label="true"
+     * class="ldr-custom-date-picker" end-date-limit="endDateLimit"></custom-date-picker></pre>
+     */
     .directive('customDatePicker', function () {
         return {
             restrict: 'AE',
