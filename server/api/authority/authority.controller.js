@@ -3,7 +3,13 @@
 var _ = require('lodash');
 var Authority = require('./authority.model');
 
-// Get list of authorities
+/**
+ * @name find
+ * @function
+ * @description get lists of all authorities
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.find = function (req, res) {
     var cursor;
     if (req.query.id) {

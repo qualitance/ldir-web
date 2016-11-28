@@ -10,6 +10,13 @@ var UtilsService = require('../../components/utils');
 
 var Q = require('q');
 
+/**
+ * @name validateAuthorityId
+ * @function
+ * @description checks if authority has id
+ * @param {String} authority_id
+ * @param {Object} authority_city
+ */
 exports.validateAuthorityId = function (authority_id, authority_city) {
     var deferred = Q.defer();
     Authority.findOne({_id: authority_id, city: authority_city}, function (err, authority) {
@@ -22,6 +29,13 @@ exports.validateAuthorityId = function (authority_id, authority_city) {
     return deferred.promise;
 };
 
+/**
+ * @name sendToAuthority
+ * @function
+ * @description sends mail to authority
+ * @param {String} authority_id
+ * @param {Object} buffer
+ */
 exports.sendToAuthority = function (authority_id, buffer) {
     var deferred = Q.defer();
     Authority.findOne({_id: authority_id}).populate('city').exec(function (err, authority) {
