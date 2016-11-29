@@ -192,7 +192,7 @@ angular.module('ldrWebApp').controller('CreatePileCtrl', [
         /**
          * @ngdoc
          * @name CreatePileCtrl#canNavigateToStep
-         * @param {String) step - step number
+         * @param {String} step - step number
          * @methodOf CreatePileCtrl
          * @description check if user can go to next step
          */
@@ -205,7 +205,7 @@ angular.module('ldrWebApp').controller('CreatePileCtrl', [
          * @ngdoc
          * @name CreatePileCtrl#goToStep
          * @methodOf CreatePileCtrl
-         * @param {String) step - step number
+         * @param {String} step - step number
          * @description redirects to specified step
          */
         $scope.goToStep = function (step) {

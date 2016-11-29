@@ -1,11 +1,9 @@
-
 angular.module('ldrWebApp')
-/**
- * @ngdoc filter
- * @name titleCase
- * @return {String}
- * @description filter used to convert words to first upper case first letter
- */
+    /**
+     * @ngdoc filter
+     * @name titleCase
+     * @description filter used to convert words to first upper case first letter
+     */
     .filter('titleCase', function () {
         return function (str) {
             if (!str) {
@@ -19,22 +17,20 @@ angular.module('ldrWebApp')
     /**
      * @ngdoc filter
      * @name yesNo
-     * @return {String}
      * @description filter used to translate true/false values in Yes/No
      */
-    .filter('yesNo', function($translate) {
-        return function(input) {
+    .filter('yesNo', function ($translate) {
+        return function (input) {
             return input ? $translate.instant('views.dashboard.yes') : $translate.instant('views.dashboard.no');
         };
     })
     /**
      * @ngdoc filter
      * @name emptyVal
-     * @return {String}
      * @description filter used to apply " - " string for empty vals
      */
-    .filter('emptyVal', function() {
-        return function(input) {
+    .filter('emptyVal', function () {
+        return function (input) {
             return (!input) ? '-' : input;
         };
     });

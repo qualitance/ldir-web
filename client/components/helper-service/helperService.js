@@ -124,7 +124,6 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
          * $scope.getThumbnail = HelperService.generateThumbnail;
          * @description
          * generates specified image thumbnail
-         * @returns {Promise}
          */
         generateThumbnail: function (image) {
             var deferred = $q.defer();
@@ -145,7 +144,6 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
          * $scope.materials = HelperService.getPileMaterials();
          * @description
          * translated pile materials
-         * @returns {Object}
          */
         getPileMaterials: function () {
             return angular.copy([
@@ -169,7 +167,6 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
          * $scope.areas = HelperService.getPileAreas();
          * @description
          * translated pile ares
-         * @returns {Object}
          */
         getPileAreas: function () {
             return angular.copy([
@@ -188,7 +185,6 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
          * $scope.roles = HelperService.getUserRoles();
          * @description
          * translated user roles
-         * @returns {Object}
          */
         getUserRoles: function () {
             return angular.copy([
@@ -205,7 +201,6 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
          * $scope.statuses = HelperService.getUserStatuses();
          * @description
          * translated user statuses
-         * @returns {Object}
          */
         getUserStatuses: function () {
             return angular.copy([
@@ -222,7 +217,6 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
          * $scope.statuses = HelperService.getPileStatuses();
          * @description
          * translated pile statuses
-         * @returns {Object}
          */
         getPileStatuses: function () {
             return angular.copy([
@@ -242,7 +236,6 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
          * $scope.availableLanguages = HelperService.getAvailableLanguages();
          * @description
          * gets available languages
-         * @returns {Object}
          */
         getAvailableLanguages: function () {
             return angular.copy([

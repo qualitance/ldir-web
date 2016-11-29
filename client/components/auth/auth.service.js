@@ -98,9 +98,9 @@ angular.module('ldrWebApp')
              * @ngdoc
              * @name Auth#changePassword
              * @methodOf Auth
-             * @param  {String}   oldPassword
-             * @param  {String}   newPassword
-             * @param  {Function} callback    - optional
+             * @param {String} oldPassword - old password
+             * @param {String} newPassword - new password
+             * @param {Function} callback - optional
              * @example
              * Auth.changePassword($scope.pass.password0, $scope.pass.password1)
              * @description
@@ -123,6 +123,7 @@ angular.module('ldrWebApp')
             /**
              * @ngdoc
              * @name Auth#getCurrentUser
+             * @methodOf Auth
              * @description - Gets all available info on authenticated user
              * @return {Object} user
              */
@@ -133,8 +134,8 @@ angular.module('ldrWebApp')
             /**
              * @ngdoc
              * @name Auth#isLoggedIn
+             * @methodOf Auth
              * @description - Check if a user is logged in
-             * @return {Boolean}
              */
             isLoggedIn: function () {
                 return responseHandler.getData(currentUser).hasOwnProperty('role');
@@ -143,6 +144,7 @@ angular.module('ldrWebApp')
             /**
              * @ngdoc
              * @name Auth#isLoggedInAsync
+             * @methodOf Auth
              * @description - Waits for currentUser to resolve before checking if user is logged in
              */
             isLoggedInAsync: function (cb) {
@@ -162,8 +164,8 @@ angular.module('ldrWebApp')
             /**
              * @ngdoc
              * @name Auth#isAdmin
+             * @methodOf Auth
              * @description - Check if a user is an admin
-             * @return {Boolean}
              */
             isAdmin: function () {
                 return responseHandler.getData(currentUser).role === 'admin';
@@ -171,9 +173,9 @@ angular.module('ldrWebApp')
             /**
              * @ngdoc
              * @name Auth#hasRole
+             * @methodOf Auth
              * @description - check user's role
-             * @param role
-             * @returns {Boolean}
+             * @param {String} - role
              */
             hasRole: function (role) {
                 return responseHandler.getData(currentUser).role === role;
@@ -182,8 +184,9 @@ angular.module('ldrWebApp')
             /**
              * @ngdoc
              * @name Auth#getToken
+             * @methodOf Auth
              * @description - Get auth token
-             * @returns {String}
+             * @returns {String} - token
              */
             getToken: function () {
                 return $cookieStore.get('token');
