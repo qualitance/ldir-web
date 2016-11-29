@@ -6,7 +6,7 @@ var City = require('./city.model');
 /**
  * @name index
  * @function
- * @description gets list of all cities
+ * @description gets list of all cities or cities in county
  * @param {Object} req
  * @param {Object} res
  */

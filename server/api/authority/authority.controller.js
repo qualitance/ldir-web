@@ -6,7 +6,7 @@ var Authority = require('./authority.model');
 /**
  * @name find
  * @function
- * @description get lists of all authorities
+ * @description find authority
  * @param {Object} req
  * @param {Object} res
  */

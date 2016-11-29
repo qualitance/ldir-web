@@ -548,7 +548,7 @@ exports.resendActivation = function (req, res) {
 /**
  * @name reset
  * @function
- * @description finds user based n temporary token
+ * @description finds user based on temporary token
  * @param {Object} req
  * @param {Object} res
  */
