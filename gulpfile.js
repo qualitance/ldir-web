@@ -82,6 +82,30 @@ gulp.task('findDamagedAuthorities', function () {
     });
 });
 
+gulp.task('ngdocs', [], function () {
+    var gulpDocs = require('gulp-ngdocs');
+
+    var options = {
+        scripts: [
+            'http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js',
+            'http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js'
+        ]
+    };
+
+    return gulp.src(['server/api/activity/*.js'])
+        .pipe(gulpDocs.process(options))
+        .pipe(gulp.dest('./docs'));
+});
+gulp.task('connect_ngdocs', function() {
+    var connect = require('gulp-connect');
+    connect.server({
+        root: 'docs',
+        livereload: false,
+        fallback: 'docs/index.html',
+        port: 8083
+    });
+});
+
 function findDamagedAuthorities(filterIds) {
     var query = {fax: new RegExp('rofax', 'i')};
     if (filterIds) query['_id'] = {$in: filterIds};
