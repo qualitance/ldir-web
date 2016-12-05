@@ -17,8 +17,10 @@ var schema = new Schema({
 schema.post('save', function (comment) {
     PileService.getUserId(comment.pile).then(
         function (user_id) {
-            if (user_id.toString() !== comment.user.toString()) {
-                ActivityService.create(comment.user, 'comment', comment.pile).then(function (activity) {
+            if(user_id.toString() != comment.user.toString()){
+                //an user different than the pile "creator" has something to say
+                //better alert the "creator" right now
+                ActivityService.create(comment.user, "comment", comment.pile).then(function (activity) {
 
                 });
             }

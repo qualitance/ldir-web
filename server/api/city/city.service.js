@@ -5,23 +5,28 @@ var County = require('../county/county.model');
 
 var Q = require('q');
 
+/**
+ * Returns city by its siruta code
+ * @param siruta
+ * @returns {*}
+ */
 exports.getCity = function (siruta) {
     var deferred = Q.defer();
     City.findOne({siruta: siruta}, function (err, city) {
-        if (err) {
+        if(err){
             deferred.reject({data: err});
-        } else if (!city) {
+        }else if(!city){
             //if there is no city with this siruta we check the counties because it might be from R. Moldova
-            County.findOne({siruta: siruta}, function (err, county) {
-                if (err) {
-                    deferred.reject(err);
-                } else if (!county) {
-                    deferred.reject({code: 'city_1'});
-                } else {
-                    deferred.resolve(county);
-                }
-            });
-        } else {
+          County.findOne({siruta: siruta}, function (err, county) {
+            if(err){
+              deferred.reject(err);
+            }else if(!county){
+              deferred.reject({code: "city_1"});
+            }else{
+              deferred.resolve(county);
+            }
+          });
+        }else{
             deferred.resolve(city);
         }
     });

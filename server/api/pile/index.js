@@ -9,6 +9,7 @@ var PileService = require('./pile.service');
 
 var router = express.Router();
 
+
 router.get('/', auth.isAuthenticated(), controller.find);
 router.get('/map', auth.isAuthenticated(), controller.findOnMap);
 router.post('/', auth.isAuthenticated(), PileService.parseFormData, geoJsonMiddleWare, controller.create);
@@ -18,5 +19,7 @@ router.put('/updateLocation', auth.hasRole('supervisor'), geoJsonMiddleWare, con
 router.post('/allocate', auth.hasRole('supervisor'), controller.allocate);
 router.post('/pileConfirmation', auth.isAuthenticated(), controller.pileConfirmation);
 router.post('/statistics', auth.hasRole('admin'), controller.getStatistics);
+//router.patch('/:id', auth.isAuthenticated(), controller.update);
+//router.delete('/:id', auth.isAuthenticated(), auth.hasRole('supervisor'), controller.destroy);
 
 module.exports = router;

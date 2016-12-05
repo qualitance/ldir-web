@@ -15,104 +15,135 @@ var amazon = require('../../components/amazon');
 var mailer = require('../../components/mailer');
 var UtilsService = require('../../components/utils');
 
+/**
+ * Add new image to the specified pile
+ * @param pile_id
+ * @param image_id
+ * @returns {*}
+ */
 exports.addImage = function (pile_id, image_id) {
     var deferred = Q.defer();
     Pile.update({_id: pile_id}, {$addToSet: {images: image_id}}, function (err, wres) {
-        if (err) {
+        if(err){
             deferred.reject({data: err});
-        } else {
+        }else{
             deferred.resolve(wres);
         }
     });
     return deferred.promise;
 };
-
+/**
+ * Add new screenshot to the specified pile
+ * @param pile_id
+ * @param image_id
+ * @returns {*}
+ */
 exports.addScreenshot = function (pile_id, image_id) {
-    var deferred = Q.defer();
-    Pile.update({_id: pile_id}, {screenshot: image_id}, function (err, wres) {
-        if (err) {
-            deferred.reject({data: err});
-        } else {
-            deferred.resolve(wres);
-        }
-    });
-    return deferred.promise;
+  var deferred = Q.defer();
+  Pile.update({_id: pile_id}, {screenshot: image_id}, function (err, wres) {
+    if(err){
+      deferred.reject({data: err});
+    }else{
+      deferred.resolve(wres);
+    }
+  });
+  return deferred.promise;
 };
-
+/**
+ * Delete image from DB
+ * @param image_id
+ * @returns {*}
+ */
 exports.removeImage = function (image_id) {
     var deferred = Q.defer();
-    Pile.update({images: {$in: [image_id]}}, {$pull: {images: image_id}}, {multi: true}, function (err) {
-        if (err) {
+    Pile.update({images: {$in: [image_id]}}, {$pull: {images: image_id}}, {multi: true}, function (err, wRes) {
+        if(err){
             deferred.reject({data: err});
-        } else {
+        }else{
             deferred.resolve();
         }
     });
     return deferred.promise;
 };
 
+/**
+ * Get user owner of the pile
+ * @param pile_id
+ * @returns {*}
+ */
 exports.getUserId = function (pile_id) {
     var deferred = Q.defer();
     Pile.findOne({_id: pile_id}, function (err, pile) {
-        if (err) {
+        if(err){
             deferred.reject({data: err});
-        } else if (!pile) {
-            deferred.reject({code: 'pile_10'});
-        } else {
+        }else if(!pile){
+            deferred.reject({code: "pile_10"});
+        }else{
             deferred.resolve(pile.user);
         }
     });
     return deferred.promise;
 };
 
+/**
+ * Returns all users pile from a county
+ * @param user_id
+ * @param county_id
+ * @returns {*}
+ */
 exports.getPileIds = function (user_id, county_id) {
     var deferred = Q.defer();
-    if (user_id) {
+    if(user_id){
         var q = {user: user_id};
-        if (county_id) q = {$or: [q, {county: county_id}]};
-        Pile.distinct('_id', {$and: [q, {$or: [{is_hidden: false}, {is_hidden: {$exists: false}}]}]}).exec(function (err, pile_ids) {
-            if (err) {
+        if(county_id) q = {$or: [q, {county: county_id}]};
+        Pile.distinct("_id", {$and:[q, {$or: [{is_hidden : false}, {is_hidden : {$exists : false}}]}]}).exec(function (err, pile_ids) {
+            if(err){
                 deferred.reject({data: err});
-            } else {
+            }else{
                 deferred.resolve(pile_ids);
             }
         });
-    } else {
-        deferred.reject({code: 'pile_12'});
+    }else{
+        deferred.reject({code: "pile_12"});
     }
     return deferred.promise;
 };
-
+/**
+ * Returns all Pile Ids in specified county
+ * @param county_id
+ * @returns {*}
+ */
 exports.getPilesIdsInCounty = function (county_id) {
     var deferred = Q.defer();
-    if (county_id) {
-        Pile.distinct('_id', {$and: [{county: county_id}, {$or: [{is_hidden: false}, {is_hidden: {$exists: false}}]}]}).exec(function (err, pile_ids) {
-            if (err) {
+    if(county_id){
+        Pile.distinct("_id",{$and:[{county: county_id}, {$or: [{is_hidden : false}, {is_hidden : {$exists : false}}]}]}).exec(function (err, pile_ids) {
+            if(err){
                 deferred.reject({data: err});
-            } else {
+            }else{
                 deferred.resolve(pile_ids);
             }
         });
-    } else {
-        deferred.reject({code: 'pile_13'});
+    }else{
+        deferred.reject({code: "pile_13"});
     }
     return deferred.promise;
 };
 
+/**
+ * Count piles by user and status
+ * @param user
+ * @param status
+ * @returns {*}
+ */
 exports.countByUserAndStatus = function (user, status) {
     var deferred = Q.defer();
     var query = {status: status};
-    if (user.role === 'volunteer') {
-        query['user'] = user._id;
-    }
-    if (user.role === 'supervisor') {
-        query['county'] = user.county;
-    }
-
-    Pile.count({$and: [query, {$or: [{is_hidden: false}, {is_hidden: {$exists: false}}]}]}, function (err, count) {
-        if (err) {
+    if(user.role === 'volunteer') query['user'] = user._id;
+    if(user.role === 'supervisor') query['county'] = user.county;
+    Pile.count({$and:[query, {$or: [{is_hidden : false}, {is_hidden : {$exists : false}}]}]}, function (err, count) {
+        if(err){
             deferred.reject({data: err});
-        } else {
+        }else{
             deferred.resolve(count);
         }
     });
@@ -123,26 +154,26 @@ exports.countByUserAndStatus = function (user, status) {
 
 var createHtmlImages = function (images) {
     var imagesCount = images.length;
-    var imageLength = imagesCount === 1 ? 100 : 50;
-    var maxHeight = imagesCount < 3 ? 700 : 350;
-    var imgHTML = '';
-    for (var i = 0; i < imagesCount; i++) {
-        imgHTML += '<div class="block' + imageLength + '"><img src="' + images[i].src + '" style="width:100%; max-height: ' + maxHeight + 'px"></div>';
+    var imageLength = imagesCount===1?100:50;
+    var maxHeight = imagesCount<3?700:350;
+    var imgHTML = "";
+    for(var i=0; i<imagesCount; i++){
+        imgHTML += '<div class="block'+imageLength+'"><img src="'+images[i].src+'" style="width:100%; max-height: '+maxHeight+'px"></div>';
     }
     return imgHTML;
 };
 
 var createHtmScreenshot = function (screenshot) {
-    var screenshotHTML = '';
-    if (screenshot) {
-        screenshotHTML += '<img src="' + screenshot.src + '">';
-    }
-    return screenshotHTML;
+  var screenshotHTML = "";
+  if (screenshot) {
+    screenshotHTML += '<img src="' + screenshot.src + '">';
+  }
+  return screenshotHTML;
 };
 
-var formatPileSize = function (pile_size) {
+var formatPileSize = function (pile_size){
     var idx = pile_size - 1;
-    if (idx < 0) idx = 0;
+    if(idx<0) idx = 0;
     var sizes = ['foarte mici', 'mici', 'medii', 'mari', 'foarte mari'];
     return sizes[idx];
 };
@@ -150,18 +181,18 @@ var formatPileSize = function (pile_size) {
 var exportAsPDF = function (pile_id) {
     var deferred = Q.defer();
     Pile.findOne({_id: pile_id}).populate('images county city allocated.authority screenshot').exec(function (err, pile) {
-        if (err) {
+        if(err){
             deferred.reject({data: err});
-        } else if (!pile) {
-            deferred.reject({code: 'pile_10'});
-        } else if (!pile.allocated || !pile.allocated.authority || !pile.allocated.authority.name) {
-            deferred.reject({code: 'pile_14'});
-        } else {
+        }else if(!pile){
+            deferred.reject({code: "pile_10"});
+        }else if(!pile.allocated || !pile.allocated.authority || !pile.allocated.authority.name){
+            deferred.reject({code: "pile_14"});
+        }else{
             var htmlTemplate = fs.readFileSync('./server/storage/html_templates/pile_report/template.html').toString();
             var signatureTemplate = fs.readFileSync('./server/storage/html_templates/pile_report/signature.html').toString();
             var templateOptions = {
-                nr_ord: 'ID' + pile.nr_ord + '_' + pile.allocated.nr_ord,
-                authority: {
+                nr_ord: "ID"+pile.nr_ord+"_"+pile.allocated.nr_ord,
+                authority:{
                     name: pile.city.name.toString()
                 },
                 pile: {
@@ -169,29 +200,31 @@ var exportAsPDF = function (pile_id) {
                     county: pile.county.name.toString(),
                     city: pile.city.name.toString(),
                     location: {
-                        lat: UtilsService.decToDms(pile.location.lat, 'lat'),
-                        lng: UtilsService.decToDms(pile.location.lng, 'lng')
+                        lat: UtilsService.decToDms(pile.location.lat, "lat"),
+                        lng: UtilsService.decToDms(pile.location.lng, "lng")
                     },
                     size: formatPileSize(pile.size)
                 },
                 sysdate: UtilsService.formatDate(new Date()),
                 signature: signatureTemplate,
                 images: createHtmlImages(pile.images),
-                screenshot: createHtmScreenshot(pile.screenshot)
+                screenshot: createHtmScreenshot(pile.screenshot),
             };
+            //console.log(pile.images);
 
             var renderedTemplate = Mustache.render(htmlTemplate, templateOptions);
+            //console.log(renderedTemplate);
             var pdfOptions = {
-                height: '11.7in',
-                width: '8.3in',
-                border: '0.3in',
-                phantomPath: env.phantomPath
+              height: '11.7in',
+              width: '8.3in',
+              border: '0.3in',
+              phantomPath: env.phantomPath
             };
-            pdf.create(renderedTemplate, pdfOptions).toBuffer(function (err, buffer) {
+            pdf.create(renderedTemplate, pdfOptions).toBuffer(function(err, buffer) {
                 if (err) {
                     console.log(err);
                     deferred.reject({data: err});
-                } else {
+                }else{
                     deferred.resolve(buffer);
                 }
             });
@@ -201,61 +234,57 @@ var exportAsPDF = function (pile_id) {
 };
 
 exports.generateAuthorityReport = function (pile_id) {
-    var deferred = Q.defer();
-    exportAsPDF(pile_id).then(
-        function (buffer) {
-            var key = 'authorities/piles/' + pile_id + '.pdf';
-            amazon.addObjectS3(key, buffer, function (err, path) {
-                if (err) {
-                    deferred.reject({data: err});
-                } else {
-                    Pile.update({_id: pile_id}, {$set: {"allocated.file_path": path}}, function (err) {
-                        if (err) {
-                            deferred.reject({data: err});
-                        } else {
-                            deferred.resolve(buffer);
-                        }
-                    });
-                }
-            });
-        },
-        function (err) {
-            deferred.reject({data: err});
+  var deferred = Q.defer();
+  exportAsPDF(pile_id).then(
+    function (buffer) {
+      var key = "authorities/piles/"+pile_id+".pdf";
+      amazon.addObjectS3(key, buffer, function (err, path) {
+        if(err){
+          deferred.reject({data: err});
+        }else{
+          Pile.update({_id: pile_id}, {$set: {"allocated.file_path": path}}, function (err, wres) {
+            if(err){
+              deferred.reject({data: err});
+            }else{
+              deferred.resolve(buffer);
+            }
+          });
         }
-    );
-    return deferred.promise;
+      });
+    },
+    function(err){
+      deferred.reject({data: err});
+    }
+  );
+  return deferred.promise;
 };
 
 exports.notifyDueDatePassed = function () {
     var deferred = Q.defer();
-    Pile.find({
-        "status": 'reported',
-        "allocated.due_date": {$lt: Date.now()},
-        "allocated.notified": {$ne: true}
-    }).populate('allocated.user').exec(function (err, piles) {
-        if (err) {
+    Pile.find({"status": "reported", "allocated.due_date": {$lt: Date.now()}, "allocated.notified": {$ne: true}}).populate("allocated.user").exec(function (err, piles) {
+        if(err){
             deferred.reject({data: err});
-        } else {
+        }else{
             var emailsSent = 0;
             async.each(piles, function (pile, callback) {
-                try {
+                try{
                     var allocated_by = pile.allocated.user;
                     //email user
                     mailer.sendToExistingUser(
                         allocated_by._id,
-                        'pile_due_date_expired_multilang',
+                        "pile_due_date_expired_multilang",
                         [{name: 'PILE_NUMBER', content: pile.nr_ord}],
-                        'pile_due_date_expired',
+                        "pile_due_date_expired",
                         null,
-                        {subject: 'due_date_expired'}
+                        {subject: "due_date_expired"}
                     ).then(
                         function (success) {
                             emailsSent++;
                             //update pile model
-                            Pile.update({_id: pile._id}, {$set: {"allocated.notified": true}}, function (err) {
-                                if (err) {
+                            Pile.update({_id: pile._id}, {$set: {"allocated.notified": true}}, function (err, wres) {
+                                if(err){
                                     callback(err);
-                                } else {
+                                }else{
                                     callback();
                                 }
                             });
@@ -264,13 +293,13 @@ exports.notifyDueDatePassed = function () {
                             callback(err);
                         }
                     );
-                } catch (ex) {
+                }catch(ex){
                     callback(ex);
                 }
             }, function (err) {
-                if (err) {
+                if(err){
                     deferred.reject({data: err});
-                } else {
+                }else{
                     deferred.resolve(emailsSent);
                 }
             });
@@ -279,10 +308,10 @@ exports.notifyDueDatePassed = function () {
     return deferred.promise;
 };
 
-exports.parseFormData = function (req, res, next) {
+exports.parseFormData = function(req, res, next){
     //the "multer" plugin parses our form data request and places any text field on req.body[field]
-    if (req.body.pile) {
+    if(req.body.pile){
         req.body = req.body.pile;
     }
     next();
-};
+}

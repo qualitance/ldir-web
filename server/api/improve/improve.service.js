@@ -17,12 +17,12 @@ var fillTemplate = function (template, vars) {
 };
 
 var generateIssuesTable = function (improves) {
-    var ret = '';
+    var ret = "";
     var singeIssueTemplate, templateVars;
     singeIssueTemplate = fs.readFileSync('./server/storage/html_templates/issues_report/single_issue.html').toString();
-    for (var i = 0; i < improves.length; i++) {
+    for(var i=0; i<improves.length; i++){
         templateVars = {
-            nr_ord: i + 1,
+            nr_ord: i+1,
             title: improves[i].message,
             description: improves[i].description
         };
@@ -36,16 +36,17 @@ var renderPDF = function (improves, dates) {
     var htmlTemplate = fs.readFileSync('./server/storage/html_templates/issues_report/template.html').toString();
     var templateOptions = {
         issues: generateIssuesTable(improves),
-        date_start: UtilsService.formatDate(dates.date_start, {language: 'en'}),
-        date_end: UtilsService.formatDate(dates.date_end, {language: 'en'})
+        date_start: UtilsService.formatDate(dates.date_start, {language: "en"}),
+        date_end: UtilsService.formatDate(dates.date_end, {language: "en"})
     };
     var renderedTemplate = fillTemplate(htmlTemplate, templateOptions);
-    var pdfOptions = {format: 'Letter', phantomPath: env.phantomPath};
-    pdf.create(renderedTemplate, pdfOptions).toBuffer(function (err, buffer) {
+    //console.log(renderedTemplate);
+    var pdfOptions = { format: 'Letter', phantomPath: env.phantomPath };
+    pdf.create(renderedTemplate, pdfOptions).toBuffer(function(err, buffer) {
         if (err) {
             console.log(err);
             deferred.reject(err);
-        } else {
+        }else{
             deferred.resolve(buffer);
         }
     });
@@ -57,16 +58,16 @@ var uploadPDF = function (improves, dates) {
     renderPDF(improves, dates).then(
         function (buffer) {
             var dateOptions = {
-                dateSeparator: '_',
+                dateSeparator: "_",
                 includeTime: true,
                 includeTimeOffset: true
             };
             var date = UtilsService.formatDate(new Date(), dateOptions);
-            var key = 'issues/exports/' + date + '.pdf';
+            var key = "issues/exports/"+date+".pdf";
             amazon.addObjectS3(key, buffer, function (err, path) {
-                if (err) {
+                if(err){
                     deferred.reject(err);
-                } else {
+                }else{
                     deferred.resolve(path);
                 }
             })
@@ -80,9 +81,9 @@ var uploadPDF = function (improves, dates) {
 
 exports.sendByEmail = function (improves, mail_to, dates) {
     var deferred = Q.defer();
-    mail_to = mail_to.split(',');
+    mail_to = mail_to.split(",");
     var formattedEmails = [];
-    for (var i = 0; i < mail_to.length; i++) formattedEmails.push({email: mail_to[i]});
+    for(var i=0; i<mail_to.length; i++) formattedEmails.push({email: mail_to[i]});
     uploadPDF(improves, dates).then(
         function (path) {
             mailer.send(
@@ -91,10 +92,10 @@ exports.sendByEmail = function (improves, mail_to, dates) {
                 [{name: 'DOWNLOAD_LINK', content: path}],
                 ['issues_export'],
                 null,
-                {subject: 'Issues report'}
+                {subject: "Issues report"}
             ).then(
-                function () {
-                    deferred.resolve('Email sent');
+                function (success) {
+                    deferred.resolve("Email sent");
                 },
                 function (err) {
                     deferred.reject(err);

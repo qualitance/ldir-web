@@ -11,6 +11,6 @@ exports.find = function (req, res) {
             amazonPrefix: env.amazonPrefix,
             hostname: env.hostname,
             images: env.images
-        }
+      }
     });
 };

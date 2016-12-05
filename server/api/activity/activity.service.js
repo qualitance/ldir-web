@@ -7,8 +7,14 @@ var PileService = require('../pile/pile.service');
 
 var Q = require('q');
 
-// Creates a new activity
-exports.create = function (actor_id, verb, pile_id) {
+/**
+ * Create a new activity
+ * @param actor_id
+ * @param verb
+ * @param pile_id
+ * @returns {*}
+ */
+exports.create = function(actor_id, verb, pile_id) {
     var deferred = Q.defer();
     var activity = new Activity({
         actor: actor_id,
@@ -16,15 +22,15 @@ exports.create = function (actor_id, verb, pile_id) {
         pile: pile_id,
         viewed: [actor_id]
     });
-    activity.save(function (err, activity) {
-        if (err) {
+    activity.save(function(err, activity) {
+        if(err) {
             deferred.reject(err);
-        } else {
+        }else{
             deferred.resolve(activity);
             activity.deepPopulate('actor pile.user', function (err, activity) {
-                if (err) {
+                if(err){
                     console.log(err);
-                } else {
+                }else{
                     PushService.activityNotify(activity);
                 }
             });
@@ -32,19 +38,21 @@ exports.create = function (actor_id, verb, pile_id) {
     });
     return deferred.promise;
 };
-
+/**
+ * Count unread activities and resolve a promise with the count
+ * @param user
+ * @returns {*}
+ */
 exports.countUnread = function (user) {
     var deferred = Q.defer();
     var county;
-    if (user.role === 'supervisor') {
-        county = user.county;
-    }
+    if(user.role === "supervisor") county = user.county;
     PileService.getPileIds(user._id, county).then(
         function (pile_ids) {
             Activity.count({pile: {$in: pile_ids}, viewed: {$nin: [user._id]}}).exec(function (err, count) {
-                if (err) {
+                if(err){
                     deferred.reject(err);
-                } else {
+                }else{
                     deferred.resolve(count);
                 }
             });
@@ -55,7 +63,11 @@ exports.countUnread = function (user) {
     );
     return deferred.promise;
 };
-
+/**
+ * Get the ids of piles for a specific user
+ * @param user_id
+ * @returns {*}
+ */
 exports.getIdsOfPilesContributedTo = function (user_id) {
     var deferred = Q.defer();
     Activity.aggregate([
@@ -65,17 +77,17 @@ exports.getIdsOfPilesContributedTo = function (user_id) {
             }
         },
         {
-            $group: {
+            $group:  {
                 _id: null,
-                pile_ids: {$addToSet: '$pile'}
+                pile_ids: {$addToSet: "$pile"}
             }
         }
     ], function (err, result) {
-        if (err) {
+        if(err){
             deferred.reject(err);
-        } else if (!result || !result[0]) {
+        }else if(!result || !result[0]){
             deferred.resolve([]);
-        } else {
+        }else{
             deferred.resolve(result[0].pile_ids);
         }
     });

@@ -18,9 +18,7 @@ schema.plugin(deepPopulate, {
 });
 
 schema.pre('save', function (next) {
-    if (this.isNew) {
-        this.date_created = Date.now();
-    }
+    if(this.isNew) this.date_created = Date.now();
     next();
 });
 

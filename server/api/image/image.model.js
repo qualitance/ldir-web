@@ -10,23 +10,23 @@ var PileService = require('../pile/pile.service');
 var UserService = require('../user/user.service');
 
 var ImageSchema = new Schema({
-    src: String,
-    thumb_src: String,
-    width: Number,
-    height: Number,
-    not_local: Boolean, //true if image is not stored on Amazon
-    is_screenshot: Boolean,
-    user: {type: Schema.Types.ObjectId, ref: 'User'},
-    dimensions: {
-        image: {
-            width: Number,
-            height: Number
-        },
-        thumb: {
-            width: Number,
-            height: Number
-        }
-    }
+  src       : String,
+  thumb_src : String,
+  width     : Number,
+  height    : Number,
+  not_local: Boolean, //true if image is not stored on Amazon
+  is_screenshot: Boolean,
+  user: {type: Schema.Types.ObjectId, ref: 'User'},
+  dimensions: {
+      image: {
+          width: Number,
+          height: Number
+      },
+      thumb: {
+          width: Number,
+          height: Number
+      }
+  }
 });
 
 ImageSchema
@@ -35,21 +35,21 @@ ImageSchema
     });
 
 ImageSchema.post('remove', function (image) {
-    if (!image.not_local) {
+    if(!image.not_local){
         async.parallel([
             function (callback) {
                 //remove image from amazon
-                var key = image.src.replace(env.amazonPrefix, '');
+                var key = image.src.replace(env.amazonPrefix, "");
                 amazon.deleteObjectS3(key, function (err, success) {
-                    if (err) console.log(err);
+                    if(err) console.log(err);
                     callback();
                 });
             },
             function (callback) {
                 //remove image thumbnail from amazon
-                var key = image.thumb_src.replace(env.amazonPrefix, '');
+                var key = image.thumb_src.replace(env.amazonPrefix, "");
                 amazon.deleteObjectS3(key, function (err, success) {
-                    if (err) console.log(err);
+                    if(err) console.log(err);
                     callback();
                 });
             },
@@ -80,7 +80,7 @@ ImageSchema.post('remove', function (image) {
         ], function () {
 
         });
-    } else {
+    }else{
 
     }
 });

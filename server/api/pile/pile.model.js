@@ -14,65 +14,58 @@ var MailService = require('../../components/mailer');
 var env = require('../../config/environment');
 
 var PileSchema = new Schema({
-    nr_ord: {
+  nr_ord: {
+    type: Number,
+    trim: true
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  status: {type: String, enum: ['confirmed', 'unconfirmed', 'pending', 'reported','clean'], default: 'pending', es_type: 'string', es_indexed: true, index: true},
+  images: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Image'
+  }],
+  screenshot:{
+    type: Schema.Types.ObjectId,
+    ref: 'Image'
+  },
+  content: {type: Array, es_type: 'string', es_indexed: true},   //string array
+  areas: {type: Array, es_type: 'string', es_indexed: true},
+  size: {type: Number, es_type: 'integer', es_indexed: true},
+  description: String,
+  created_at: {type: Date, default: Date.now, es_type: 'date', es_indexed: true},
+  last_update: {type: Date, es_type: 'date', es_indexed: true},
+  location: {
+    lat: Number,
+    lng: Number
+  },
+  county: {
+    type: Schema.Types.ObjectId,
+    ref: 'County',
+    es_indexed: true
+  },
+  city: {
+    type: Schema.Types.ObjectId,
+    ref: 'City',
+    es_indexed: true
+  },
+  confirm: [{type: Schema.Types.ObjectId, ref: 'User'}],
+  unconfirm: [{type: Schema.Types.ObjectId, ref: 'User'}],
+  allocated:{
+      user: {type: Schema.Types.ObjectId, ref: 'User'},
+      authority: {type: Schema.Types.ObjectId, ref: 'Authority'},
+      //default due date is 30 days
+      due_date: {type: Date, default: new Date() + (30 * 24 * 60 * 60 * 100)},
+      notified: {type: Boolean, default: false},
+      file_path: String,
+      nr_ord: {
         type: Number,
         trim: true
-    },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    status: {
-        type: String,
-        enum: ['confirmed', 'unconfirmed', 'pending', 'reported', 'clean'],
-        default: 'pending',
-        es_type: 'string',
-        es_indexed: true,
-        index: true
-    },
-    images: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Image'
-    }],
-    screenshot: {
-        type: Schema.Types.ObjectId,
-        ref: 'Image'
-    },
-    content: {type: Array, es_type: 'string', es_indexed: true},
-    areas: {type: Array, es_type: 'string', es_indexed: true},
-    size: {type: Number, es_type: 'integer', es_indexed: true},
-    description: String,
-    created_at: {type: Date, default: Date.now, es_type: 'date', es_indexed: true},
-    last_update: {type: Date, es_type: 'date', es_indexed: true},
-    location: {
-        lat: Number,
-        lng: Number
-    },
-    county: {
-        type: Schema.Types.ObjectId,
-        ref: 'County',
-        es_indexed: true
-    },
-    city: {
-        type: Schema.Types.ObjectId,
-        ref: 'City',
-        es_indexed: true
-    },
-    confirm: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    unconfirm: [{type: Schema.Types.ObjectId, ref: 'User'}],
-    allocated: {
-        user: {type: Schema.Types.ObjectId, ref: 'User'},
-        authority: {type: Schema.Types.ObjectId, ref: 'Authority'},
-        //default due date is 30 days
-        due_date: {type: Date, default: new Date() + (30 * 24 * 60 * 60 * 100)},
-        notified: {type: Boolean, default: false},
-        file_path: String,
-        nr_ord: {
-            type: Number,
-            trim: true
-        }
-    },
-    is_hidden: {type: Boolean, es_type: 'boolean', es_indexed: true, index: true}
+      }
+  },
+  is_hidden: {type: Boolean, es_type: 'boolean', es_indexed: true, index: true}
 });
 
 PileSchema.post('init', function () {
@@ -90,15 +83,17 @@ PileSchema.pre('save', function (next) {
 });
 
 PileSchema.post('save', function (doc) {
+    //console.log("===================== " + this.updated_by);
     var updated_by = this.updated_by;
     //if the document is newly created or it's status has been updated, create an activity for it
-    if (this.wasNew || this.oldStatus !== doc.status) {
+    if(this.wasNew || this.oldStatus != doc.status){
         var actor = updated_by || doc.user;
         ActivityService.create(actor, doc.status, doc._id).then(function (activity) {
+            //console.log(activity);
         });
     }
     //if the status has been updated send email to owner
-    if (this.oldStatus && this.oldStatus !== this.status) {
+    if(this.oldStatus && this.oldStatus !== this.status){
         MailService.events.pileStatusChanged(doc.user, doc.status);
     }
 });
