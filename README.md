@@ -15,6 +15,9 @@ The others just overwrite based on NODE_ENV
 9. run in the root `docker-compose up` . To detach run with the flag `-d`
 10. To stop the infrastructure run `docker-compose down`
 
+## User Manual
+
+[Here](https://docs.google.com/document/d/1JalrzTIXh64KuRByPnxv362upNtSUxgByR20kovoHEM/edit?usp=sharing) you can find the user manual.
 
 
 
