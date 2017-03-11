@@ -1,4 +1,11 @@
 'use strict';
+/**
+ * @ngdoc service
+ * @service
+ * @name map helper service
+ * @description The subsidy service
+ * @requires deviceDetector
+ */
 angular.module('ldrWebApp').factory('MapHelperService', ['deviceDetector',
     function (deviceDetector) {
 
@@ -78,15 +85,7 @@ angular.module('ldrWebApp').factory('MapHelperService', ['deviceDetector',
             },
 
             calculateMenuResolution: function () {
-                var menuResolution;
-
-                if (window.innerWidth > 1023) {
-                    menuResolution = window.innerHeight - this.calculateMapResolution();
-                }
-                else {
-                    menuResolution = window.innerHeight - this.calculateMapResolution();
-                }
-                return menuResolution;
+                return window.innerHeight - this.calculateMapResolution();
             },
 
             createMap: function () {

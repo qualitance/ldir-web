@@ -2,7 +2,13 @@
 
 var Countries = require('./country.model');
 
-// Gets a list of Countrys
+/**
+ * @name index
+ * @function
+ * @description gets all countries
+ * @param {Object} req
+ * @param {Object} res
+ */
 function index(req, res) {
     Countries.find({}, function (err, countries) {
         if (err) {

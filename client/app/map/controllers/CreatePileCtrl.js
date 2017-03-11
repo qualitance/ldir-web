@@ -1,4 +1,34 @@
 'use strict';
+/**
+ * @ngdoc controller
+ * @name CreatePileCtrl
+ * @description create pile view controller
+ * @requires $rootScope
+ * @requires $scope
+ * @requires LxDialogService
+ * @requires LxNotificationService
+ * @requires $timeout
+ * @requires $state
+ * @requires Pile
+ * @requires Upload
+ * @requires HelperService
+ * @requires $sce
+ * @requires ImageUpload
+ * @requires preloader
+ * @requires $translate
+ * @requires responseHandler
+ * @requires Auth
+ * @requires API_URL
+ * @property {Integer} uploadMaxFileSize - environment maximum upload size
+ * @property {Object} bgImage - default background image
+ * @property {Object} files - image files
+ * @property {Boolean} inprogress - images uploading in progress
+ * @property {Object} steps - create pile steps config objects
+ * @property {Function} getThumbnail - generate photo thumbnail function
+ * @property {Object} materials - materials object
+ * @property {Object} areas - areas object
+ * @property {Object} pile - pile to create object
+ */
 angular.module('ldrWebApp').controller('CreatePileCtrl', [
     '$rootScope',
     '$scope',
@@ -25,6 +55,13 @@ angular.module('ldrWebApp').controller('CreatePileCtrl', [
         $scope.files = [];
         $scope.inprogress = false;
 
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#checkedMaterialType
+         * @methodOf CreatePileCtrl
+         * @description check if material type is selected
+         * @returns {Boolean} response
+         */
         self.checkedMaterialType = function () {
             var response = false;
             angular.forEach($scope.materials, function (item) {
@@ -35,6 +72,13 @@ angular.module('ldrWebApp').controller('CreatePileCtrl', [
             return response;
         };
 
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#checkedArea
+         * @methodOf CreatePileCtrl
+         * @description check if area is selected
+         * @returns {Boolean} response
+         */
         self.checkedArea = function () {
             var response = false;
             angular.forEach($scope.areas, function (item) {
@@ -93,6 +137,13 @@ angular.module('ldrWebApp').controller('CreatePileCtrl', [
                 size: 3
             };
         };
+
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#$watchCollection
+         * @methodOf CreatePileCtrl
+         * @description splice files array if limit is exceeded
+         */
         $scope.$watchCollection('files', function () {
             if ($scope.files.length > 3) {
                 $scope.files = $scope.files.slice(0, 3);
@@ -100,6 +151,13 @@ angular.module('ldrWebApp').controller('CreatePileCtrl', [
             }
         });
 
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#selectFiles
+         * @methodOf CreatePileCtrl
+         * @param {Object} files - image files to upload
+         * @description for each image file generates thumbnail
+         */
         $scope.selectFiles = function (files) {
             angular.forEach(files, function (file) {
                 ImageUpload.isImage(file).then(
@@ -131,17 +189,37 @@ angular.module('ldrWebApp').controller('CreatePileCtrl', [
             });
         };
 
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#canNavigateToStep
+         * @param {String} step - step number
+         * @methodOf CreatePileCtrl
+         * @description check if user can go to next step
+         */
         $scope.canNavigateToStep = function (step) {
             return (step >= 0 && step < $scope.steps.length && $scope.steps[step].isAvailable &&
             (step !== $scope.currentStep));
         };
 
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#goToStep
+         * @methodOf CreatePileCtrl
+         * @param {String} step - step number
+         * @description redirects to specified step
+         */
         $scope.goToStep = function (step) {
             if ($scope.canNavigateToStep(step)) {
                 $scope.currentStep = step;
             }
         };
 
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#nextStep
+         * @methodOf CreatePileCtrl
+         * @description redirects to next steps
+         */
         $scope.nextStep = function () {
             if ($scope.steps[$scope.currentStep].isValid()) {
                 $scope.pile.location = $rootScope.location;
@@ -153,12 +231,25 @@ angular.module('ldrWebApp').controller('CreatePileCtrl', [
                 return area.selected === true;
             });
         };
+
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#previousStep
+         * @methodOf CreatePileCtrl
+         * @description redirects to previous step
+         */
         $scope.previousStep = function () {
             if ($scope.canNavigateToStep($scope.currentStep - 1)) {
                 $scope.currentStep -= 1;
             }
         };
 
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#resetPile
+         * @methodOf CreatePileCtrl
+         * @description resets pile object
+         */
         $scope.resetPile = function () {
             $scope.pile = {
                 size: 3,
@@ -171,6 +262,12 @@ angular.module('ldrWebApp').controller('CreatePileCtrl', [
 
         $scope.saving = false;
 
+        /**
+         * @ngdoc
+         * @name CreatePileCtrl#createPile
+         * @methodOf CreatePileCtrl
+         * @description maps pile object, uploads pile and images, resets pile object
+         */
         $scope.createPile = function () {
 
             $scope.saving = true;

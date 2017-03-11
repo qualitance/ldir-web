@@ -1,6 +1,23 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc controller
+     * @name StatisticsCtrl
+     * @description admin statistics controller
+     * @requires $scope
+     * @requires leafletData
+     * @requires $timeout
+     * @requires Pile
+     * @requires LxDialogService
+     * @requires LxNotificationService
+     * @requires LxProgressService
+     * @requires $filter
+     * @requires HelperService
+     * @requires responseHandler
+     * @property {Boolean} openInfo - open info modal flag
+     * @property {Object} defaultStyle - layer style config object
+     */
     .controller('StatisticsCtrl', ['$scope',
         'leafletData',
         '$timeout',
@@ -32,6 +49,13 @@ angular.module('ldrWebApp')
                 style: $scope.defaultStyle
             });
 
+            /**
+             * @ngdoc
+             * @name StatisticsCtrl#calculateMapWidth
+             * @methodOf StatisticsCtrl
+             * @description
+             * calculates map with
+             */
             $scope.calculateMapWidth = function () {
                 if (window.innerWidth) {
                     var leftMenuWidth = (window.innerWidth / 12) * 3;
@@ -51,12 +75,31 @@ angular.module('ldrWebApp')
                 }
             };
 
+            /**
+             * @ngdoc
+             * @name StatisticsCtrl#getArray
+             * @methodOf StatisticsCtrl
+             * @example
+             <button style="margin-bottom: 10px;margin-top:10px" ng-csv="getArray(featureCounty)"
+             filename="Statistics_report.csv" class="btn btn--xs btn--green btn--raised" lx-ripple
+             add-bom="true">{{'views.statistics.downloadCSVReport' | translate}}</button>
+             * @description
+             * prepares county stats array to generate CSV from
+             * @returns {Array} county - country stats array to generate CSV from
+             */
             $scope.getArray = function (countyArray) {
                 $scope.data = [countyArray];
                 $scope.data.unshift(HelperService.headerOnCsv('County'));
                 return $scope.data;
             };
 
+            /**
+             * @ngdoc
+             * @name StatisticsCtrl#onMapClick
+             * @methodOf StatisticsCtrl
+             * @description
+             * gets statistics for clicked county, sets show info flag to true
+             */
             function onMapClick(e) {
                 $scope.featureSiruta = leafletPip.pointInLayer([e.latlng.lng, e.latlng.lat], gjLayer, true)[0].feature.properties.SIRUTA;
                 $scope.featureName = leafletPip.pointInLayer([e.latlng.lng, e.latlng.lat], gjLayer, true)[0].feature.properties.NAME;
@@ -72,6 +115,13 @@ angular.module('ldrWebApp')
                 }
             }
 
+            /**
+             * @ngdoc
+             * @name StatisticsCtrl#highlightFeature
+             * @methodOf StatisticsCtrl
+             * @description
+             * sets style for highlighted county
+             */
             function highlightFeature(e) {
                 var layer = e.target;
                 layer.setStyle({
@@ -87,6 +137,13 @@ angular.module('ldrWebApp')
                 gjLayer.resetStyle(e.target);
             }
 
+            /**
+             * @ngdoc
+             * @name StatisticsCtrl#onEachFeature
+             * @methodOf StatisticsCtrl
+             * @description
+             * sets options for each layer
+             */
             function onEachFeature(polygon, layer) {
                 layer.on({
                     click: onMapClick,
@@ -96,6 +153,14 @@ angular.module('ldrWebApp')
                 });
             }
 
+            /**
+             * @ngdoc
+             * @name StatisticsCtrl#calculateMapStatisticsResolution
+             * @methodOf StatisticsCtrl
+             * @description
+             * calculates statistics map height
+             * @returns {Integer} statisticsMap - statistics map height
+             */
             $scope.calculateMapStatisticsResolution = function () {
                 if (window.innerWidth > 1023) {
                     $scope.statisticsMap = window.innerHeight - 150 - 40;
@@ -105,8 +170,13 @@ angular.module('ldrWebApp')
                 return $scope.statisticsMap;
             };
 
-            //CREATE leaflet map for statistics
-
+            /**
+             * @ngdoc
+             * @name StatisticsCtrl#createMap
+             * @methodOf StatisticsCtrl
+             * @description
+             * creates leaflet map object for statistics, mapbox token is required
+             */
             self.createMap = function () {
                 return {
                     defaults: {
@@ -127,7 +197,7 @@ angular.module('ldrWebApp')
                         baselayers: {
                             xyz: {
                                 name: 'OpenStreetMap (XYZ)',
-                                url: 'https://api.mapbox.com/v4/mapbox.streets-basic/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicXVhbGl0YW5jZSIsImEiOiJkYTY0ODQzMGM1MDFlOGVhM2FiZjc3M2ZkYmQ2MjA0NSJ9.3bxLXwcDaG_V0H3reJzLBg',
+                                url: 'https://api.mapbox.com/v4/mapbox.streets-basic/{z}/{x}/{y}.png?access_token=*********',
                                 type: 'xyz'
                             }
                         },
@@ -136,11 +206,18 @@ angular.module('ldrWebApp')
                 };
             };
 
+            /**
+             * @ngdoc
+             * @name StatisticsCtrl#centerMap
+             * @methodOf StatisticsCtrl
+             * @description
+             * map is repositioned on Roumania's center
+             */
             $scope.centerMap = function () {
                 angular.extend($scope.map, {
                     center: {
                         zoom: 7,
-                        lat: 45.834402, //middle of romania
+                        lat: 45.834402,
                         lng: 24.996989
                     }
                 });

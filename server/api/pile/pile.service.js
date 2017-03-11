@@ -15,6 +15,14 @@ var amazon = require('../../components/amazon');
 var mailer = require('../../components/mailer');
 var UtilsService = require('../../components/utils');
 
+/**
+ * @name addImage
+ * @function
+ * @description update pile with image id
+ * @param {String} pile_id
+ * @param {String} image_id
+ * @returns {Promise}
+ */
 exports.addImage = function (pile_id, image_id) {
     var deferred = Q.defer();
     Pile.update({_id: pile_id}, {$addToSet: {images: image_id}}, function (err, wres) {
@@ -27,6 +35,14 @@ exports.addImage = function (pile_id, image_id) {
     return deferred.promise;
 };
 
+/**
+ * @name addScreenshot
+ * @function
+ * @description update pile scrrenshot with image id
+ * @param {String} pile_id
+ * @param {String} image_id
+ * @returns {Promise}
+ */
 exports.addScreenshot = function (pile_id, image_id) {
     var deferred = Q.defer();
     Pile.update({_id: pile_id}, {screenshot: image_id}, function (err, wres) {
@@ -39,6 +55,13 @@ exports.addScreenshot = function (pile_id, image_id) {
     return deferred.promise;
 };
 
+/**
+ * @name removeImage
+ * @function
+ * @description removes image id from pile image references id's array
+ * @param {String} image_id
+ * @returns {Promise}
+ */
 exports.removeImage = function (image_id) {
     var deferred = Q.defer();
     Pile.update({images: {$in: [image_id]}}, {$pull: {images: image_id}}, {multi: true}, function (err) {
@@ -51,6 +74,13 @@ exports.removeImage = function (image_id) {
     return deferred.promise;
 };
 
+/**
+ * @name getUserId
+ * @function
+ * @description get reporter id
+ * @param {String} pile_id
+ * @returns {Promise}
+ */
 exports.getUserId = function (pile_id) {
     var deferred = Q.defer();
     Pile.findOne({_id: pile_id}, function (err, pile) {
@@ -65,6 +95,14 @@ exports.getUserId = function (pile_id) {
     return deferred.promise;
 };
 
+/**
+ * @name getPileIds
+ * @function
+ * @description get user or county pile ids
+ * @param {String} user_id
+ * @param {String} county_id
+ * @returns {Promise}
+ */
 exports.getPileIds = function (user_id, county_id) {
     var deferred = Q.defer();
     if (user_id) {
@@ -83,6 +121,13 @@ exports.getPileIds = function (user_id, county_id) {
     return deferred.promise;
 };
 
+/**
+ * @name getPilesIdsInCounty
+ * @function
+ * @description get county pile ids
+ * @param {String} county_id
+ * @returns {Promise}
+ */
 exports.getPilesIdsInCounty = function (county_id) {
     var deferred = Q.defer();
     if (county_id) {
@@ -99,6 +144,14 @@ exports.getPilesIdsInCounty = function (county_id) {
     return deferred.promise;
 };
 
+/**
+ * @name countByUserAndStatus
+ * @function
+ * @description count piles by user and status
+ * @param {Object} user
+ * @param {Object} status
+ * @returns {Promise}
+ */
 exports.countByUserAndStatus = function (user, status) {
     var deferred = Q.defer();
     var query = {status: status};
@@ -119,8 +172,13 @@ exports.countByUserAndStatus = function (user, status) {
     return deferred.promise;
 };
 
-//===================================================================================================================== EXPORT PDF
-
+/**
+ * @name createHtmlImages
+ * @function
+ * @description creates images divs
+ * @param {Array} images
+ * @returns {String} imgHTML
+ */
 var createHtmlImages = function (images) {
     var imagesCount = images.length;
     var imageLength = imagesCount === 1 ? 100 : 50;
@@ -132,6 +190,13 @@ var createHtmlImages = function (images) {
     return imgHTML;
 };
 
+/**
+ * @name createHtmScreenshot
+ * @function
+ * @description creates screenshot div
+ * @param {Object} screenshot
+ * @returns {String} screenshotHTML
+ */
 var createHtmScreenshot = function (screenshot) {
     var screenshotHTML = '';
     if (screenshot) {
@@ -140,6 +205,13 @@ var createHtmScreenshot = function (screenshot) {
     return screenshotHTML;
 };
 
+/**
+ * @name formatPileSize
+ * @function
+ * @description formats pile sizes
+ * @param {Integer} pile_size
+ * @returns {String} sizes[idx]
+ */
 var formatPileSize = function (pile_size) {
     var idx = pile_size - 1;
     if (idx < 0) idx = 0;
@@ -147,6 +219,13 @@ var formatPileSize = function (pile_size) {
     return sizes[idx];
 };
 
+/**
+ * @name exportAsPDF
+ * @function
+ * @description finds pile and generates report pdf
+ * @param {String} pile_id
+ * @returns {Promise}
+ */
 var exportAsPDF = function (pile_id) {
     var deferred = Q.defer();
     Pile.findOne({_id: pile_id}).populate('images county city allocated.authority screenshot').exec(function (err, pile) {
@@ -200,6 +279,13 @@ var exportAsPDF = function (pile_id) {
     return deferred.promise;
 };
 
+/**
+ * @name generateAuthorityReport
+ * @function
+ * @description generates report pdf and uploads to S3, updates pile
+ * @param {String} pile_id
+ * @returns {Promise}
+ */
 exports.generateAuthorityReport = function (pile_id) {
     var deferred = Q.defer();
     exportAsPDF(pile_id).then(
@@ -226,6 +312,12 @@ exports.generateAuthorityReport = function (pile_id) {
     return deferred.promise;
 };
 
+/**
+ * @name notifyDueDatePassed
+ * @function
+ * @description finds pile and sends due date expired mail, updates pile
+ * @returns {Promise}
+ */
 exports.notifyDueDatePassed = function () {
     var deferred = Q.defer();
     Pile.find({
@@ -251,7 +343,6 @@ exports.notifyDueDatePassed = function () {
                     ).then(
                         function (success) {
                             emailsSent++;
-                            //update pile model
                             Pile.update({_id: pile._id}, {$set: {"allocated.notified": true}}, function (err) {
                                 if (err) {
                                     callback(err);
@@ -279,8 +370,15 @@ exports.notifyDueDatePassed = function () {
     return deferred.promise;
 };
 
+/**
+ * @name parseFormData
+ * @function
+ * @description parses form data
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} next
+ */
 exports.parseFormData = function (req, res, next) {
-    //the "multer" plugin parses our form data request and places any text field on req.body[field]
     if (req.body.pile) {
         req.body = req.body.pile;
     }

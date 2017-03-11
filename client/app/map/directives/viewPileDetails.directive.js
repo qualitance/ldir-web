@@ -1,5 +1,12 @@
 'use strict';
-
+/**
+ * @ngdoc directive
+ * @name customCarousel
+ * @description directive for showing pile images, shows thumbnails and sets main image on click after calculating
+ * clicked image width and height, also binds magnificPopup to click event on main image, popup is closed on state change
+ * @example
+ * <pre><custom-carousel images="allImages"></custom-carousel></pre>
+ */
 angular.module('ldrWebApp')
     .directive('customCarousel', ['$timeout', 'PILE_IMAGE_CONFIG', function ($timeout, PILE_IMAGE_CONFIG) {
         return {

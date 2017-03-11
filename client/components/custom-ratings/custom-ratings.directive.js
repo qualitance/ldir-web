@@ -1,3 +1,10 @@
+/**
+ * @ngdoc directive
+ * @name customRatings
+ * @description pile sizes directive
+ * @example
+ * <pre><custom-ratings ng-model="pile.size" disabled></custom-ratings></pre>
+ */
 angular.module('customRatings', []).directive('customRatings', [function () {
     return {
         restrict: 'E',

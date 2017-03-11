@@ -1,6 +1,20 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc controller
+     * @name IssuesListCtrl
+     * @description issues page controller
+     * @requires $scope
+     * @requires Issues
+     * @requires LxNotificationService
+     * @requires LxDialogService
+     * @requires $translate
+     * @requires responseHandler
+     * @property {Object} range - query start/end date objects
+     * @property {Object} endDateLimit - end date moment object
+     * @property {Object} pagination - query pagination object
+     */
     .controller('IssuesListCtrl', [
         '$scope',
         'Issues',
@@ -33,6 +47,12 @@ angular.module('ldrWebApp')
                 $scope.pagination.page++;
             };
 
+            /**
+             * @ngdoc
+             * @name IssuesListCtrl#$watchGroup
+             * @methodOf IssuesListCtrl
+             * @description watch for changes on pagination and selected start/end date and gets requested issues
+             */
             $scope.$watchGroup(['pagination.page', 'range.date_start', 'range.date_end'], function () {
                 Issues.query({
                     page: $scope.pagination.page,
@@ -67,6 +87,14 @@ angular.module('ldrWebApp')
                 LxDialogService.open(dialogId);
             };
 
+            /**
+             * @ngdoc
+             * @name IssuesListCtrl#sendErrors
+             * @methodOf IssuesListCtrl
+             * @param {Object} form - issue form object
+             * @param {String} dialogId - dialog ids
+             * @description sends issues in range to specified email
+             */
             $scope.sendErrors = function (form, dialogId) {
 
                 if (form.$valid) {
@@ -83,9 +111,4 @@ angular.module('ldrWebApp')
                 }
 
             };
-
-            $scope.filterByRange = function () {
-
-            };
-
         }]);

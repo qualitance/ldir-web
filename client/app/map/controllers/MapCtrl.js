@@ -1,5 +1,32 @@
 'use strict';
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc controller
+     * @name CreatePileCtrl
+     * @description create pile view controller
+     * @requires $scope
+     * @requires leafletData
+     * @requires $rootScope
+     * @requires Pile
+     * @requires HelperService
+     * @requires $timeout
+     * @requires LxNotificationService
+     * @requires LxDialogService
+     * @requires Auth
+     * @requires deviceDetector
+     * @requires Help
+     * @requires $compile
+     * @requires LxProgressService
+     * @requires MapHelperService
+     * @requires $translate
+     * @requires responseHandler
+     * @property {Object} options - map options object
+     * @property {Function} hasRole - authentication function that checks if user has specified role
+     * @property {Object} regionBounds - map bounds
+     * @property {Boolean} markersLoading - markers loading flags
+     * @property {Object} map - map object
+     * @property {Object} userMarker - user marker object
+     */
     .controller('MapCtrl', [
         '$scope',
         'leafletData',
@@ -7,7 +34,8 @@ angular.module('ldrWebApp')
         'Pile',
         'HelperService',
         '$timeout',
-        'LxNotificationService', 'LxDialogService',
+        'LxNotificationService',
+        'LxDialogService',
         'Auth',
         'deviceDetector',
         'Help',

@@ -1,4 +1,29 @@
 'use strict';
+/**
+ * @ngdoc controller
+ * @name ViewPileCtrl
+ * @description view pile controller
+ * @requires $scope
+ * @requires $rootScope
+ * @requires $filter
+ * @requires leafletData
+ * @requires Pile
+ * @requires $q
+ * @requires Auth
+ * @requires ImageUpload
+ * @requires LxNotificationService
+ * @requires MapHelperService
+ * @requires $translate
+ * @requires responseHandler
+ * @property {Function} hasRole - authentication function that checks if user has specified role
+ * @property {Object} center - pile object
+ * @property {Boolean} savableScreenshot - screenshot can be saved depending on pile status
+ * @property {Boolean} savingScreenshot - saving screenshot in progress
+ * @property {Object} defaults - map options
+ * @property {Object} regionBounds - map bounds
+ * @property {Integer} marker - pile marker, icon color depending on status
+ * @property {Integer} markerOpts - marker options
+ */
 angular.module('ldrWebApp').controller('ViewPileOnMapCtrl', ['$scope', '$rootScope', '$filter', 'leafletData', 'Pile',
     '$q', 'Auth', 'ImageUpload', 'LxNotificationService', 'MapHelperService', '$translate', 'responseHandler',
     function ($scope, $rootScope, $filter, leafletData, Pile,

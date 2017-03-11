@@ -8,12 +8,19 @@ var UtilsService = require('../utils');
 
 var County = require('../../api/county/county.model');
 
+/**
+ * @name formatElasticQuery
+ * @function
+ * @description formats query for elastic search
+ * @param {Object} county_id
+ * @param {Object} date_start
+ * @param {Object} date_end
+ */
 var formatElasticQuery = function (county_id, date_start, date_end) {
     var query = {
         filtered: {}
     };
 
-    //filter by county id
     if (county_id) {
         query.filtered.query = {
             match: {
@@ -22,7 +29,6 @@ var formatElasticQuery = function (county_id, date_start, date_end) {
         };
     }
 
-    //filter by date range
     var range_options = {};
 
     if (UtilsService.isDate(date_start)) {
@@ -57,14 +63,21 @@ var formatElasticQuery = function (county_id, date_start, date_end) {
     return query;
 };
 
+/**
+ * @name getPileStats
+ * @function
+ * @description gets pile stats, form query object, form aggregation object, if report is not requested for specific county,
+ * sub-aggregate for each county, place the query before the aggregations and finally, form the request payload
+ * @param {Object} county_id
+ * @param {Object} date_start
+ * @param {Object} date_end
+ */
 var getPileStats = function (county_id, date_start, date_end) {
 
     var deferred = Q.defer();
 
-    //first filter piles that need to be aggregated by forming a query object
     var query = formatElasticQuery(county_id, date_start, date_end);
 
-    //next, form the aggregations object
     var aggregations = {
         status: {
             terms: {
@@ -74,7 +87,7 @@ var getPileStats = function (county_id, date_start, date_end) {
         content: {
             terms: {
                 field: 'content',
-                size: 50         // default value is 10
+                size: 50
             }
         },
         size: {
@@ -89,7 +102,6 @@ var getPileStats = function (county_id, date_start, date_end) {
         }
     };
 
-    //if report is not requested for a specific county, sub-aggregate for each county
     if (!county_id) {
         aggregations.county = {
             terms: {
@@ -99,15 +111,12 @@ var getPileStats = function (county_id, date_start, date_end) {
         };
     }
 
-    //finally, form our request payload; it is important to place the query before the aggregations
-
     var data = {};
     if (query) {
         data.query = query;
     }
     data.aggs = aggregations;
 
-    //send the request
     request({
         method: 'POST',
         uri: env.elasticHost + '/piles/pile/_search',
@@ -124,14 +133,21 @@ var getPileStats = function (county_id, date_start, date_end) {
     return deferred.promise;
 };
 
+/**
+ * @name getUserStats
+ * @function
+ * @description gets user stats, form query object, form aggregation object, if report is not requested for specific county,
+ * sub-aggregate for each county, place the query before the aggregations and finally, form the request payload
+ * @param {Object} county_id
+ * @param {Object} date_start
+ * @param {Object} date_end
+ */
 var getUserStats = function (county_id, date_start, date_end) {
 
     var deferred = Q.defer();
 
-    //first filter users that need to be aggregated by forming a query object
     var query = formatElasticQuery(county_id, date_start, date_end);
 
-    //next, form the aggregations object
     var aggregations = {
         status: {
             terms: {
@@ -150,15 +166,12 @@ var getUserStats = function (county_id, date_start, date_end) {
         }
     };
 
-    //finally, form our request payload; it is important to place the query before the aggregations
-
     var data = {};
     if (query) {
         data.query = query;
     }
     data.aggs = aggregations;
 
-    //send the request
     request({
         method: 'POST',
         uri: env.elasticHost + '/users/user/_search',
@@ -229,12 +242,19 @@ var parsePileAggs = function (aggs, callback) {
     }
 };
 
+/**
+ * @name getPileStats
+ * @function
+ * @description format a readable client response from our elastic server response
+ * @param {Object} county_id
+ * @param {Object} date_start
+ * @param {Object} date_end
+ */
 exports.getPileStats = function (county_id, date_start, date_end) {
     var deferred = Q.defer();
     if (county_id || (date_start && date_end)) {
         getPileStats(county_id, date_start, date_end).then(
             function (success) {
-                //format a readable client response from our elastic server response
                 var total = success.hits.total;
                 var aggs = success.aggregations;
                 parsePileAggs(aggs, function (err, parsed) {
@@ -266,11 +286,18 @@ exports.getPileStats = function (county_id, date_start, date_end) {
     return deferred.promise;
 };
 
+/**
+ * @name getUserStats
+ * @function
+ * @description format a readable client response from our elastic server response
+ * @param {Object} county_id
+ * @param {Object} date_start
+ * @param {Object} date_end
+ */
 exports.getUserStats = function (county_id, date_start, date_end) {
     var deferred = Q.defer();
     getUserStats(county_id, date_start, date_end).then(
         function (success) {
-            //format a readable client response from our elastic server response
             var ret = {};
             ret.total = success.hits.total;
             var aggs = success.aggregations;

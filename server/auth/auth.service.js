@@ -15,20 +15,18 @@ var _ = require('lodash');
 var ImageService = require('../api/image/image.service');
 
 /**
- * Attaches the user object to the request if authenticated
- * Otherwise returns 403
+ * @name isAuthenticated
+ * @function
+ * @description validate jwt, attaches the user object to the request if authenticated, otherwise returns 403
  */
 function isAuthenticated() {
     return compose()
-    // Validate jwt
         .use(function (req, res, next) {
-            // allow access_token to be passed through query parameter as well
             if (req.query && req.query.hasOwnProperty('access_token')) {
                 req.headers.authorization = 'Bearer ' + req.query.access_token;
             }
             validateJwt(req, res, next);
         })
-        // Attach user to request
         .use(function (req, res, next) {
             User.findById(req.user._id).exec(function (err, user) {
                 if (err) {
@@ -45,7 +43,10 @@ function isAuthenticated() {
 }
 
 /**
- * Checks if the user role meets the minimum requirements of the route
+ * @name hasRole
+ * @function
+ * @description checks if the user role meets the minimum requirements of the route
+ * @param {String} roleRequired
  */
 function hasRole(roleRequired) {
     if (!roleRequired) {
@@ -65,14 +66,21 @@ function hasRole(roleRequired) {
 }
 
 /**
- * Returns a jwt token signed by the app secret
+ * @name signToken
+ * @function
+ * @description returns a jwt token signed by the app secret
+ * @param {String} id
  */
 function signToken(id) {
     return jwt.sign({_id: id}, config.secrets.session, {expiresInMinutes: 60 * 24 * 3});
 }
 
 /**
- * Set token cookie directly for oAuth strategies
+ * @name setTokenCookie
+ * @function
+ * @description set token cookie directly for oAuth strategies
+ * @param {Object} req
+ * @param {Object} res
  */
 function setTokenCookie(req, res) {
     if (!req.user) {
@@ -83,12 +91,21 @@ function setTokenCookie(req, res) {
     res.redirect(config.staticSite);
 }
 
+/**
+ * @name loginToFacebook
+ * @function
+ * @description calls FB api with received id and token
+ * check if a user is already registered with this facebook id, create one if not
+ * synchronize info
+ * @param {String} accessToken
+ * @param {String} facebookID
+ * @param {Function} callback
+ */
 var loginToFacebook = function (accessToken, facebookID, callback) {
     if (!facebookID || !accessToken) {
         callback({code: 'auth_mobile_1', status: 400});
     } else {
         var url = config.facebook.apiURL + facebookID + '?access_token=' + accessToken + '&fields=id,first_name,last_name,email,verified';
-        // CALL FB API WITH RECEIVED ID AND TOKEN
         var options = {
             url: url,
             method: 'GET',
@@ -124,7 +141,6 @@ var loginToFacebook = function (accessToken, facebookID, callback) {
                     facebook: parsedResponse
                 };
 
-                //check if a user is already registered with this facebook id
                 User.findOne({
                         'facebook.id': facebookID
                     },
@@ -132,7 +148,6 @@ var loginToFacebook = function (accessToken, facebookID, callback) {
                         if (err) {
                             callback({error: err, status: 500});
                         } else if (!user) {
-                            //create one; watch caveat: email is already taken
                             User.findOne({email: fb_user.email}, function (err, user) {
                                 if (err) {
                                     callback({error: err, status: 500});
@@ -144,9 +159,7 @@ var loginToFacebook = function (accessToken, facebookID, callback) {
                                         user.status = parsedResponse.verified ? 'active' : 'pending';
                                         user.terms = true;
                                     }
-                                    //sync facebook info
                                     _.assign(user, fb_user);
-                                    //sync profile image
                                     ImageService.createFromFB(facebookID).then(
                                         function (image) {
                                             user.image = image._id;
@@ -159,7 +172,6 @@ var loginToFacebook = function (accessToken, facebookID, callback) {
                                 }
                             });
                         } else {
-                            //synchronize
                             User.findOne({
                                 'facebook.id': {$ne: facebookID},
                                 email: fb_user.email

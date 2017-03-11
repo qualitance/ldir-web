@@ -1,5 +1,13 @@
 (function (module) {
     'use strict';
+    /**
+     * @ngdoc service
+     * @service
+     * @name CountryService
+     * @description Get countries service
+     * @requires $resource
+     * @requires API_URL
+     */
     module.factory('CountryService', CountryService);
     CountryService.$inject = ['$resource', 'API_URL'];
     function CountryService($resource, API_URL) {

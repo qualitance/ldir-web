@@ -1,6 +1,14 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc service
+     * @service
+     * @name User
+     * @description The user service
+     * @requires $resource
+     * @requires API_URL
+     */
     .factory('User', ['$resource', 'API_URL', function ($resource, API_URL) {
         return $resource(API_URL + 'users/:action/:salt/:token', {},
             {

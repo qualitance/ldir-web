@@ -1,7 +1,24 @@
 'use strict';
-
+/**
+ * @ngdoc service
+ * @service
+ * @name HelperService
+ * @description helper service
+ * @requires $q
+ * @requires $translate
+ */
 angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', function ($q, $translate) {
     return {
+        /**
+         * @ngdoc method
+         * @name HelperService#configObjectReport
+         * @methodOf HelperService
+         * @example
+         *  countryStatistics.push(HelperService.configObjectReport(statsTotal, 'Total', null, 'total'));
+         * @description
+         * configures report object
+         * @returns {Object} config object
+         */
         configObjectReport: function (object, label, i, type) {
             type = typeof type !== 'undefined' ? type : 'row';
 
@@ -57,6 +74,16 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
 
             return o;
         },
+        /**
+         * @ngdoc method
+         * @name HelperService#headerOnCsv
+         * @methodOf HelperService
+         * @example
+         * $scope.data.unshift(HelperService.headerOnCsv('County'));
+         * @description
+         * configures csv header
+         * @returns {Object} config object
+         */
         headerOnCsv: function (locationHeader) {
             var headerObject = {
                 id: 'ID',
@@ -89,6 +116,15 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
             };
             return headerObject;
         },
+        /**
+         * @ngdoc method
+         * @name HelperService#generateThumbnail
+         * @methodOf HelperService
+         * @example
+         * $scope.getThumbnail = HelperService.generateThumbnail;
+         * @description
+         * generates specified image thumbnail
+         */
         generateThumbnail: function (image) {
             var deferred = $q.defer();
 
@@ -100,6 +136,15 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
             reader.readAsDataURL(image);
             return deferred.promise;
         },
+        /**
+         * @ngdoc method
+         * @name HelperService#getPileMaterials
+         * @methodOf HelperService
+         * @example
+         * $scope.materials = HelperService.getPileMaterials();
+         * @description
+         * translated pile materials
+         */
         getPileMaterials: function () {
             return angular.copy([
                 {name: $translate.instant('helperService.plastic'), type: 'Plastic', selected: false},
@@ -114,6 +159,15 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
                 {name: $translate.instant('helperService.other'), type: 'Other', selected: false}
             ]);
         },
+        /**
+         * @ngdoc method
+         * @name HelperService#getPileAreas
+         * @methodOf HelperService
+         * @example
+         * $scope.areas = HelperService.getPileAreas();
+         * @description
+         * translated pile ares
+         */
         getPileAreas: function () {
             return angular.copy([
                 {name: $translate.instant('helperService.cityArea'), type: 'city', selected: false},
@@ -123,6 +177,15 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
                 {name: $translate.instant('helperService.otherArea'), type: 'other', selected: false}
             ]);
         },
+        /**
+         * @ngdoc method
+         * @name HelperService#getUserRoles
+         * @methodOf HelperService
+         * @example
+         * $scope.roles = HelperService.getUserRoles();
+         * @description
+         * translated user roles
+         */
         getUserRoles: function () {
             return angular.copy([
                 {name: $translate.instant('helperService.volunteerRole'), value: 'Volunteer', type: 'volunteer'},
@@ -130,6 +193,15 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
                 {name: $translate.instant('helperService.adminRole'), value: 'admin', type: 'admin'}
             ]);
         },
+        /**
+         * @ngdoc method
+         * @name HelperService#getUserStatuses
+         * @methodOf HelperService
+         * @example
+         * $scope.statuses = HelperService.getUserStatuses();
+         * @description
+         * translated user statuses
+         */
         getUserStatuses: function () {
             return angular.copy([
                 {name: $translate.instant('helperService.active'), type: 'active', value: 'Active'},
@@ -137,6 +209,15 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
                 {name: $translate.instant('helperService.inactive'), type: 'inactive', value: 'Inactive'}
             ]);
         },
+        /**
+         * @ngdoc method
+         * @name HelperService#getPileStatuses
+         * @methodOf HelperService
+         * @example
+         * $scope.statuses = HelperService.getPileStatuses();
+         * @description
+         * translated pile statuses
+         */
         getPileStatuses: function () {
             return angular.copy([
                 {name: $translate.instant('helperService.allPile'), type: null, value: 'All'},
@@ -147,6 +228,15 @@ angular.module('ldrWebApp').factory('HelperService', ['$q', '$translate', functi
                 {name: $translate.instant('helperService.cleanedPile'), type: 'clean', value: 'Cleaned'}
             ]);
         },
+        /**
+         * @ngdoc method
+         * @name HelperService#getAvailableLanguages
+         * @methodOf HelperService
+         * @example
+         * $scope.availableLanguages = HelperService.getAvailableLanguages();
+         * @description
+         * gets available languages
+         */
         getAvailableLanguages: function () {
             return angular.copy([
                 {name: $translate.instant('helperService.english'), type: 'en', value: 'en'},

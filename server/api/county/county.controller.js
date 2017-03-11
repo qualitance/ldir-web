@@ -3,7 +3,13 @@
 var _ = require('lodash');
 var County = require('./county.model');
 
-// Get list of counties
+/**
+ * @name index
+ * @function
+ * @description gets all counties
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.index = function (req, res) {
     var q = {};
     if (req.query.country) {
@@ -17,7 +23,13 @@ exports.index = function (req, res) {
     });
 };
 
-// Get a single county
+/**
+ * @name show
+ * @function
+ * @description gets single county
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.show = function (req, res) {
     County.findById(req.params.id, function (err, county) {
         if (err) {

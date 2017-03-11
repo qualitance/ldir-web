@@ -16,6 +16,13 @@ var fillTemplate = function (template, vars) {
     return Mustache.render(template, vars);
 };
 
+/**
+ * @name generateIssuesTable
+ * @function
+ * @description generates table with improve records
+ * @param {Array} improves
+ * @returns {String} ret
+ */
 var generateIssuesTable = function (improves) {
     var ret = '';
     var singeIssueTemplate, templateVars;
@@ -31,6 +38,14 @@ var generateIssuesTable = function (improves) {
     return ret;
 };
 
+/**
+ * @name renderPDF
+ * @function
+ * @description generates pdf with improves table in given date range
+ * @param {Array} improves
+ * @param {Object} dates
+ * @returns {Promise}
+ */
 var renderPDF = function (improves, dates) {
     var deferred = Q.defer();
     var htmlTemplate = fs.readFileSync('./server/storage/html_templates/issues_report/template.html').toString();
@@ -52,6 +67,14 @@ var renderPDF = function (improves, dates) {
     return deferred.promise;
 };
 
+/**
+ * @name uploadPDF
+ * @function
+ * @description uploads pdf to S3
+ * @param {Array} improves
+ * @param {Object} dates
+ * @returns {Promise}
+ */
 var uploadPDF = function (improves, dates) {
     var deferred = Q.defer();
     renderPDF(improves, dates).then(
@@ -78,6 +101,15 @@ var uploadPDF = function (improves, dates) {
     return deferred.promise;
 };
 
+/**
+ * @name sendByEmail
+ * @function
+ * @description sends email with upload link
+ * @param {Array} improves
+ * @param {Object} mail_to
+ * @param {Object} dates
+ * @returns {Promise}
+ */
 exports.sendByEmail = function (improves, mail_to, dates) {
     var deferred = Q.defer();
     mail_to = mail_to.split(',');

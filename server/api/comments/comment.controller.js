@@ -2,6 +2,13 @@
 
 var Comment = require('./comment.model');
 
+/**
+ * @name show
+ * @function
+ * @description gets single comment
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.show = function (req, res) {
     if (req.query.pile) {
         Comment.find({pile: req.query.pile}, function (err, comments) {
@@ -16,6 +23,13 @@ exports.show = function (req, res) {
     }
 };
 
+/**
+ * @name create
+ * @function
+ * @description creates comment
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.create = function (req, res) {
     if (req.query.pile) {
         var comment = new Comment(req.body);

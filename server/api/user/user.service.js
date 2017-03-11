@@ -11,6 +11,14 @@ var PileService = require('../pile/pile.service');
 var ActivityService = require('../activity/activity.service');
 var config = require('../../config/environment');
 
+/**
+ * @name sendActivationMail
+ * @function
+ * @description finds user, creates token or temporary one, sends mail with activation link
+ * @param {Object} req
+ * @param {String} user_email
+ * @param {Function} callback
+ */
 exports.sendActivationMail = function (req, user_email, callback) {
     var User = require('./user.model');
     User.findOne({email: user_email}).select('+createToken').exec(function (err, user) {
@@ -62,6 +70,12 @@ exports.sendActivationMail = function (req, user_email, callback) {
     });
 };
 
+/**
+ * @name removeImage
+ * @function
+ * @description removes profile image from user
+ * @param {String} image_id
+ */
 exports.removeImage = function (image_id) {
     var User = require('./user.model');
     var deferred = Q.defer();
@@ -84,6 +98,13 @@ exports.removeImage = function (image_id) {
     return deferred.promise;
 };
 
+/**
+ * @name addImage
+ * @function
+ * @description adds user profile image
+ * @param {String} image_id
+ * @param {String} user_id
+ */
 exports.addImage = function (user_id, image_id) {
     var User = require('./user.model');
     var deferred = Q.defer();
@@ -97,6 +118,12 @@ exports.addImage = function (user_id, image_id) {
     return deferred.promise;
 };
 
+/**
+ * @name getStats
+ * @function
+ * @description finds user, counts reported piles and unread activities
+ * @param {String} user_id
+ */
 exports.getStats = function (user_id) {
     var User = require('./user.model');
     var deferred = Q.defer();

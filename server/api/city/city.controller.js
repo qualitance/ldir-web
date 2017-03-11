@@ -3,7 +3,13 @@
 var _ = require('lodash');
 var City = require('./city.model');
 
-// Get list of citys
+/**
+ * @name index
+ * @function
+ * @description gets list of all cities or cities in county
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.index = function (req, res) {
     var params = {};
     if (req.params.id === 'all' && req.params.countyId !== undefined) {
@@ -17,7 +23,13 @@ exports.index = function (req, res) {
     });
 };
 
-// Get a single city
+/**
+ * @name show
+ * @function
+ * @description gets single city
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.show = function (req, res) {
     City.findById(req.params.id, function (err, city) {
         if (err) {

@@ -1,6 +1,13 @@
 var env = require('../../config/environment');
 var mailer = require('../../components/mailer');
 
+/**
+ * @name create
+ * @function
+ * @description sends mail with contact note
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.create = function (req, res) {
     mailer.send(
         'contact',

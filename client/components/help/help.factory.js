@@ -1,8 +1,26 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc service
+     * @service
+     * @name Help
+     * @description help service
+     * @requires $rootScope
+     * @requires Auth
+     */
     .factory('Help', ['$rootScope', 'Auth', function ($rootScope, Auth) {
         return {
+            /**
+             * @ngdoc method
+             * @name Help#tutorial
+             * @methodOf Help
+             * @example
+             * var items = Help.tutorial(0);
+             * @description
+             * calculates map resolution depending on screen resolution and browser used
+             * @returns {Array} help step image required
+             */
             tutorial: function (id) {
                 switch (id) {
                     case 0:
@@ -31,6 +49,17 @@ angular.module('ldrWebApp')
                         return [];
                 }
             },
+            /**
+             * @ngdoc method
+             * @name Help#display
+             * @methodOf Help
+             * @param {Object} items - items to display
+             * @param {Function} callback - callback function
+             * @example
+             * Help.display(items);
+             * @description
+             * displays magnificPopup
+             */
             display: function (items, callback) {
                 callback = callback || angular.noop;
                 $.magnificPopup.open({

@@ -1,6 +1,19 @@
 'use strict';
 
 angular.module('ldrWebApp')
+    /**
+     * @ngdoc controller
+     * @name PasswordCtrl
+     * @description change password controller
+     * @requires $scope
+     * @requires $state
+     * @requires User
+     * @requires LxNotificationService
+     * @requires $translate
+     * @property {Object} errors - errors object
+     * @property {Object} user - user object
+     * @property {Object} success - success response flag
+     */
     .controller('PasswordCtrl', [
         '$scope',
         '$state',
@@ -12,6 +25,18 @@ angular.module('ldrWebApp')
             $scope.success = false;
 
             $scope.user = {};
+
+            /**
+             * @ngdoc
+             * @name PasswordCtrl#changePassword
+             * @methodOf PasswordCtrl
+             * @param {Object} form - change password form object
+             * @example
+             * <pre><form class="form" name="changePassForm" ng-submit="changePassword(changePassForm)" novalidate
+             ng-if="!success"></pre>
+             * @description
+             * changes user password
+             */
             $scope.changePassword = function (form) {
 
                 $scope.submitted = true;
